@@ -10,7 +10,7 @@ namespace TarkovItemBot
 {
     class Program
     {
-		static async Task Main()
+        static async Task Main()
         {
             var hostBuilder = Host.CreateDefaultBuilder()
                 .ConfigureDiscordHost<DiscordSocketClient>((context, config) =>

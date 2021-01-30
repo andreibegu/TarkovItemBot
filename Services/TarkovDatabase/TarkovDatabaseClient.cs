@@ -14,7 +14,7 @@ namespace TarkovItemBot.Services
         {
             httpClient.BaseAddress = new Uri(config["TarkovDatabase:BaseUri"]);
             httpClient.DefaultRequestHeaders.Add("User-Agent",
-                $"Tarkov Item Bot/{Assembly.GetEntryAssembly().GetName().Version}");
+                $"TarkovItemBot/{Assembly.GetEntryAssembly().GetName().Version}");
 
             _httpClient = httpClient;
         }
