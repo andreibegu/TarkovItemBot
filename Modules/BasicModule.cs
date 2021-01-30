@@ -19,10 +19,13 @@ namespace TarkovItemBot.Modules
             => Context.Message.ReplyAsync($"Current latency: `{Context.Client.Latency}`");
 
         [Command("total")]
-        public async Task TotalAsync()
+        public async Task TotalAsync(ItemKind kind = ItemKind.None)
         {
             var info = await _tarkov.GetItemsInfoAsync();
-            await Context.Message.ReplyAsync($"Total number of items: `{info.Total}`");
+
+            int total = kind == ItemKind.None ? info.Total : info.Kinds[kind].Count;
+
+            await Context.Message.ReplyAsync($"Total of items: `{total}`.");
         }
 
     }
