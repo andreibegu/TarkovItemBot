@@ -51,8 +51,7 @@ namespace TarkovItemBot.Services
                 var offset = limit * i;
 
                 var response = await _httpClient.GetFromJsonAsync<ItemResponse<T>>
-                    ($"item/{kind.ToString().ToCamelCase()}?limit={limit}&offset={offset}" +
-                    $"&");
+                    ($"item/{kind.ToString().ToCamelCase()}?limit={limit}&offset={offset}");
                 items.AddRange(response.Items);
             }
 
