@@ -26,6 +26,13 @@ namespace TarkovItemBot.Services
         public Task<ItemsInfo> GetItemsInfoAsync()
             => _httpClient.GetFromJsonAsync<ItemsInfo>("item");
 
+        public async Task<T> GetItemAsync<T>(string id) where T : CommonItem
+        {
+            var kind = ((KindAttribute)Attribute.GetCustomAttribute(typeof(T), typeof(KindAttribute))).Kind;
+            var response = await _httpClient.GetFromJsonAsync<T>($"item/{kind.ToString().ToCamelCase()}/{id}");
+            return response;
+        }
+
         private record ItemResponse<T>(int Total, List<T> Items) where T : CommonItem;
 
         public async Task<List<T>> GetItemsAsync<T>() where T : CommonItem
@@ -44,7 +51,8 @@ namespace TarkovItemBot.Services
                 var offset = limit * i;
 
                 var response = await _httpClient.GetFromJsonAsync<ItemResponse<T>>
-                    ($"item/{kind.ToString().ToCamelCase()}?limit={limit}&offset={offset}");
+                    ($"item/{kind.ToString().ToCamelCase()}?limit={limit}&offset={offset}" +
+                    $"&");
                 items.AddRange(response.Items);
             }
 
