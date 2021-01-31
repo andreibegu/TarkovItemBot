@@ -28,5 +28,13 @@ namespace TarkovItemBot.Modules
             await Context.Message.ReplyAsync($"Total of items: `{total}`.");
         }
 
+        [Command("test")]
+        public async Task TestAsync()
+        {
+            var items = await _tarkov.GetItemsAsync<ArmorItem>();
+            var test = items[0];
+
+            await ReplyAsync($"{test.Name}: {test.Description}");
+        }
     }
 }

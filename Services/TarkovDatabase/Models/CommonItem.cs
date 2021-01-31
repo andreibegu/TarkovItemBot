@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services
 {
+    [Kind(ItemKind.Common)]
     public class CommonItem
     {
         [JsonPropertyName("_id")]
@@ -14,7 +15,7 @@ namespace TarkovItemBot.Services
         public float Weight { get; set; }
         public int MaxStack { get; set; }
         public string Rarity { get; set; }
-        public object Grid { get; set; }
+        public Grid Grid { get; set; }
         [JsonPropertyName("_modified")]
         public int Modified { get; set; }
         [JsonPropertyName("_kind")]
