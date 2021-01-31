@@ -20,5 +20,7 @@ namespace TarkovItemBot.Services
         public int Modified { get; set; }
         [JsonPropertyName("_kind")]
         public ItemKind Kind { get; set; }
+        [JsonIgnore]
+        public string IconUrl => $"https://raw.githubusercontent.com/RatScanner/EfTIcons/master/uid/{Id}.png";
     }
 }
