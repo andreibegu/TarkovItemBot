@@ -40,27 +40,7 @@ namespace TarkovItemBot.Modules
             // TODO: search and decide kind auto
             var item = await _tarkov.GetItemAsync<CommonItem>(id);
 
-            var embed = new EmbedBuilder()
-            {
-                Title = $"{item.Name} ({item.ShortName})",
-                Description = item.Description,
-                ThumbnailUrl = item.IconUrl,
-                Color = item.Grid.Color
-            };
-
-            // TODO: Add fields automatically (maybe attribute?)
-            embed.AddField("Weight", $"{item.Weight} kg", true);
-            embed.AddField("Rarity", item.Rarity.FirstCharUpper(), true);
-
-            var width = item.Grid.Width;
-            var height = item.Grid.Height;
-            embed.AddField("Size", $"{width}x{height} ({width * height})", true);
-
-            embed.AddField("Base Price", $"{item.Price.ToMetric()} ₽");
-
-            embed.WithFooter($"Updated {item.Modified.Humanize()}");
-
-            await Context.Message.ReplyAsync(embed: embed.Build());
+            await Context.Message.ReplyAsync(embed: item.ToEmbedBuilder().Build());
         }
 
         [Command("locations")]

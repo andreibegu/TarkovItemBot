@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Discord;
+using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services
 {
@@ -14,5 +15,15 @@ namespace TarkovItemBot.Services
         public HighPass HighPass { get; set; }
         public Compressor Compressor { get; set; }
 
+        public override EmbedBuilder ToEmbedBuilder()
+        {
+            var builder = base.ToEmbedBuilder();
+
+            builder.AddField("Ambient Volume", $"{AmbientVolume:+0.00;-#.00} dB", true);
+            builder.AddField("Distortion", $"{Distortion * 100}%", true);
+            builder.AddField("Cutoff Frequency", $"< {HighPass.CutoffFrequency} Hz", true);
+
+            return builder;
+        }
     }
 }

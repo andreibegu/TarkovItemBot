@@ -1,6 +1,9 @@
 ﻿
+using Discord;
+using Humanizer;
 using System;
 using System.Text.Json.Serialization;
+using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
@@ -24,5 +27,29 @@ namespace TarkovItemBot.Services
         public ItemKind Kind { get; set; }
         [JsonIgnore]
         public string IconUrl => $"https://raw.githubusercontent.com/RatScanner/EfTIcons/master/uid/{Id}.png";
+
+        public virtual EmbedBuilder ToEmbedBuilder()
+        {
+            var embed = new EmbedBuilder()
+            {
+                Title = $"{Name} ({ShortName})",
+                Description = Description,
+                ThumbnailUrl = IconUrl,
+                Color = Grid.Color
+            };
+
+            embed.AddField("Weight", $"{Weight} kg", true);
+            embed.AddField("Rarity", Rarity.FirstCharUpper(), true);
+
+            var width = Grid.Width;
+            var height = Grid.Height;
+            embed.AddField("Size", $"{width}x{height} ({width * height})", true);
+
+            embed.AddField("Base Price", $"{Price:#,##0} ₽", true);
+
+            embed.WithFooter($"Updated {Modified.Humanize()}");
+
+            return embed;
+        }
     }
 }
