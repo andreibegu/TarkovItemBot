@@ -56,7 +56,7 @@ namespace TarkovItemBot.Modules
             var height = item.Grid.Height;
             embed.AddField("Size", $"{width}x{height} ({width * height})", true);
 
-            embed.AddField("Base Price", $"{item.Price} ₽");
+            embed.AddField("Base Price", $"{item.Price.ToMetric()} ₽");
 
             embed.WithFooter($"Updated {item.Modified.Humanize()}");
 
