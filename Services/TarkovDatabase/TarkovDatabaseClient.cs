@@ -59,7 +59,7 @@ namespace TarkovItemBot.Services
             return items;
         }
         
-        private record LocationResponse(int total, List<Location> Items);
+        private record LocationResponse(int Total, List<Location> Items);
 
         public async Task<List<Location>> GetLocationsAsync(string text = null, int limit = 15)
         {
