@@ -1,9 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services
 {
-    public record ItemsInfo(int Total, int Modified, Dictionary<ItemKind, KindInfo> Kinds);
+    public class ItemsInfo
+    {
+        public int Total { get; set; }
+        [JsonConverter(typeof(UnixDateTimeConverter))]
+        public DateTime Modified { get; set; }
+        public Dictionary<ItemKind, KindInfo> Kinds { get; set; }
+    }
 
-    public record KindInfo(int Count, int Modified);
-
+    public class KindInfo
+    {
+        public int Count { get; set; }
+        [JsonConverter(typeof(UnixDateTimeConverter))]
+        public DateTime Modified { get; set; }
+    }
 }

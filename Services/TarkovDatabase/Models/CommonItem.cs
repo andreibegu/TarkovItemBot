@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services
@@ -17,7 +18,8 @@ namespace TarkovItemBot.Services
         public string Rarity { get; set; }
         public Grid Grid { get; set; }
         [JsonPropertyName("_modified")]
-        public int Modified { get; set; }
+        [JsonConverter(typeof(UnixDateTimeConverter))]
+        public DateTime Modified { get; set; }
         [JsonPropertyName("_kind")]
         public ItemKind Kind { get; set; }
         [JsonIgnore]

@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Web;
 using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
@@ -56,6 +57,19 @@ namespace TarkovItemBot.Services
             }
 
             return items;
+        }
+        
+        private record LocationResponse(int total, List<Location> Items);
+
+        public async Task<List<Location>> GetLocationsAsync(string text = null, int limit = 15)
+        {
+            var query = new Dictionary<string, object>();
+
+            if (text != null) query["text"] = text;
+            query["limit"] = limit;
+
+            var response = await _httpClient.GetFromJsonAsync<LocationResponse>("location" + query.AsQueryString());
+            return response.Items;
         }
     }
 }
