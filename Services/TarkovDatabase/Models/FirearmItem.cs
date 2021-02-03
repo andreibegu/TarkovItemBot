@@ -5,7 +5,6 @@ using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services
 {
-    [Kind(ItemKind.Firearm)]
     public class FirearmItem : CommonItem
     {
         public string Type { get; set; }

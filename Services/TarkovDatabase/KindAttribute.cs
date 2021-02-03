@@ -2,13 +2,13 @@
 
 namespace TarkovItemBot.Services
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class KindAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Field)]
+    public class KindTypeAttribute : Attribute
     {
-        public ItemKind Kind;
-        public KindAttribute(ItemKind kind)
+        public Type KindType;
+        public KindTypeAttribute(Type kindType)
         {
-            Kind = kind;
+            KindType = kindType;
         }
     }
 }

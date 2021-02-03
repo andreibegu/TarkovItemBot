@@ -5,7 +5,6 @@ using System.Text;
 
 namespace TarkovItemBot.Services
 {
-    [Kind(ItemKind.Backpack)]
     public class BackpackItem : CommonItem
     {
         public List<ContainerGrid> Grids { get; set; }

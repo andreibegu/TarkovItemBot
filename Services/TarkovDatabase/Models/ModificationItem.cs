@@ -3,10 +3,10 @@ using Humanizer;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
+using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
-    [Kind(ItemKind.Modification)]
     public class ModificationItem : CommonItem
     {
         [JsonPropertyName("ergonomicsFP")]
@@ -28,19 +28,12 @@ namespace TarkovItemBot.Services
             if (Accuracy != 0) builder.AddField("Accuracy", Accuracy.ToString("+0.00;-#.00"), true);
             if (Recoil != 0) builder.AddField("Recoil", Recoil.ToString("+0.00;-#.00"), true);
 
-            var stringBuilder = new StringBuilder();
-
-            if (GridModifier.Height != 0) stringBuilder.AppendLine($"`{GridModifier.Height:+0;-#}` height");
-            if (GridModifier.Width != 0) stringBuilder.AppendLine($"`{GridModifier.Height:+0;-#}` width");
-
-            var grid = stringBuilder.ToString();
-            if (!string.IsNullOrWhiteSpace(grid)) builder.AddField("Grid", grid, true);
+            builder.AddGridModifier(GridModifier);
 
             return builder;
         }
     }
 
-    [Kind(ItemKind.ModificationBarrel)]
     public class BarrelItem : ModificationItem
     {
         public float Length { get; set; }
@@ -60,17 +53,14 @@ namespace TarkovItemBot.Services
         }
     }
 
-    [Kind(ItemKind.ModificationBipod)]
     public class BipodItem : ModificationItem
     {
     }
 
-    [Kind(ItemKind.ModificationCharge)]
     public class ChargeItem : ModificationItem
     {
     }
 
-    [Kind(ItemKind.ModificationDevice)]
     public class DeviceItem : ModificationItem
     {
         public string Type { get; set; }
@@ -87,22 +77,18 @@ namespace TarkovItemBot.Services
         }
     }
 
-    [Kind(ItemKind.ModificationForegrip)]
     public class ForegripItem : ModificationItem
     {
     }
 
-    [Kind(ItemKind.ModificationGasblock)]
     public class GasblockItem : ModificationItem
     {
     }
 
-    [Kind(ItemKind.ModificationHandguard)]
     public class HandguardItem : ModificationItem
     {
     }
 
-    [Kind(ItemKind.ModificationLauncher)]
     public class LauncherItem : ModificationItem
     {
         public string Caliber { get; set; }
@@ -111,12 +97,10 @@ namespace TarkovItemBot.Services
             => base.ToEmbedBuilder().AddField("Caliber", Caliber, true);
     }
 
-    [Kind(ItemKind.ModificationMount)]
     public class MountItem : ModificationItem
     {
     }
 
-    [Kind(ItemKind.ModificationMuzzle)]
     public class MuzzleItem : ModificationItem
     {
         public string Type { get; set; }
@@ -136,12 +120,10 @@ namespace TarkovItemBot.Services
         }
     }
 
-    [Kind(ItemKind.ModificationPistolgrip)]
     public class PistolgripItem : ModificationItem
     {
     }
 
-    [Kind(ItemKind.ModificationReceiver)]
     public class ReceiverItem : ModificationItem
     {
         public float Velocity { get; set; }
@@ -156,7 +138,6 @@ namespace TarkovItemBot.Services
         }
     }
 
-    [Kind(ItemKind.ModificationSight)]
     public class SightItem : ModificationItem
     {
         public string Type { get; set; }
@@ -177,7 +158,6 @@ namespace TarkovItemBot.Services
         }
     }
 
-    [Kind(ItemKind.ModificationSightSpecial)]
     public class SightSpecialItem : SightItem
     {
         public List<string> Modes { get; set; }
@@ -185,7 +165,6 @@ namespace TarkovItemBot.Services
         public string Noise { get; set; }
     }
 
-    [Kind(ItemKind.ModificationStock)]
     public class StockItem : ModificationItem
     {
         public bool FoldRetractable { get; set; }
@@ -194,7 +173,6 @@ namespace TarkovItemBot.Services
             => base.ToEmbedBuilder().AddField("Foldable", FoldRetractable ? "Yes" : "No", true);
     }
 
-    [Kind(ItemKind.ModificationGoggles)]
     public class GogglesItem : ModificationItem
     {
         public string Type { get; set; }

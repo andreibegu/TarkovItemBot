@@ -41,7 +41,13 @@ namespace TarkovItemBot.Modules
         {
             var searchResult = (await _tarkovSearch.SearchAsync(search, 1)).FirstOrDefault();
 
-            var item = await _tarkov.GetItemAsync<CommonItem>(searchResult.Id);
+            if (searchResult == null)
+            {
+                await Context.Message.ReplyAsync($"Item `{Format.Sanitize(search)}` not found!");
+                return;
+            }
+
+            var item = await _tarkov.GetEmbedableItemAsync(searchResult.Id, searchResult.Kind);
 
             await Context.Message.ReplyAsync(embed: item.ToEmbedBuilder().Build());
         }
@@ -72,7 +78,7 @@ namespace TarkovItemBot.Modules
 
             embed.AddField("Players", $"{location.MinPlayers}-{location.MaxPlayers}", true);
             embed.AddField("Timer", $"{location.EscapeTime} min.", true);
-            embed.AddField("Has Insurance", location.Insurance ? "Yes" : "No");
+            embed.AddField("Has Insurance", location.Insurance ? "Yes" : "No", true);
 
             embed.AddField("Exfils", " \u200b", false);
 

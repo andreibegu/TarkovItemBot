@@ -6,40 +6,75 @@ namespace TarkovItemBot.Services
     public enum ItemKind
     {
         None,
+        [KindType(typeof(AmmunitionItem))]
         Ammunition,
+        [KindType(typeof(ArmorItem))]
         Armor,
+        [KindType(typeof(BackpackItem))]
         Backpack,
+        [KindType(typeof(BarterItem))]
         Barter,
+        [KindType(typeof(ClothingItem))]
         Clothing,
+        [KindType(typeof(CommonItem))]
         Common,
+        [KindType(typeof(ContainerItem))]
         Container,
+        [KindType(typeof(FirearmItem))]
         Firearm,
+        [KindType(typeof(FoodItem))]
         Food,
+        [KindType(typeof(GrenadeItem))]
         Grenade,
+        [KindType(typeof(HeadphoneItem))]
         Headphone,
+        [KindType(typeof(KeyItem))]
         Key,
+        [KindType(typeof(MagazineItem))]
         Magazine,
+        [KindType(typeof(MapItem))]
         Map,
+        [KindType(typeof(MedicalItem))]
         Medical,
+        [KindType(typeof(MeleeItem))]
         Melee,
+        [KindType(typeof(ModificationItem))]
         Modification,
+        [KindType(typeof(BarrelItem))]
         ModificationBarrel,
+        [KindType(typeof(BipodItem))]
         ModificationBipod,
+        [KindType(typeof(ChargeItem))]
         ModificationCharge,
+        [KindType(typeof(DeviceItem))]
         ModificationDevice,
+        [KindType(typeof(ForegripItem))]
         ModificationForegrip,
+        [KindType(typeof(GasblockItem))]
         ModificationGasblock,
+        [KindType(typeof(GogglesItem))]
         ModificationGoggles,
+        [KindType(typeof(HandguardItem))]
         ModificationHandguard,
+        [KindType(typeof(LauncherItem))]
         ModificationLauncher,
+        [KindType(typeof(MountItem))]
         ModificationMount,
+        [KindType(typeof(MuzzleItem))]
         ModificationMuzzle,
+        [KindType(typeof(PistolgripItem))]
         ModificationPistolgrip,
+        [KindType(typeof(ReceiverItem))]
         ModificationReceiver,
+        [KindType(typeof(SightItem))]
         ModificationSight,
+        [KindType(typeof(SightSpecialItem))]
         ModificationSightSpecial,
+        [KindType(typeof(StockItem))]
         ModificationStock,
+        [KindType(typeof(MoneyItem))]
         Money,
+        [KindType(typeof(TacticalrigItem))]
         Tacticalrig
     }
 }

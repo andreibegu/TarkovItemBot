@@ -24,7 +24,6 @@ namespace TarkovItemBot
                 })
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddHostedService<CommandHandlingService>();
                     services.AddMemoryCache();
 
                     // Tarkov Database
@@ -42,6 +41,8 @@ namespace TarkovItemBot
                     services.AddTransient<TarkovSearchTokenHandler>();
 
                     services.AddHttpClient<TarkovSearchClient>().AddHttpMessageHandler<TarkovSearchTokenHandler>();
+
+                    services.AddHostedService<CommandHandlingService>();
                 });
             
             await hostBuilder.RunConsoleAsync();

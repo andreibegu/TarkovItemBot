@@ -5,7 +5,6 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
-    [Kind(ItemKind.Armor)]
     public class ArmorItem : CommonItem
     {
         public ArmorType Type { get; set; }

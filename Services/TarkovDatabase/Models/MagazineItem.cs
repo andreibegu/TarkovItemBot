@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
+using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
-    [Kind(ItemKind.Magazine)]
     public class MagazineItem : CommonItem
     {
         public int Capacity { get; set; }
@@ -30,13 +30,7 @@ namespace TarkovItemBot.Services
             if (Modifier.CheckTime != 0) builder.AddField("Check Time", $"{Modifier.CheckTime:+0.00;-#.00}%", true);
             if (Modifier.LoadUnload != 0) builder.AddField("Load/Unload Time", $"{Modifier.LoadUnload:+0.00;-#.00}%", true);
 
-            var stringBuilder = new StringBuilder();
-
-            if (GridModifier.Height != 0) stringBuilder.AppendLine($"`{GridModifier.Height:+0;-#}` height");
-            if (GridModifier.Width != 0) stringBuilder.AppendLine($"`{GridModifier.Height:+0;-#}` width");
-
-            var grid = stringBuilder.ToString();
-            if (!string.IsNullOrWhiteSpace(grid)) builder.AddField("Grid", grid, true);
+            builder.AddGridModifier(GridModifier);
 
             return builder;
         }

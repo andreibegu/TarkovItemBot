@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services
 {
-    [Kind(ItemKind.Grenade)]
     public class GrenadeItem : CommonItem
     {
         public string Type { get; set; }

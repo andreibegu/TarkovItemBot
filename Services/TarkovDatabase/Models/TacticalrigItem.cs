@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace TarkovItemBot.Services
 {
-    [Kind(ItemKind.Tacticalrig)]
     class TacticalrigItem : CommonItem
     {
         public List<ContainerGrid> Grids { get; set; }

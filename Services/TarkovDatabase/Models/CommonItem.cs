@@ -7,8 +7,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
-    [Kind(ItemKind.Common)]
-    public class CommonItem
+    public class CommonItem : IEmbedableItem
     {
         [JsonPropertyName("_id")]
         public string Id { get; set; }

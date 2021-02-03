@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services
 {
-    [Kind(ItemKind.Headphone)]
     public class HeadphoneItem : CommonItem
     {
         [JsonPropertyName("ambientVol")]
