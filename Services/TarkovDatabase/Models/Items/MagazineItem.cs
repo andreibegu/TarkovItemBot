@@ -6,7 +6,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
-    public class MagazineItem : CommonItem
+    public class MagazineItem : BaseItem
     {
         public int Capacity { get; set; }
         public string Caliber { get; set; }

@@ -39,7 +39,7 @@ namespace TarkovItemBot.Services
         public Task<ItemsInfo> GetItemsInfoAsync()
             => _httpClient.GetFromJsonAsync<ItemsInfo>("item");
 
-        public async Task<T> GetItemAsync<T>(string id) where T : CommonItem
+        public async Task<T> GetItemAsync<T>(string id) where T : BaseItem
         {
             var kind = _kindMap.FirstOrDefault(x => x.Value == typeof(T)).Key;
             var response = await _httpClient.GetFromJsonAsync<T>($"item/{kind.ToString().ToCamelCase()}/{id}");
@@ -53,9 +53,9 @@ namespace TarkovItemBot.Services
             return response as IEmbedableItem;
         }
 
-        private record ItemResponse<T>(int Total, List<T> Items) where T : CommonItem;
+        private record ItemResponse<T>(int Total, List<T> Items) where T : BaseItem;
 
-        public async Task<List<T>> GetItemsAsync<T>() where T : CommonItem
+        public async Task<List<T>> GetItemsAsync<T>() where T : BaseItem
         {
             var kind = _kindMap.FirstOrDefault(x => x.Value == typeof(T)).Key;
 

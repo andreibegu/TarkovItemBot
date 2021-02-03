@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TarkovItemBot.Services
 {
-    public class ClothingItem : CommonItem
+    public class ClothingItem : BaseItem
     {
         public List<string> Blocking { get; set; }
         public Penalties Penalties { get; set; }

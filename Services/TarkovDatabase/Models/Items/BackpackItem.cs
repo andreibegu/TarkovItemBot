@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TarkovItemBot.Services
 {
-    public class BackpackItem : CommonItem
+    public class BackpackItem : BaseItem
     {
         public List<ContainerGrid> Grids { get; set; }
         public Penalties Penalties { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace TarkovItemBot.Services
 {
-    public class MapItem : CommonItem
+    public class MapItem : BaseItem
     {
     }
 }

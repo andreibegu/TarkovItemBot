@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services
 {
-    public class GrenadeItem : CommonItem
+    public class GrenadeItem : BaseItem
     {
         public string Type { get; set; }
         public float Delay { get; set; }

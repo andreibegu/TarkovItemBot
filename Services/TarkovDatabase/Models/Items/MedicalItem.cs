@@ -5,7 +5,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
-    public class MedicalItem : CommonItem
+    public class MedicalItem : BaseItem
     {
         public string Type { get; set; }
         public int Resources { get; set; }

@@ -5,7 +5,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
-    public class AmmunitionItem : CommonItem
+    public class AmmunitionItem : BaseItem
     {
         public string Caliber { get; set; }
         public string Type { get; set; }

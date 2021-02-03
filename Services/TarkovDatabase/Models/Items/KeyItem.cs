@@ -3,7 +3,7 @@ using Humanizer;
 
 namespace TarkovItemBot.Services
 {
-    public class KeyItem : CommonItem
+    public class KeyItem : BaseItem
     {
         public string Location { get; set; }
 
