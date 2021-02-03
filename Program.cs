@@ -25,14 +25,23 @@ namespace TarkovItemBot
                 .ConfigureServices((context, services) =>
                 {
                     services.AddHostedService<CommandHandlingService>();
+                    services.AddMemoryCache();
 
+                    // Tarkov Database
                     services.AddHttpClient<TarkovDatabaseAuthClient>();
                     
-                    services.AddMemoryCache();
                     services.AddScoped<TarkovDatabaseTokenCache>();
-
                     services.AddTransient<TarkovDatabaseTokenHandler>();
+
                     services.AddHttpClient<TarkovDatabaseClient>().AddHttpMessageHandler<TarkovDatabaseTokenHandler>();
+
+                    // Tarkov Database Search
+                    services.AddHttpClient<TarkovSearchAuthClient>();
+
+                    services.AddScoped<TarkovSearchTokenCache>();
+                    services.AddTransient<TarkovSearchTokenHandler>();
+
+                    services.AddHttpClient<TarkovSearchClient>().AddHttpMessageHandler<TarkovSearchTokenHandler>();
                 });
             
             await hostBuilder.RunConsoleAsync();

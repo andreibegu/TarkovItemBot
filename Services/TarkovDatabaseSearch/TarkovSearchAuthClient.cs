@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace TarkovItemBot.Services
 {
-    public class TarkovDatabaseAuthClient
+    public class TarkovSearchAuthClient
     {
-        private record TokenResponse(string Token);
+        private record TokenResponse(string Token, int Expires);
 
         private readonly HttpClient _httpClient;
 
-        public TarkovDatabaseAuthClient(HttpClient httpClient, IConfiguration config)
+        public TarkovSearchAuthClient(HttpClient httpClient, IConfiguration config)
         {
-            httpClient.BaseAddress = new Uri(config["TarkovDatabase:BaseUri"]);
+            httpClient.BaseAddress = new Uri(config["TarkovDatabase:SearchBaseUri"]);
             httpClient.DefaultRequestHeaders.Add("User-Agent",
                 $"TarkovItemBot/{Assembly.GetEntryAssembly().GetName().Version}");
             httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", config["TarkovDatabase:Token"]);
+                new AuthenticationHeaderValue("Bearer", config["TarkovDatabase:SearchToken"]);
 
             _httpClient = httpClient;
         }

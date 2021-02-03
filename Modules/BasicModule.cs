@@ -13,10 +13,12 @@ namespace TarkovItemBot.Modules
     public class BasicModule : ModuleBase<SocketCommandContext>
     {
         private readonly TarkovDatabaseClient _tarkov;
+        private readonly TarkovSearchClient _tarkovSearch;
 
-        public BasicModule(TarkovDatabaseClient tarkov)
+        public BasicModule(TarkovDatabaseClient tarkov, TarkovSearchClient tarkovSearch)
         {
             _tarkov = tarkov;
+            _tarkovSearch = tarkovSearch;
         }
 
         [Command("ping")]
@@ -35,10 +37,11 @@ namespace TarkovItemBot.Modules
         }
 
         [Command("item")]
-        public async Task ItemAsync(string id)
+        public async Task ItemAsync([Remainder] string search)
         {
-            // TODO: search and decide kind auto
-            var item = await _tarkov.GetItemAsync<CommonItem>(id);
+            var searchResult = (await _tarkovSearch.SearchAsync(search, 1)).FirstOrDefault();
+
+            var item = await _tarkov.GetItemAsync<CommonItem>(searchResult.Id);
 
             await Context.Message.ReplyAsync(embed: item.ToEmbedBuilder().Build());
         }

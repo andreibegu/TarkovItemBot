@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 
 namespace TarkovItemBot.Helpers
 {
@@ -10,7 +11,7 @@ namespace TarkovItemBot.Helpers
             if (dictionary.Count == 0)
                 return "";
             else
-                return $"?{string.Join("&", dictionary.Select(x => $"{x.Key}={x.Value}"))}";
+                return $"?{string.Join("&", dictionary.Select(x => $"{HttpUtility.UrlEncode(x.Key.ToString())}={HttpUtility.UrlEncode(x.Value.ToString())}"))}";
         }
     }
 }
