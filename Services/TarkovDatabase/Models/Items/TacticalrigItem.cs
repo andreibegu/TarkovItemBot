@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Humanizer;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TarkovItemBot.Services
 {
@@ -25,7 +26,8 @@ namespace TarkovItemBot.Services
             if (Penalties.Speed != 0) builder.AddField("Speed Penalty", $"{Penalties.Speed}%", true);
             if (Penalties.Mouse != 0) builder.AddField("Turning Penalty", $"{Penalties.Mouse}%", true);
 
-            builder.AddField("Grids", Grids.Humanize(x => $"{x.Height}x{x.Width} ({x.Height * x.Width})"), true);
+            builder.AddField("Grids", $"`{Grids.Count}` {"grid".ToQuantity(Grids.Count, ShowQuantityAs.None)}," +
+                $"`{Grids.Sum(x => x.Width * x.Height)}` slots total", true);
 
             return builder;
         }

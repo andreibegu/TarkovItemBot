@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Humanizer;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace TarkovItemBot.Services
@@ -14,13 +15,14 @@ namespace TarkovItemBot.Services
         {
             var builder = base.ToEmbedBuilder();
 
-            builder.AddField("Grids", Grids.Humanize(x => $"{x.Height}x{x.Width} ({x.Height * x.Width})"), true);
+            builder.AddField("Grids", $"`{Grids.Count}` {"grid".ToQuantity(Grids.Count, ShowQuantityAs.None)}," +
+                $"`{Grids.Sum(x => x.Width * x.Height)}` slots total", true);
 
             if (Penalties.Speed != 0) builder.AddField("Speed Penalty", $"{Penalties.Speed}%", true);
             if (Penalties.Mouse != 0) builder.AddField("Turning Penalty", $"{Penalties.Mouse}%", true);
             if (Penalties.Deafness != Deafness.None) builder.AddField("Deafness", Penalties.Deafness.Humanize(), true);
 
             return builder;
-        }
+        }   
     }
 }
