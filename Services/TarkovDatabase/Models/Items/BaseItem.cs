@@ -25,7 +25,7 @@ namespace TarkovItemBot.Services
         [JsonPropertyName("_kind")]
         public ItemKind Kind { get; set; }
         [JsonIgnore]
-        public string IconUrl => $"https://raw.githubusercontent.com/RatScanner/EfTIcons/master/uid/{Id}.png";
+        public string IconUrl => $"https://static.tarkov-database.com/image/icon/1-1/{Id}.png";
 
         public virtual EmbedBuilder ToEmbedBuilder()
         {
