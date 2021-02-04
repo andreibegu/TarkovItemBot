@@ -151,7 +151,7 @@ namespace TarkovItemBot.Services
 
             builder.AddField("Type", Type.Transform(To.TitleCase), true);
             builder.AddField("Variable Zoom", VariableZoom ? "Yes" : "No", true);
-            builder.AddField("Magnification(s)", Magnification.Humanize(), true);
+            builder.AddField("Magnification", Magnification.Humanize(), true);
             builder.AddField("Zero Distances", ZeroDistances.Humanize(x => $"{x} m."), true);
 
             return builder;
