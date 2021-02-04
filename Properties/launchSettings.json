@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TarkovItemBot": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

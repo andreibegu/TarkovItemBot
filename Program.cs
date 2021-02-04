@@ -17,7 +17,7 @@ namespace TarkovItemBot
             var hostBuilder = Host.CreateDefaultBuilder()
                 .ConfigureAppConfiguration((context, config) =>
                 {
-                    // config.AddEnvironmentVariables("TarkovItemBot_");
+                    config.AddEnvironmentVariables("TarkovItemBot_");
                 })
                 .ConfigureDiscordHost<DiscordSocketClient>((context, config) =>
                 {
