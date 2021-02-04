@@ -1,5 +1,4 @@
-﻿using Discord.Addons.Hosting;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using TarkovItemBot.Helpers;
 
@@ -63,10 +61,10 @@ namespace TarkovItemBot.Services
             var total = index.Kinds[kind].Count;
 
             int limit = 100;
-            var pages = total%limit == 0 ? total/limit : total/limit + 1;
+            var pages = total % limit == 0 ? total / limit : total / limit + 1;
 
             var items = new List<T>();
-            for(int i = 0; i < pages; i++)
+            for (int i = 0; i < pages; i++)
             {
                 var offset = limit * i;
 
@@ -77,7 +75,7 @@ namespace TarkovItemBot.Services
 
             return items;
         }
-        
+
         private record LocationResponse(int Total, List<Location> Items);
 
         public async Task<List<Location>> GetLocationsAsync(string text = null, int limit = 15)

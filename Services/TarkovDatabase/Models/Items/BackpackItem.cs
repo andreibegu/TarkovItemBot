@@ -2,7 +2,6 @@
 using Humanizer;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace TarkovItemBot.Services
 {
@@ -23,6 +22,6 @@ namespace TarkovItemBot.Services
             if (Penalties.Deafness != Deafness.None) builder.AddField("Deafness", Penalties.Deafness.Humanize(), true);
 
             return builder;
-        }   
+        }
     }
 }

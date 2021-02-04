@@ -29,7 +29,7 @@ namespace TarkovItemBot.Services
         }
         public override async Task InitializeAsync(CancellationToken cancellationToken)
         {
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(),_services);
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
         }
 
         private async Task MessageReceivedAsync(SocketMessage rawMessage)

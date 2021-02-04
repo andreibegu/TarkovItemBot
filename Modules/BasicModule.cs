@@ -1,7 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Humanizer;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace TarkovItemBot.Modules

@@ -1,5 +1,5 @@
-﻿using StandardColor = System.Drawing.Color;
-using DiscordColor = Discord.Color;
+﻿using DiscordColor = Discord.Color;
+using StandardColor = System.Drawing.Color;
 
 namespace TarkovItemBot.Services
 {

@@ -3,7 +3,6 @@ using Discord;
 using Humanizer;
 using System;
 using System.Text.Json.Serialization;
-using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {

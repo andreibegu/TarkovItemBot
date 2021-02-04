@@ -1,7 +1,6 @@
 ﻿using Discord;
 using Humanizer;
 using System.Text.Json.Serialization;
-using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
@@ -30,7 +29,7 @@ namespace TarkovItemBot.Services
 
             builder.AddField("Caliber", Caliber, true);
             builder.AddField("Type", Type.Transform(To.TitleCase), true);
-            builder.AddField("Tracer", Tracer ? TracerColor.Replace("tracer" ,"") : "No", true);
+            builder.AddField("Tracer", Tracer ? TracerColor.Replace("tracer", "") : "No", true);
             builder.AddField("Subsonic", Subsonic ? "Yes" : "No", true);
             builder.AddField("Damage", $"{Damage} ({ArmorDamage} to armor)", true);
             builder.AddField("Penetration", Penetration, true);

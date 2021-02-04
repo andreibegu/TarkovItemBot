@@ -1,7 +1,4 @@
-﻿using Discord;
-using Humanizer;
-
-namespace TarkovItemBot.Services
+﻿namespace TarkovItemBot.Services
 {
     public class KeyItem : BaseItem
     {

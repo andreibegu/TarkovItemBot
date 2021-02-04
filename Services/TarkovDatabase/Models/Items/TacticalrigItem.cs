@@ -15,7 +15,7 @@ namespace TarkovItemBot.Services
         {
             var builder = base.ToEmbedBuilder();
 
-            if(Armor != null)
+            if (Armor != null)
             {
                 builder.AddField("Class", Armor.Class, true);
                 builder.AddField("Durability", Armor.Durability, true);

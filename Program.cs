@@ -28,7 +28,7 @@ namespace TarkovItemBot
 
                     // Tarkov Database
                     services.AddHttpClient<TarkovDatabaseAuthClient>();
-                    
+
                     services.AddScoped<TarkovDatabaseTokenCache>();
                     services.AddTransient<TarkovDatabaseTokenHandler>();
 
@@ -44,7 +44,7 @@ namespace TarkovItemBot
 
                     services.AddHostedService<CommandHandlingService>();
                 });
-            
+
             await hostBuilder.RunConsoleAsync();
         }
     }
