@@ -3,10 +3,12 @@ using Discord.Addons.Hosting;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using TarkovItemBot.Options;
 
 namespace TarkovItemBot.Services
 {
@@ -15,13 +17,13 @@ namespace TarkovItemBot.Services
         private readonly CommandService _commands;
         private readonly DiscordSocketClient _discord;
         private readonly IServiceProvider _services;
-        private readonly IConfiguration _config;
+        private readonly BotOptions _config;
 
-        public CommandHandlingService(IServiceProvider services, DiscordSocketClient client, CommandService commandService, IConfiguration config)
+        public CommandHandlingService(IServiceProvider services, DiscordSocketClient client, CommandService commandService, IOptions<BotOptions> config)
         {
             _commands = commandService;
             _discord = client;
-            _config = config;
+            _config = config.Value;
             _services = services;
 
             _discord.MessageReceived += MessageReceivedAsync;
@@ -34,11 +36,11 @@ namespace TarkovItemBot.Services
 
         private async Task MessageReceivedAsync(SocketMessage rawMessage)
         {
-            if (!(rawMessage is SocketUserMessage message)) return;
+            if (rawMessage is not SocketUserMessage message) return;
             if (message.Source != MessageSource.User) return;
 
             var argPos = 0;
-            if (!message.HasStringPrefix(_config["prefix"], ref argPos) && !message.HasMentionPrefix(_discord.CurrentUser, ref argPos)) return;
+            if (!message.HasStringPrefix(_config.Prefix, ref argPos) && !message.HasMentionPrefix(_discord.CurrentUser, ref argPos)) return;
 
             var context = new SocketCommandContext(_discord, message);
             await _commands.ExecuteAsync(context, argPos, _services);

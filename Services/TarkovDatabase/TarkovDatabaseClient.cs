@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Net.Http.Json;
 using System.Reflection;
 using System.Threading.Tasks;
 using TarkovItemBot.Helpers;
+using TarkovItemBot.Options;
 
 namespace TarkovItemBot.Services
 {
@@ -15,11 +17,11 @@ namespace TarkovItemBot.Services
     {
         private readonly ConcurrentDictionary<ItemKind, Type> _kindMap = new ConcurrentDictionary<ItemKind, Type>();
         private readonly HttpClient _httpClient;
-        public TarkovDatabaseClient(HttpClient httpClient, IConfiguration config)
+        public TarkovDatabaseClient(HttpClient httpClient, IOptions<TarkovDatabaseOptions> config)
         {
             BuildKindMap();
 
-            httpClient.BaseAddress = new Uri(config["TarkovDatabase:BaseUri"]);
+            httpClient.BaseAddress = new Uri(config.Value.BaseUri);
             httpClient.DefaultRequestHeaders.Add("User-Agent",
                 $"TarkovItemBot/{Assembly.GetEntryAssembly().GetName().Version}");
 

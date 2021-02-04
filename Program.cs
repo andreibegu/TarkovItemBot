@@ -1,9 +1,11 @@
 ﻿using Discord.Addons.Hosting;
 using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
+using TarkovItemBot.Options;
 using TarkovItemBot.Services;
 
 namespace TarkovItemBot
@@ -13,9 +15,13 @@ namespace TarkovItemBot
         static async Task Main()
         {
             var hostBuilder = Host.CreateDefaultBuilder()
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    // config.AddEnvironmentVariables("TarkovItemBot_");
+                })
                 .ConfigureDiscordHost<DiscordSocketClient>((context, config) =>
                 {
-                    config.Token = context.Configuration["token"];
+                    config.Token = context.Configuration["Bot:Token"];
                 })
                 .UseCommandService((context, config) =>
                 {
@@ -24,6 +30,10 @@ namespace TarkovItemBot
                 })
                 .ConfigureServices((context, services) =>
                 {
+                    //Config
+                    services.Configure<BotOptions>(context.Configuration.GetSection("Bot"));
+                    services.Configure<TarkovDatabaseOptions>(context.Configuration.GetSection("TarkovDatabase"));
+
                     services.AddMemoryCache();
 
                     // Tarkov Database
