@@ -44,11 +44,14 @@ namespace TarkovItemBot.Modules
             embed.AddField("Timer", $"{location.EscapeTime} min.", true);
             embed.AddField("Has Insurance", location.Insurance ? "Yes" : "No", true);
 
-            embed.AddField("Exfils", " \u200b", false);
-
-            foreach (var exit in location.Exits)
+            if(location.Exits != null)
             {
-                embed.AddField(exit.Name, $"`{exit.Chance}%` chance / `{exit.ExfilTime}` sec. timer", true);
+                embed.AddField("Exfils", " \u200b", false);
+
+                foreach (var exit in location.Exits)
+                {
+                    embed.AddField(exit.Name, $"`{exit.Chance}%` chance / `{exit.ExfilTime}` sec. timer", true);
+                }
             }
 
             embed.WithFooter($"Updated {location.Modified.Humanize()}");
