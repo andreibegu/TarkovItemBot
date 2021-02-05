@@ -14,4 +14,6 @@ RUN apk add --no-cache libstdc++ libintl krb5-libs
 
 COPY --from=build /app/publish /app
 
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+
 CMD ["/app/TarkovItemBot"]
