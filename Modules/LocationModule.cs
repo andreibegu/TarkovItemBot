@@ -7,6 +7,7 @@ using TarkovItemBot.Services;
 
 namespace TarkovItemBot.Modules
 {
+    [Name("Location")]
     public class LocationModule : ModuleBase<SocketCommandContext>
     {
         private readonly TarkovDatabaseClient _tarkov;

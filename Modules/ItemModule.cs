@@ -7,6 +7,7 @@ using TarkovItemBot.Services;
 
 namespace TarkovItemBot.Modules
 {
+    [Name("Item")]
     public class ItemModule : ModuleBase<SocketCommandContext>
     {
         private readonly TarkovDatabaseClient _tarkov;
@@ -30,15 +31,15 @@ namespace TarkovItemBot.Modules
         }
 
         [Command("item")]
-        public async Task ItemAsync([Remainder] string search)
+        public async Task ItemAsync([Remainder] string query)
         {
-            if (search.Length < 3)
+            if (query.Length < 3)
             {
                 await Context.Message.ReplyAsync($"Query must be of 3 or more characters!");
                 return;
             }
 
-            var result = (await _tarkovSearch.SearchAsync(search, 1)).FirstOrDefault();
+            var result = (await _tarkovSearch.SearchAsync(query, 1)).FirstOrDefault();
 
             if (result == null)
             {
