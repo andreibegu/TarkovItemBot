@@ -44,7 +44,7 @@ namespace TarkovItemBot.Modules
             embed.AddField("Timer", $"{location.EscapeTime} min.", true);
             embed.AddField("Has Insurance", location.Insurance ? "Yes" : "No", true);
 
-            if(location.Exits != null)
+            if (location.Exits != null)
             {
                 embed.AddField("Exfils", " \u200b", false);
 

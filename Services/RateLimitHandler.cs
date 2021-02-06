@@ -24,7 +24,7 @@ namespace TarkovItemBot.Services
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            
+
             await HandleRateLimitAsync(cancellationToken);
 
             var req = await base.SendAsync(request, cancellationToken);
