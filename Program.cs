@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Threading.Tasks;
 using TarkovItemBot.Options;
 using TarkovItemBot.Services;
@@ -43,7 +44,10 @@ namespace TarkovItemBot
                     services.AddScoped<TarkovDatabaseTokenCache>();
                     services.AddTransient<TarkovDatabaseTokenHandler>();
 
-                    services.AddHttpClient<TarkovDatabaseClient>().AddHttpMessageHandler<TarkovDatabaseTokenHandler>();
+
+                    // TODO: Ratelimit from config
+                    services.AddHttpClient<TarkovDatabaseClient>().AddHttpMessageHandler(_ => new RateLimitHandler(350, TimeSpan.FromMinutes(1)))
+                        .AddHttpMessageHandler<TarkovDatabaseTokenHandler>();
 
                     // Tarkov Database Search
                     services.AddHttpClient<TarkovSearchAuthClient>();
@@ -51,7 +55,9 @@ namespace TarkovItemBot
                     services.AddScoped<TarkovSearchTokenCache>();
                     services.AddTransient<TarkovSearchTokenHandler>();
 
-                    services.AddHttpClient<TarkovSearchClient>().AddHttpMessageHandler<TarkovSearchTokenHandler>();
+                    // TODO: Ratelimit from config
+                    services.AddHttpClient<TarkovSearchClient>().AddHttpMessageHandler(_ => new RateLimitHandler(400, TimeSpan.FromMinutes(1)))
+                        .AddHttpMessageHandler<TarkovSearchTokenHandler>();
 
                     services.AddHostedService<CommandHandlingService>();
                 });
