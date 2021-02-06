@@ -47,9 +47,10 @@ namespace TarkovItemBot.Services
 
         private async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
         {
-            if (!command.IsSpecified || result.IsSuccess) return;
+            if (result.IsSuccess) return;
+            if (result.Error == CommandError.UnknownCommand) return;
 
-            await context.Channel.SendMessageAsync($"Error: {result}");
+            await context.Message.ReplyAsync($"An error occured! {result.ErrorReason}", allowedMentions: AllowedMentions.None);
         }
     }
 }
