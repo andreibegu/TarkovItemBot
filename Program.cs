@@ -60,6 +60,7 @@ namespace TarkovItemBot
                         .AddHttpMessageHandler<TarkovSearchTokenHandler>();
 
                     services.AddHostedService<CommandHandlingService>();
+                    services.AddHostedService<PresenceService>();
                 });
 
             await hostBuilder.RunConsoleAsync();
