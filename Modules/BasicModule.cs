@@ -2,6 +2,8 @@
 using Discord.Commands;
 using Humanizer;
 using Microsoft.Extensions.Options;
+using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TarkovItemBot.Options;
@@ -42,6 +44,13 @@ namespace TarkovItemBot.Modules
 
             builder.AddField("Instance Owner", appInfo.Owner.ToString(), true);
 
+            if (appInfo.IsBotPublic) builder.AddField("Invite Link", $"[Invite](https://discord.com/oauth2/authorize?client_id={appInfo.Id}&scope=bot&permissions=0)", true);
+
+            builder.AddField("Guilds", Context.Client.Guilds.Count, true);
+
+            var uptime = (DateTime.Now - Process.GetCurrentProcess().StartTime).Humanize();
+            builder.AddField("Uptime", uptime, true);
+
             await Context.Message.ReplyAsync(embed: builder.Build());
         }
 
@@ -65,7 +74,7 @@ namespace TarkovItemBot.Modules
 
         private string GetCommandUsage(CommandInfo command)
         {
-            var usage = command.Name; 
+            var usage = command.Name;
             if (!command.Parameters.Any()) return usage;
 
             foreach (var parameter in command.Parameters)
