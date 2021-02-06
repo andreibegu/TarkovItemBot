@@ -21,11 +21,11 @@ namespace TarkovItemBot.Helpers
                 {
                     var effect = value as Effect;
 
-                    var change = effect.Value == 0 ? "*Adds* effect" : $"`{effect.Value:+0.00;-#.00}` change";
-                    var action = effect.Removes ? $"*Removes* effect {(effect.Value == 0 ? "" : $"(`{effect.Value}`)")}" : change;
+                    var action = effect.Removes ? $"*Removes* effect" : "*Adds* effect";
+                    var change = effect.Value == 0 ? action : $"`{effect.Value:+0.00;-#.00}` change";
                     var info = !effect.Removes ? $"\n`{effect.Duration}` sec. duration\n `{effect.Delay}` sec. delay" :
                         $"\nUses `{effect.ResourceCosts}` resource";
-                    builder.AddField(property.Name.Transform(To.TitleCase), action + $"\n `{effect.Chance * 100}`% chance{info}", true);
+                    builder.AddField(property.Name.Transform(To.TitleCase), change + $"\n `{effect.Chance * 100}`% chance{info}", true);
                 }
             }
 
