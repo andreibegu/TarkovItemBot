@@ -16,7 +16,7 @@ namespace TarkovItemBot.Services
 
         public RateLimitHandler(int requestLimit, TimeSpan resetDuration)
         {
-            _requestLimit = requestLimit + 1;
+            _requestLimit = requestLimit;
             _resetDuration = resetDuration;
         }
 
@@ -29,10 +29,10 @@ namespace TarkovItemBot.Services
 
             var req = await base.SendAsync(request, cancellationToken);
 
-            if (!req.IsSuccessStatusCode)
+            if (req.IsSuccessStatusCode)
             {
                 await _requestLock.WaitAsync(cancellationToken);
-                _requestCount++;
+                _requestCount--;
                 _requestLock.Release();
             }
 
@@ -48,10 +48,6 @@ namespace TarkovItemBot.Services
                 _requestCount = _requestLimit;
             }
             _timeLock.Release();
-
-            await _requestLock.WaitAsync(cancellationToken);
-            _requestCount--;
-            _requestLock.Release();
 
             if (_requestCount > 0) return;
 
