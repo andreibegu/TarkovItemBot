@@ -1,0 +1,28 @@
+name: Build
+on:
+  release:
+    types: [published]
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: tarkov-item-bot
+    steps:
+
+      - name: Login to Registry
+        run: docker login docker.pkg.github.com -u ${GITHUB_ACTOR} -p ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Build image
+        run: docker build -t docker.pkg.github.com/${GITHUB_REPOSITORY}/${IMAGE_NAME}:${GITHUB_REF#refs/tags/v} .
+
+      - name: Publish image
+        run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/${IMAGE_NAME}
+
+      - name: Logout
+        run: docker logout docker.pkg.github.com
