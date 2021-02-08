@@ -9,24 +9,20 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: tarkov-item-bot
+      IMAGE_TAG: andreibegu/tarkov-item-bot
     steps:
 
       - name: Login to Registry
-        run: docker login docker.pkg.github.com -u ${GITHUB_ACTOR} -p ${{ secrets.GITHUB_TOKEN }}
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Check out
         uses: actions/checkout@v2
 
       - name: Build image
-        run: |
-          export REPOSITORY=$(echo "${GITHUB_REPOSITORY}" | awk '{print tolower($0)}')
-          docker build -t docker.pkg.github.com/${REPOSITORY}/${IMAGE_NAME}:${GITHUB_REF#refs/tags/v} .
+        run: docker build -t ${IMAGE_TAG}:${GITHUB_REF#refs/tags/v} .
 
       - name: Publish image
-        run: |
-          export REPOSITORY=$(echo "${GITHUB_REPOSITORY}" | awk '{print tolower($0)}')
-          docker push docker.pkg.github.com/${REPOSITORY}/${IMAGE_NAME}
+        run: docker push ${IMAGE_TAG}
 
       - name: Logout
-        run: docker logout docker.pkg.github.com
+        run: docker logout 
