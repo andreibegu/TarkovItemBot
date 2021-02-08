@@ -26,7 +26,7 @@ namespace TarkovItemBot.Modules
             var locations = await _tarkov.GetLocationsAsync();
             var names = locations.Select(x => Format.Code(x.Name));
 
-            await Context.Message.ReplyAsync($"All available locations: {string.Join(", ", names)}.");
+            await ReplyAsync($"All available locations: {string.Join(", ", names)}.");
         }
 
         [Command("location")]
@@ -70,9 +70,9 @@ namespace TarkovItemBot.Modules
                 }
             }
 
-            embed.WithFooter($"Updated {location.Modified.Humanize()}");
+            embed.WithFooter($"Modified {location.Modified.Humanize()}");
 
-            await Context.Message.ReplyAsync(embed: embed.Build());
+            await ReplyAsync(embed: embed.Build());
         }
     }
 }
