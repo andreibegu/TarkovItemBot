@@ -84,7 +84,7 @@ namespace TarkovItemBot.Modules
 
             var builder = new EmbedBuilder()
             {
-                Title = item.Name,
+                Title = $"{item.Name} ({item.ShortName})",
                 Color = item.Grid.Color,
                 ThumbnailUrl = item.IconUrl,
                 Description = item.Description
