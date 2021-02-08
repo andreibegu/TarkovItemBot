@@ -33,9 +33,9 @@ namespace TarkovItemBot.Modules
         [Command("item")]
         public async Task ItemAsync([Remainder] string query)
         {
-            if (query.Length < 3)
+            if (query.Length < 3 || query.Length > 50)
             {
-                await Context.Message.ReplyAsync($"Query must be of 3 or more characters!");
+                await Context.Message.ReplyAsync($"Query must be 3-50 characters long!");
                 return;
             }
 
