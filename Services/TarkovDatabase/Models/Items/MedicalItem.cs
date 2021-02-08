@@ -17,7 +17,7 @@ namespace TarkovItemBot.Services
             var builder = base.ToEmbedBuilder();
 
             builder.AddField("Type", Type.Transform(To.TitleCase), true);
-            builder.AddField("Resources", ResourceRate == 0 ? Resources : $"{Resources} / {ResourceRate}", true);
+            if (Resources != 0) builder.AddField("Resources", ResourceRate == 0 ? Resources : $"{Resources} / {ResourceRate}", true);
             builder.AddField("Use time", $"{UseTime} sec.", true);
 
             builder.AddEffects(Effects);
