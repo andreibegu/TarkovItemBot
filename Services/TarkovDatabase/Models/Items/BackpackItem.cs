@@ -2,6 +2,7 @@
 using Humanizer;
 using System.Collections.Generic;
 using System.Linq;
+using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
@@ -18,8 +19,7 @@ namespace TarkovItemBot.Services
             if (Penalties.Mouse != 0) builder.AddField("Turning Penalty", $"{Penalties.Mouse}%", true);
             if (Penalties.Deafness != Deafness.None) builder.AddField("Deafness", Penalties.Deafness.Humanize(), true);
 
-            builder.AddField("Grids", $"`{Grids.Count}` {"grid".ToQuantity(Grids.Count, ShowQuantityAs.None)}, " +
-                $"`{Grids.Sum(x => x.Width * x.Height)}` slots total", true);
+            builder.AddGrids(Grids);
 
             return builder;
         }

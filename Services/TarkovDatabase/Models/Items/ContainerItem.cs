@@ -2,6 +2,7 @@
 using Humanizer;
 using System.Collections.Generic;
 using System.Linq;
+using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
@@ -13,8 +14,7 @@ namespace TarkovItemBot.Services
         {
             var builder = base.ToEmbedBuilder();
 
-            builder.AddField("Grids", $"`{Grids.Count}` {"grid".ToQuantity(Grids.Count, ShowQuantityAs.None)}, " +
-                $"`{Grids.Sum(x => x.Width * x.Height)}` slots total", true);
+            builder.AddGrids(Grids);
 
             return builder;
         }

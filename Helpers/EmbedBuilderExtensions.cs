@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Humanizer;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TarkovItemBot.Services;
@@ -57,6 +58,12 @@ namespace TarkovItemBot.Helpers
             builder.AddField("Durability", armor.Durability, true);
             builder.AddField("Zones", armor.Zones.Humanize(x => x.Transform(To.TitleCase)), true);
             builder.AddField("Material", armor.Material.Name.Transform(To.TitleCase), true);
+        }
+
+        public static void AddGrids(this EmbedBuilder builder, List<ContainerGrid> grids)
+        {
+            builder.AddField("Grids", $"{grids.Count} {"grid".ToQuantity(grids.Count, ShowQuantityAs.None)}, " +
+                $"{grids.Sum(x => x.Width * x.Height)} slots total", true);
         }
     }
 }
