@@ -19,7 +19,7 @@ namespace TarkovItemBot.Services
         {
             httpClient.BaseAddress = new Uri(config.Value.SearchBaseUri);
             httpClient.DefaultRequestHeaders.Add("User-Agent",
-                $"TarkovItemBot/{Assembly.GetEntryAssembly().GetName().Version}");
+                $"TarkovItemBot/{Assembly.GetEntryAssembly().GetName().Version.ToString(3)}");
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", config.Value.SearchToken);
 
