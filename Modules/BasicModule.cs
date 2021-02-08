@@ -44,7 +44,7 @@ namespace TarkovItemBot.Modules
 
             builder.AddField("Instance Owner", appInfo.Owner.ToString(), true);
 
-            if (appInfo.IsBotPublic) builder.AddField("Invite Link", $"[Invite](https://discord.com/oauth2/authorize?client_id={appInfo.Id}&scope=bot&permissions=0)", true);
+            if (appInfo.IsBotPublic) builder.AddField("Invite Link", $"[Invite](https://discord.com/oauth2/authorize?client_id={appInfo.Id}&scope=bot&permissions=16384)", true);
 
             builder.AddField("Guilds", Context.Client.Guilds.Count, true);
 
