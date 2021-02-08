@@ -46,7 +46,7 @@ namespace TarkovItemBot.Modules
                 return;
             }
 
-            var result = (await _tarkovSearch.SearchAsync(query, 1)).FirstOrDefault();
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
 
             if (result == null)
             {
@@ -70,7 +70,7 @@ namespace TarkovItemBot.Modules
                 return;
             }
 
-            var result = (await _tarkovSearch.SearchAsync(query, 1)).FirstOrDefault();
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
 
             if (result == null)
             {
