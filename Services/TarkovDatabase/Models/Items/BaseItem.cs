@@ -46,7 +46,7 @@ namespace TarkovItemBot.Services
 
             embed.AddField("Base Price", $"{Price:#,##0} ₽", true);
 
-            embed.WithFooter($"{Kind.Humanize()} • Updated {Modified.Humanize()}");
+            embed.WithFooter($"{Kind.Humanize()} • Modified {Modified.Humanize()}");
 
             return embed;
         }
