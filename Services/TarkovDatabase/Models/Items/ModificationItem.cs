@@ -92,8 +92,8 @@ namespace TarkovItemBot.Services
     {
         public string Caliber { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
-            => base.ToEmbedBuilder().AddField("Caliber", Caliber, true);
+        //public override EmbedBuilder ToEmbedBuilder()
+        //    => base.ToEmbedBuilder().AddField("Caliber", Caliber, true);
     }
 
     public class MountItem : ModificationItem

@@ -23,7 +23,7 @@ namespace TarkovItemBot.Helpers
 
                     var action = effect.Removes ? $"*Removes* effect" : "*Adds* effect";
                     var change = effect.Value == 0 ? action : $"`{effect.Value:+0.00;-#.00}` change";
-                    var info = !effect.Removes ? $"\n`{effect.Duration}` sec. duration\n `{effect.Delay}` sec. delay" :
+                    var info = !effect.Removes ? $"\n`{effect.Duration}` sec. duration\n`{effect.Delay}` sec. delay" :
                         $"\nUses `{effect.ResourceCosts}` resource";
                     builder.AddField(property.Name.Transform(To.TitleCase), change + $"\n `{effect.Chance * 100}`% chance{info}", true);
                 }
@@ -44,8 +44,8 @@ namespace TarkovItemBot.Helpers
         {
             var stringBuilder = new StringBuilder();
 
-            if (modifier.Height != 0) stringBuilder.AppendLine($"`{modifier.Height:+0;-#}` height");
-            if (modifier.Width != 0) stringBuilder.AppendLine($"`{modifier.Width:+0;-#}` width");
+            if (modifier.Height != 0) stringBuilder.AppendLine($"{modifier.Height:+0;-#} height");
+            if (modifier.Width != 0) stringBuilder.AppendLine($"{modifier.Width:+0;-#} width");
 
             var grid = stringBuilder.ToString();
             if (!string.IsNullOrWhiteSpace(grid)) builder.AddField("Grid", grid, true);

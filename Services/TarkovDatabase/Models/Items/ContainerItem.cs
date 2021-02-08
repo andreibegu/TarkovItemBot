@@ -13,7 +13,7 @@ namespace TarkovItemBot.Services
         {
             var builder = base.ToEmbedBuilder();
 
-            builder.AddField("Grids", $"`{Grids.Count}` {"grid".ToQuantity(Grids.Count, ShowQuantityAs.None)}," +
+            builder.AddField("Grids", $"`{Grids.Count}` {"grid".ToQuantity(Grids.Count, ShowQuantityAs.None)}, " +
                 $"`{Grids.Sum(x => x.Width * x.Height)}` slots total", true);
 
             return builder;

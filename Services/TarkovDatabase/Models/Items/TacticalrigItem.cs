@@ -26,7 +26,7 @@ namespace TarkovItemBot.Services
             if (Penalties.Speed != 0) builder.AddField("Speed Penalty", $"{Penalties.Speed}%", true);
             if (Penalties.Mouse != 0) builder.AddField("Turning Penalty", $"{Penalties.Mouse}%", true);
 
-            builder.AddField("Grids", $"`{Grids.Count}` {"grid".ToQuantity(Grids.Count, ShowQuantityAs.None)}," +
+            builder.AddField("Grids", $"`{Grids.Count}` {"grid".ToQuantity(Grids.Count, ShowQuantityAs.None)}, " +
                 $"`{Grids.Sum(x => x.Width * x.Height)}` slots total", true);
 
             return builder;
