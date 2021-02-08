@@ -50,6 +50,7 @@ namespace TarkovItemBot.Modules
             var embed = new EmbedBuilder()
             {
                 Title = location.Name,
+                Color = new Discord.Color(0x968867),
                 Description = location.Description
             };
 

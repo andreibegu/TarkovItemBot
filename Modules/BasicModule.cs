@@ -33,7 +33,7 @@ namespace TarkovItemBot.Modules
             var builder = new EmbedBuilder()
             {
                 Description = "A free and open source Discord bot providing item and location information for the game Escape from Tarkov.",
-                Color = Color.LightGrey
+                Color = new Color(0x968867)
             }.WithAuthor(Context.Client.CurrentUser)
             .WithFooter($"(?) Use {_config.Prefix}help for command info");
 
@@ -60,7 +60,7 @@ namespace TarkovItemBot.Modules
             var builder = new EmbedBuilder()
             {
                 Title = $"{Context.Client.CurrentUser.Username} Help",
-                Color = Color.LightGrey,
+                Color = new Color(0x968867),
                 Description = $"A list of commands available for use. Prefix: `{_config.Prefix}`"
             }.WithFooter($"(?) Use {_config.Prefix}about for more info");
 
