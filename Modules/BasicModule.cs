@@ -67,6 +67,7 @@ namespace TarkovItemBot.Modules
 
             foreach (var module in _commands.Modules.Where(x => x.Parent == null))
             {
+                if (!module.Commands.Any()) continue;
                 builder.AddField($"{module.Name} Commands", module.Commands.Humanize(x => $"`{GetCommandUsage(x)}`"));
             }
 
