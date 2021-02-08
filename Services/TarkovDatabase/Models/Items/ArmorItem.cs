@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Humanizer;
 using System.Collections.Generic;
+using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
@@ -18,11 +19,8 @@ namespace TarkovItemBot.Services
             var builder = base.ToEmbedBuilder();
 
             builder.AddField("Type", Type.Humanize(), true);
-            builder.AddField("Class", Armor.Class, true);
-            builder.AddField("Durability", Armor.Durability, true);
-            builder.AddField("Zones", Armor.Zones.Humanize(x => x.Transform(To.TitleCase)), true);
-            builder.AddField("Material", Armor.Material.Name.Transform(To.TitleCase), true);
-
+            
+            builder.AddArmorProperties(Armor);
 
             if (Blocking.Count != 0) builder.AddField("Blocking", Blocking.Humanize(x => x.Transform(To.TitleCase)), true);
 

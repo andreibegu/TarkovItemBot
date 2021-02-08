@@ -50,5 +50,13 @@ namespace TarkovItemBot.Helpers
             var grid = stringBuilder.ToString();
             if (!string.IsNullOrWhiteSpace(grid)) builder.AddField("Grid", grid, true);
         }
+
+        public static void AddArmorProperties(this EmbedBuilder builder, ArmorProperties armor)
+        {
+            builder.AddField("Class", armor.Class, true);
+            builder.AddField("Durability", armor.Durability, true);
+            builder.AddField("Zones", armor.Zones.Humanize(x => x.Transform(To.TitleCase)), true);
+            builder.AddField("Material", armor.Material.Name.Transform(To.TitleCase), true);
+        }
     }
 }

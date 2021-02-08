@@ -2,6 +2,7 @@
 using Humanizer;
 using System.Collections.Generic;
 using System.Linq;
+using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
@@ -17,10 +18,7 @@ namespace TarkovItemBot.Services
 
             if (Armor != null)
             {
-                builder.AddField("Class", Armor.Class, true);
-                builder.AddField("Durability", Armor.Durability, true);
-                builder.AddField("Zones", Armor.Zones.Humanize(x => x.Transform(To.TitleCase)), true);
-                builder.AddField("Material", Armor.Material.Name.Transform(To.TitleCase), true);
+                builder.AddArmorProperties(Armor);
             }
 
             if (Penalties.Speed != 0) builder.AddField("Speed Penalty", $"{Penalties.Speed}%", true);
