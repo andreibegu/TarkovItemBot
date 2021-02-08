@@ -88,8 +88,12 @@ namespace TarkovItemBot.Modules
                 Color = item.Grid.Color,
                 ThumbnailUrl = item.IconUrl,
                 Description = item.Description
-            }.AddField("Base Price", $"{item.Price:#,##0} ₽", true)
-            .AddField("Tax", $"{tax:#,##0} ₽", true);
+            };
+
+            builder.AddField("Base Price", $"{item.Price:#,##0} ₽", true);
+            builder.AddField("Tax", $"{tax:#,##0} ₽", true);
+
+            builder.WithFooter($"{item.Kind.Humanize()} • Modified {item.Modified.Humanize()}");
 
             await ReplyAsync(embed: builder.Build());
         }
