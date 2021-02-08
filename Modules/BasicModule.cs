@@ -43,7 +43,7 @@ namespace TarkovItemBot.Modules
                 Color = new Color(0x968867)
             };
             
-            builder.WithAuthor($"{Context.Client.CurrentUser.Username} (v{Assembly.GetEntryAssembly().GetName().Version.ToString(3)})",
+            builder.WithAuthor($"{Context.Client.CurrentUser.Username} (v{AssemblyHelper.GetInformationalVersion()})",
                 Context.Client.CurrentUser.GetAvatarUrl());
 
             builder.WithFooter($"(?) Use {_config.Prefix}help for command info");
