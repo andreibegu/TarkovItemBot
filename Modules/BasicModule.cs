@@ -11,7 +11,7 @@ using TarkovItemBot.Options;
 namespace TarkovItemBot.Modules
 {
     [Name("Basic")]
-    public class BasicModule : ModuleBase<SocketCommandContext>
+    public class BasicModule : ItemBotModuleBase
     {
         private readonly CommandService _commands;
         private readonly BotOptions _config;
@@ -24,7 +24,7 @@ namespace TarkovItemBot.Modules
 
         [Command("ping")]
         public Task PingAsync()
-            => Context.Message.ReplyAsync($"Current latency: `{Context.Client.Latency}`");
+            => ReplyAsync($"Current latency: `{Context.Client.Latency}`");
 
         [Command("about")]
         [Alias("info")]
@@ -51,7 +51,7 @@ namespace TarkovItemBot.Modules
             var uptime = (DateTime.Now - Process.GetCurrentProcess().StartTime).Humanize();
             builder.AddField("Uptime", uptime, true);
 
-            await Context.Message.ReplyAsync(embed: builder.Build());
+            await ReplyAsync(embed: builder.Build());
         }
 
         [Command("help")]
@@ -69,7 +69,7 @@ namespace TarkovItemBot.Modules
                 builder.AddField($"{module.Name} Commands", module.Commands.Humanize(x => $"`{GetCommandUsage(x)}`"));
             }
 
-            await Context.Message.ReplyAsync(embed: builder.Build());
+            await ReplyAsync(embed: builder.Build());
         }
 
         private string GetCommandUsage(CommandInfo command)

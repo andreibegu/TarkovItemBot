@@ -9,7 +9,7 @@ using TarkovItemBot.Services;
 namespace TarkovItemBot.Modules
 {
     [Name("Item")]
-    public class ItemModule : ModuleBase<SocketCommandContext>
+    public class ItemModule : ItemBotModuleBase
     {
         private readonly TarkovDatabaseClient _tarkov;
         private readonly TarkovSearchClient _tarkovSearch;
@@ -28,7 +28,7 @@ namespace TarkovItemBot.Modules
             int total = kind == ItemKind.None ? info.Total : info.Kinds[kind].Count;
             var updated = kind == ItemKind.None ? info.Modified : info.Kinds[kind].Modified;
 
-            await Context.Message.ReplyAsync($"Total of items: `{total}` (Updated `{updated.Humanize()}`).");
+            await ReplyAsync($"Total of items: `{total}` (Updated `{updated.Humanize()}`).");
         }
 
         [Command("item")]
@@ -49,7 +49,7 @@ namespace TarkovItemBot.Modules
             }
 
             var item = await _tarkov.GetEmbedableItemAsync(result.Id, result.Kind);
-            await Context.Message.ReplyAsync(embed: item.ToEmbedBuilder().Build());
+            await ReplyAsync(embed: item.ToEmbedBuilder().Build());
         }
 
         [Command("tax")]
@@ -91,7 +91,7 @@ namespace TarkovItemBot.Modules
             }.AddField("Base Price", $"{item.Price:#,##0} ₽", true)
             .AddField("Tax", $"{tax:#,##0} ₽", true);
 
-            await Context.Message.ReplyAsync(embed: builder.Build());
+            await ReplyAsync(embed: builder.Build());
         }
     }
 }
