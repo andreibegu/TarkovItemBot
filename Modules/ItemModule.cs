@@ -21,6 +21,9 @@ namespace TarkovItemBot.Modules
         }
 
         [Command("total")]
+        [Alias("t")]
+        [Summary("Returns the total items of a kind.")]
+        [Remarks("total Ammunition")]
         public async Task TotalAsync(ItemKind kind = ItemKind.None)
         {
             var info = await _tarkov.GetItemsInfoAsync();
@@ -32,6 +35,9 @@ namespace TarkovItemBot.Modules
         }
 
         [Command("item")]
+        [Alias("i", "it")]
+        [Summary("Returns detailed information for the item most closely matching the query.")]
+        [Remarks("item Zagustin")]
         public async Task ItemAsync([Remainder] string query)
         {
             if (query.Length < 3 || query.Length > 50)
@@ -53,6 +59,9 @@ namespace TarkovItemBot.Modules
         }
 
         [Command("tax")]
+        [Alias("commission", "flea", "market")]
+        [Summary("Returns the Flea Market tax for the item most closely matching the query.")]
+        [Remarks("tax 500000 Red Keycard")]
         public async Task TaxAsync(int price, [Remainder] string query)
         {
             if (query.Length < 3 || query.Length > 50)

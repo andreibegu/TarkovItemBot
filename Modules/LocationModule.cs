@@ -20,17 +20,19 @@ namespace TarkovItemBot.Modules
         [Command("locations")]
         [Alias("maps")]
         [Summary("Lists all available locations to be queried for.")]
+        [Remarks("locations")]
         public async Task LocationsAsync()
         {
             var locations = await _tarkov.GetLocationsAsync();
-            var names = locations.Where(x => x.Available).Select(x => Format.Code(x.Name));
+            var names = locations.Select(x => Format.Code(x.Name));
 
             await Context.Message.ReplyAsync($"All available locations: {string.Join(", ", names)}.");
         }
 
         [Command("location")]
-        [Alias("map")]
+        [Alias("map", "m", "l")]
         [Summary("Lists information about a specific location.")]
+        [Remarks("location The Lab")]
         public async Task LocationAsync([Remainder] string query)
         {
             if (query.Length < 3 || query.Length > 50)

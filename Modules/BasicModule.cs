@@ -25,19 +25,28 @@ namespace TarkovItemBot.Modules
         }
 
         [Command("ping")]
+        [Alias("latency", "pong")]
+        [Summary("Returns the bot's latency to the Discord servers.")]
+        [Remarks("ping")]
         public Task PingAsync()
             => ReplyAsync($"Current latency: `{Context.Client.Latency}`");
 
         [Command("about")]
         [Alias("info")]
+        [Summary("Displays general information about the bot.")]
+        [Remarks("about")]
         public async Task AboutAsync()
         {
             var builder = new EmbedBuilder()
             {
                 Description = "A free and open source Discord bot providing item and location information for the game Escape from Tarkov.",
                 Color = new Color(0x968867)
-            }.WithAuthor($"{Context.Client.CurrentUser.Username} ({Assembly.GetEntryAssembly().GetName().Version.ToString(3)})", Context.Client.CurrentUser.GetAvatarUrl())
-            .WithFooter($"(?) Use {_config.Prefix}help for command info");
+            };
+            
+            builder.WithAuthor($"{Context.Client.CurrentUser.Username} (v{Assembly.GetEntryAssembly().GetName().Version.ToString(3)})",
+                Context.Client.CurrentUser.GetAvatarUrl());
+
+            builder.WithFooter($"(?) Use {_config.Prefix}help for command info");
 
             builder.AddField("Data Source", "[Tarkov Database](https://tarkov-database.com/)", true);
             builder.AddField("Source Code", "[Github](https://github.com/Andrewww1/TarkovItemBot)", true);
@@ -57,6 +66,9 @@ namespace TarkovItemBot.Modules
         }
 
         [Command("help")]
+        [Alias("h")]
+        [Summary("Lists all commands available for use.")]
+        [Remarks("help")]
         public async Task HelpAsync()
         {
             var builder = new EmbedBuilder()
@@ -71,6 +83,39 @@ namespace TarkovItemBot.Modules
                 if (!module.Commands.Any()) continue;
                 builder.AddField($"{module.Name} Commands", module.Commands.Humanize(x => $"`{x.GetUsage()}`"));
             }
+
+            await ReplyAsync(embed: builder.Build());
+        }
+
+        [Command("help")]
+        [Alias("h")]
+        [Summary("Returns information about a specific command.")]
+        [Remarks("help item")]
+        public async Task HelpAsync([Remainder] string query)
+        {
+            var result = _commands.Search(query);
+
+            if (!result.IsSuccess)
+            {
+                await ReplyAsync(result.ErrorReason);
+                return;
+            }
+
+            var commandResult = result.Commands.FirstOrDefault();
+            var command = commandResult.Command;
+
+            var builder = new EmbedBuilder()
+            {
+                Title = $"{_config.Prefix}{commandResult.Alias}",
+                Color = new Color(0x968867),
+                Description = command.Summary ?? "No summary."
+            };
+
+            builder.AddField("Usage", $"`{command.GetUsage()}`", true);
+            builder.AddField("Example", $"`{command.Remarks}`" ?? "None", true);
+            builder.AddField("Aliases", command.Aliases.Humanize(x => $"`{x}`"), true);
+
+            builder.WithFooter($"{command.Module.Name} Module • Prefix {_config.Prefix}");
 
             await ReplyAsync(embed: builder.Build());
         }
