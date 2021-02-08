@@ -7,6 +7,7 @@ using System;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using TarkovItemBot.Helpers;
 using TarkovItemBot.Options;
 
 namespace TarkovItemBot.Services
@@ -50,7 +51,14 @@ namespace TarkovItemBot.Services
             if (result.IsSuccess) return;
             if (result.Error == CommandError.UnknownCommand) return;
 
-            await context.Message.ReplyAsync($"An error occured! {result.ErrorReason}", allowedMentions: AllowedMentions.None);
+            string message = result switch
+            {
+                ParseResult parseResult => $"Parameter `{parseResult.ErrorParameter.Name}` has been wrongly provided! " +
+                    $"(command usage: `{_config.Prefix}{parseResult.ErrorParameter.Command.GetUsage()}`)",
+                _ => result.ErrorReason
+            };
+
+            await context.Message.ReplyAsync($"An error occured! {message}", allowedMentions: AllowedMentions.None);
         }
     }
 }

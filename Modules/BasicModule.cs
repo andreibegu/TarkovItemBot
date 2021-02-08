@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using TarkovItemBot.Helpers;
 using TarkovItemBot.Options;
 
 namespace TarkovItemBot.Modules
@@ -68,30 +69,10 @@ namespace TarkovItemBot.Modules
             foreach (var module in _commands.Modules.Where(x => x.Parent == null))
             {
                 if (!module.Commands.Any()) continue;
-                builder.AddField($"{module.Name} Commands", module.Commands.Humanize(x => $"`{GetCommandUsage(x)}`"));
+                builder.AddField($"{module.Name} Commands", module.Commands.Humanize(x => $"`{x.GetUsage()}`"));
             }
 
             await ReplyAsync(embed: builder.Build());
-        }
-
-        private string GetCommandUsage(CommandInfo command)
-        {
-            var usage = command.Name;
-            if (!command.Parameters.Any()) return usage;
-
-            foreach (var parameter in command.Parameters)
-            {
-                if (parameter.IsOptional)
-                    usage += $" [{parameter.Name} = {parameter.DefaultValue}]";
-                else if (parameter.IsMultiple)
-                    usage += $" |{parameter.Name}|";
-                else if (parameter.IsRemainder)
-                    usage += $" ...{parameter.Name}";
-                else
-                    usage += $" <{parameter.Name}>";
-            }
-
-            return usage;
         }
     }
 }
