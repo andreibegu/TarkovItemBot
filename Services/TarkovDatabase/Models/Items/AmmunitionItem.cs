@@ -40,8 +40,8 @@ namespace TarkovItemBot.Services
             if (Pellets != 0) builder.AddField("Pellets", Pellets, true);
             if (Projectiles != 1) builder.AddField("Projectiles", Projectiles, true);
 
-            if (WeaponModifier.Accuracy != 0) builder.AddField("Accuracy", WeaponModifier.Accuracy.ToString("+0.00;-#.00"), true);
-            if (WeaponModifier.Recoil != 0) builder.AddField("Recoil", WeaponModifier.Recoil.ToString("+0.00;-#.00"), true);
+            if (WeaponModifier.Accuracy != 0) builder.AddField("Accuracy", $"{WeaponModifier.Accuracy.ToString("+0.00;-#.00")}%", true);
+            if (WeaponModifier.Recoil != 0) builder.AddField("Recoil", $"{WeaponModifier.Recoil.ToString("+0.00;-#.00")}%", true);
 
             if (Effects.HeavyBleedingChance != 0) builder.AddField("Heavy Bleeding Chance", $"{Effects.HeavyBleedingChance * 100}%", true);
             if (Effects.LightBleedingChance != 0) builder.AddField("Light Bleeding Chance", $"{Effects.LightBleedingChance * 100}%", true);
