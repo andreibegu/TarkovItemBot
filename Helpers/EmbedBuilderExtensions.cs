@@ -25,7 +25,7 @@ namespace TarkovItemBot.Helpers
                     var change = effect.Value == 0 ? action : $"`{effect.Value:+0.00;-#.00}` change";
                     var info = !effect.Removes ? $"\n`{effect.Duration}` sec. duration\n`{effect.Delay}` sec. delay" :
                         $"\nUses `{effect.ResourceCosts}` resource";
-                    builder.AddField(property.Name.Transform(To.TitleCase), change + $"\n `{effect.Chance * 100}`% chance{info}", true);
+                    builder.AddField(property.Name.Humanize(LetterCasing.Title), change + $"\n `{effect.Chance * 100}`% chance{info}", true);
                 }
             }
 
@@ -34,7 +34,7 @@ namespace TarkovItemBot.Helpers
             {
                 foreach (var skill in effects.Skill)
                 {
-                    builder.AddField(skill.Name.Transform(To.TitleCase), $"`{skill.Value:+0.00;-#.00}` change" +
+                    builder.AddField(skill.Name.Humanize(LetterCasing.Title), $"`{skill.Value:+0.00;-#.00}` change" +
                         $"\n`{skill.Chance * 100}`% chance\n`{skill.Duration}` sec. duration\n`{skill.Delay}` sec. delay", true);
                 }
             }
