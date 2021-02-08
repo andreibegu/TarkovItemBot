@@ -31,7 +31,7 @@ namespace TarkovItemBot.Modules
         [Command("location")]
         [Alias("map")]
         [Summary("Lists information about a specific location.")]
-        public async Task LocationAsync([Name("Location")][Summary("The location to search for.")][Remainder] string query)
+        public async Task LocationAsync([Remainder] string query)
         {
             if (query.Length < 3 || query.Length > 50)
             {
