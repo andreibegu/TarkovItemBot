@@ -31,9 +31,21 @@ namespace TarkovItemBot.Modules
         [Command("location")]
         [Alias("map")]
         [Summary("Lists information about a specific location.")]
-        public async Task LocationAsync([Name("Location")][Summary("The location to search for.")] string query)
+        public async Task LocationAsync([Name("Location")][Summary("The location to search for.")][Remainder] string query)
         {
+            if (query.Length < 3 || query.Length > 50)
+            {
+                await Context.Message.ReplyAsync($"Query must be 3-50 characters long!");
+                return;
+            }
+
             var location = (await _tarkov.GetLocationsAsync(query, 1)).FirstOrDefault();
+
+            if (location == null)
+            {
+                await Context.Message.ReplyAsync("No locations found for query!");
+                return;
+            }
 
             var embed = new EmbedBuilder()
             {
