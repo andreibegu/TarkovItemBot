@@ -73,11 +73,13 @@ namespace TarkovItemBot.Modules
         {
             var builder = new EmbedBuilder()
             {
-                Title = $"{Context.Client.CurrentUser.Username} Help",
                 Color = new Color(0x968867),
                 Description = $"A list of commands available for use. Prefix commands with `{_config.Prefix}` or {Context.Client.CurrentUser.Mention}.\n" +
                     $"For more information on a specific command use `{_config.Prefix}help <command>`.\n"
-            }.WithFooter($"(?) Use {_config.Prefix}about for more info");
+            };
+
+            builder.WithAuthor($"{Context.Client.CurrentUser.Username} Help", Context.Client.CurrentUser.GetAvatarUrl());
+            builder.WithFooter($"(?) Use {_config.Prefix}about for more info");
 
             foreach (var module in _commands.Modules.Where(x => x.Parent == null))
             {
