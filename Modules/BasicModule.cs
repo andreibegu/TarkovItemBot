@@ -75,14 +75,18 @@ namespace TarkovItemBot.Modules
             {
                 Title = $"{Context.Client.CurrentUser.Username} Help",
                 Color = new Color(0x968867),
-                Description = $"A list of commands available for use. Prefix: `{_config.Prefix}`"
+                Description = $"A list of commands available for use. Prefix commands with `{_config.Prefix}` or {Context.Client.CurrentUser.Mention}.\n" +
+                    $"For more information on a specific command use `{_config.Prefix}help <command>`.\n"
             }.WithFooter($"(?) Use {_config.Prefix}about for more info");
 
             foreach (var module in _commands.Modules.Where(x => x.Parent == null))
             {
                 if (!module.Commands.Any()) continue;
-                builder.AddField($"{module.Name} Commands", module.Commands.Humanize(x => $"`{x.GetUsage()}`"));
+                builder.AddField($"{module.Name} Commands", string.Join("\n", module.Commands.Where(x => x.Name != "help")
+                    .Select(x => $"• `{x.GetUsage()}`")), true);
             }
+
+            builder.AddField("How to read parameter info", $"`<required>`, `[optional = Default]`, `...remainder`, `|multiple values|`.");
 
             await ReplyAsync(embed: builder.Build());
         }
