@@ -90,6 +90,7 @@ namespace TarkovItemBot.Modules
 
             builder.AddField("Base Price", $"{item.Price:#,##0} ₽", true);
             builder.AddField("Tax", $"{tax:#,##0} ₽", true);
+            builder.AddField("Profit", $"{price-tax:#,##0} ₽", true);
 
             builder.WithFooter($"{item.Kind.Humanize()} • Modified {item.Modified.Humanize()}");
 
