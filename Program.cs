@@ -4,6 +4,8 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 using System;
 using System.Threading.Tasks;
 using TarkovItemBot.Options;
@@ -15,7 +17,13 @@ namespace TarkovItemBot
     {
         static async Task Main()
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Console(theme: ConsoleTheme.None)
+                .CreateLogger();
+
             var hostBuilder = Host.CreateDefaultBuilder()
+                .UseSerilog()
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     config.AddEnvironmentVariables("TarkovItemBot_");
