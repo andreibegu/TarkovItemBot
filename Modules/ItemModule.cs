@@ -4,6 +4,7 @@ using Humanizer;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TarkovItemBot.Preconditions;
 using TarkovItemBot.Services;
 
 namespace TarkovItemBot.Modules
@@ -38,14 +39,8 @@ namespace TarkovItemBot.Modules
         [Alias("i", "it")]
         [Summary("Returns detailed information for the item most closely matching the query.")]
         [Remarks("item Zagustin")]
-        public async Task ItemAsync([Remainder] string query)
+        public async Task ItemAsync([Remainder][RequireLength(3, 50)] string query)
         {
-            if (query.Length < 3 || query.Length > 50)
-            {
-                await Context.Message.ReplyAsync($"Query must be 3-50 characters long!");
-                return;
-            }
-
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
 
             if (result == null)
@@ -62,14 +57,8 @@ namespace TarkovItemBot.Modules
         [Alias("commission", "flea", "market")]
         [Summary("Returns the Flea Market tax for the item most closely matching the query.")]
         [Remarks("tax 500000 Red Keycard")]
-        public async Task TaxAsync(int price, [Remainder] string query)
+        public async Task TaxAsync(int price, [Remainder][RequireLength(3, 50)] string query)
         {
-            if (query.Length < 3 || query.Length > 50)
-            {
-                await Context.Message.ReplyAsync($"Query must be 3-50 characters long!");
-                return;
-            }
-
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
 
             if (result == null)

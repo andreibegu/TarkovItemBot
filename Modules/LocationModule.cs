@@ -3,6 +3,7 @@ using Discord.Commands;
 using Humanizer;
 using System.Linq;
 using System.Threading.Tasks;
+using TarkovItemBot.Preconditions;
 using TarkovItemBot.Services;
 
 namespace TarkovItemBot.Modules
@@ -33,14 +34,8 @@ namespace TarkovItemBot.Modules
         [Alias("map", "m", "l")]
         [Summary("Lists information about a specific location.")]
         [Remarks("location The Lab")]
-        public async Task LocationAsync([Remainder] string query)
+        public async Task LocationAsync([Remainder][RequireLength(3, 50)] string query)
         {
-            if (query.Length < 3 || query.Length > 50)
-            {
-                await Context.Message.ReplyAsync($"Query must be 3-50 characters long!");
-                return;
-            }
-
             var location = (await _tarkov.GetLocationsAsync(query, 1)).FirstOrDefault();
 
             if (location == null)
