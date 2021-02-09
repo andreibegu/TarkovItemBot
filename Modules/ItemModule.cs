@@ -45,7 +45,7 @@ namespace TarkovItemBot.Modules
 
             if (result == null)
             {
-                await Context.Message.ReplyAsync("No items found for query!");
+                await ReplyAsync("No items found for query!");
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace TarkovItemBot.Modules
 
             if (result == null)
             {
-                await Context.Message.ReplyAsync("No items found for query!");
+                await ReplyAsync("No items found for query!");
                 return;
             }
 

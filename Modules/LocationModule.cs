@@ -40,7 +40,7 @@ namespace TarkovItemBot.Modules
 
             if (location == null)
             {
-                await Context.Message.ReplyAsync("No locations found for query!");
+                await ReplyAsync("No locations found for query!");
                 return;
             }
 
