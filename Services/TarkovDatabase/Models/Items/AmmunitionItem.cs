@@ -37,7 +37,6 @@ namespace TarkovItemBot.Services
 
             builder.AddField("Fragmentation", $"{Fragmentation.Chance * 100}% ({Fragmentation.Min}-{Fragmentation.Max})", true);
 
-            if (Pellets != 0) builder.AddField("Pellets", Pellets, true);
             if (Projectiles != 1) builder.AddField("Projectiles", Projectiles, true);
 
             if (WeaponModifier.Accuracy != 0) builder.AddField("Accuracy", $"{WeaponModifier.Accuracy:+0.00;-#.00}%", true);
