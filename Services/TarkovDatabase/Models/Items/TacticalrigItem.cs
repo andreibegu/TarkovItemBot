@@ -1,7 +1,5 @@
 ﻿using Discord;
-using Humanizer;
 using System.Collections.Generic;
-using System.Linq;
 using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services

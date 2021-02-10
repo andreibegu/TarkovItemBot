@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using TarkovItemBot.Helpers;
 using TarkovItemBot.Options;
@@ -42,7 +41,7 @@ namespace TarkovItemBot.Modules
                 Description = "A free and open source Discord bot providing item and location information for the game Escape from Tarkov.",
                 Color = new Color(0x968867)
             };
-            
+
             builder.WithAuthor($"{Context.Client.CurrentUser.Username} (v{AssemblyHelper.GetInformationalVersion()})",
                 Context.Client.CurrentUser.GetAvatarUrl());
 

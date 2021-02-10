@@ -19,7 +19,7 @@ namespace TarkovItemBot.Services
             var builder = base.ToEmbedBuilder();
 
             builder.AddField("Type", Type.Humanize(), true);
-            
+
             builder.AddArmorProperties(Armor);
 
             if (Blocking.Count != 0) builder.AddField("Blocking", Blocking.Humanize(x => x.Transform(To.TitleCase)), true);
