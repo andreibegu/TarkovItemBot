@@ -70,13 +70,19 @@ namespace TarkovItemBot.Modules
             var item = await _tarkov.GetEmbedableItemAsync(result.Id, result.Kind) as BaseItem;
 
             var offerValue = item.Price;
-            var requestValue = price;
+            var requestValue = Convert.ToDouble(price);
 
             var offerModifier = Math.Log10(offerValue / requestValue);
-            offerModifier = requestValue < offerValue ? Math.Pow(offerModifier, 1.08) : offerModifier;
-
             var requestModifier = Math.Log10(requestValue / offerValue);
-            requestModifier = requestValue >= offerValue ? Math.Pow(requestModifier, 1.08) : requestModifier;
+
+            if (requestValue >= offerValue)
+            {
+                requestModifier = Math.Pow(requestModifier, 1.08);
+            }
+            else
+            {
+                offerModifier = Math.Pow(offerModifier, 1.08);
+            }
 
             var tax = offerValue * 0.05 * Math.Pow(4, offerModifier) + requestValue * 0.05 * Math.Pow(4, requestModifier);
 
@@ -89,7 +95,7 @@ namespace TarkovItemBot.Modules
             };
 
             builder.AddField("Base Price", $"{item.Price:#,##0} ₽", true);
-            builder.AddField("Tax", $"{tax:#,##0} ₽", true);
+            builder.AddField("Base Tax", $"{tax:#,##0} ₽", true);
             builder.AddField("Profit", $"{price - tax:#,##0} ₽", true);
 
             builder.WithFooter($"{item.Kind.Humanize()} • Modified {item.Modified.Humanize()}");
