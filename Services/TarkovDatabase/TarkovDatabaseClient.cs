@@ -87,7 +87,7 @@ namespace TarkovItemBot.Services
             query["limit"] = limit;
 
             var response = await _httpClient.GetFromJsonAsync<LocationResponse>("location" + query.AsQueryString());
-            return response.Items;
+            return response.Items ?? new List<Location>();
         }
     }
 }
