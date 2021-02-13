@@ -23,13 +23,14 @@ namespace TarkovItemBot.Helpers
                     var effect = value as Effect;
 
                     var action = effect.Removes ? $"*Removes* effect" : "*Adds* effect";
-                    var change = effect.Value == 0 ? action : $"`{effect.Value:+0.00;-#.00}` change";
+                    var change = effect.IsPercent ? $"{effect.Value*100:+0.00;-#.00}%" : effect.Value.ToString("+0.00;-#.00");
+                    var info = effect.Value == 0 ? action : $"`{change}` change";
 
-                    if (effect.Duration != 0) change += $"\n`{effect.Duration}` sec. duration";
-                    if (effect.Delay != 0) change += $"\n`{effect.Delay}` sec. delay";
-                    if (effect.ResourceCosts != 0) change += $"\nUses `{effect.ResourceCosts}` resource";
+                    if (effect.Duration != 0) info += $"\n`{effect.Duration}` sec. duration";
+                    if (effect.Delay != 0) info += $"\n`{effect.Delay}` sec. delay";
+                    if (effect.ResourceCosts != 0) info += $"\nUses `{effect.ResourceCosts}` resource";
 
-                    builder.AddField(property.Name.Humanize(LetterCasing.Title), change + $"\n `{effect.Chance * 100}`% chance", true);
+                    builder.AddField(property.Name.Humanize(LetterCasing.Title), info + $"\n`{effect.Chance * 100}`% chance", true);
                 }
             }
 
