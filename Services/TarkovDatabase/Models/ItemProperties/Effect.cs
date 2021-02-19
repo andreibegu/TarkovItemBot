@@ -6,7 +6,7 @@ namespace TarkovItemBot.Services
         Effect Health, Effect HealthRate, Effect Bloodloss, Effect LightBleeding, Effect HeavyBleeding, Effect Fracture, Effect Contusion,
         Effect Pain, Effect TunnelVision, Effect Tremor, Effect Toxication, Effect Antidote, Effect RadiationExposure, Effect BodyTemperature,
         Effect Mobility, Effect Recoil, Effect ReloadSpeed, Effect LootSpeed, Effect UnlockSpeed, Effect DestroyedPart, Effect WeightLimit,
-        Effect DamageModifier, List<Effect> Skill);
+        Effect DamageModifier, IReadOnlyCollection<Effect> Skill);
 
     public class Effect
     {

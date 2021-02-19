@@ -10,7 +10,7 @@ namespace TarkovItemBot.Services
         public int Total { get; set; }
         [JsonConverter(typeof(UnixDateTimeConverter))]
         public DateTime Modified { get; set; }
-        public Dictionary<ItemKind, KindInfo> Kinds { get; set; }
+        public IReadOnlyDictionary<ItemKind, KindInfo> Kinds { get; set; }
     }
 
     public class KindInfo

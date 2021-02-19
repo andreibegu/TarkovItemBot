@@ -6,7 +6,7 @@ namespace TarkovItemBot.Services
 {
     class TacticalrigItem : BaseItem
     {
-        public List<ContainerGrid> Grids { get; set; }
+        public IReadOnlyCollection<ContainerGrid> Grids { get; set; }
         public Penalties Penalties { get; set; }
         public ArmorProperties Armor { get; set; }
 

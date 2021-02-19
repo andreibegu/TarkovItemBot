@@ -64,7 +64,7 @@ namespace TarkovItemBot.Helpers
             builder.AddField("Material", armor.Material.Name.Transform(To.TitleCase), true);
         }
 
-        public static void AddGrids(this EmbedBuilder builder, List<ContainerGrid> grids)
+        public static void AddGrids(this EmbedBuilder builder, IReadOnlyCollection<ContainerGrid> grids)
         {
             builder.AddField("Grids", $"{grids.Count} {"grid".ToQuantity(grids.Count, ShowQuantityAs.None)}, " +
                 $"{grids.Sum(x => x.Width * x.Height)} slots total", true);

@@ -12,7 +12,7 @@ namespace TarkovItemBot.Services
         public string TracerColor { get; set; }
         public bool Subsonic { get; set; }
         public float Velocity { get; set; }
-        public float BallisticCoef { get; set; }
+        public float BalIReadOnlyCollectionicCoef { get; set; }
         public float Damage { get; set; }
         public float Penetration { get; set; }
         public float ArmorDamage { get; set; }

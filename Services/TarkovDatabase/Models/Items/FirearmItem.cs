@@ -14,7 +14,7 @@ namespace TarkovItemBot.Services
         public int RateOfFire { get; set; }
         public int BurstRounds { get; set; }
         public string Action { get; set; }
-        public List<string> Modes { get; set; }
+        public IReadOnlyCollection<string> Modes { get; set; }
         public float Velocity { get; set; }
         [JsonPropertyName("effectiveDist")]
         public int EffectiveDistance { get; set; }

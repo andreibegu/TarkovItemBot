@@ -21,9 +21,9 @@ namespace TarkovItemBot.Services
             _httpClient = httpClient;
         }
 
-        private record SearchResult(int Count, List<SearchItem> Data);
+        private record SearchResult(int Count, IReadOnlyCollection<SearchItem> Data);
 
-        public async Task<List<SearchItem>> SearchAsync(string query, int limit = 30)
+        public async Task<IReadOnlyCollection<SearchItem>> SearchAsync(string query, int limit = 30)
         {
             var uriQuery = new Dictionary<string, object>
             {

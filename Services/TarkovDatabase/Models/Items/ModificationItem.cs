@@ -63,7 +63,7 @@ namespace TarkovItemBot.Services
     public class DeviceItem : ModificationItem
     {
         public string Type { get; set; }
-        public List<string> Modes { get; set; }
+        public IReadOnlyCollection<string> Modes { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {
@@ -140,9 +140,9 @@ namespace TarkovItemBot.Services
     public class SightItem : ModificationItem
     {
         public string Type { get; set; }
-        public List<string> Magnification { get; set; }
+        public IReadOnlyCollection<string> Magnification { get; set; }
         public bool VariableZoom { get; set; }
-        public List<int> ZeroDistances { get; set; }
+        public IReadOnlyCollection<int> ZeroDistances { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {
@@ -159,7 +159,7 @@ namespace TarkovItemBot.Services
 
     public class SightSpecialItem : SightItem
     {
-        public List<string> Modes { get; set; }
+        public IReadOnlyCollection<string> Modes { get; set; }
         public Color Color { get; set; }
         public string Noise { get; set; }
     }
@@ -175,7 +175,7 @@ namespace TarkovItemBot.Services
     public class GogglesItem : ModificationItem
     {
         public string Type { get; set; }
-        public List<string> Modes { get; set; }
+        public IReadOnlyCollection<string> Modes { get; set; }
         public Color Color { get; set; }
         public string Noise { get; set; }
 

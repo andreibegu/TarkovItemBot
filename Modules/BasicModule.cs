@@ -106,7 +106,7 @@ namespace TarkovItemBot.Modules
                 return;
             }
 
-            var commandResult = result.Commands.FirstOrDefault();
+            var commandResult = result.Commands[0];
             var command = commandResult.Command;
 
             var builder = new EmbedBuilder()

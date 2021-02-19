@@ -52,9 +52,9 @@ namespace TarkovItemBot.Services
             return response as IEmbedableItem;
         }
 
-        private record ItemResponse<T>(int Total, List<T> Items) where T : BaseItem;
+        private record ItemResponse<T>(int Total, IReadOnlyCollection<T> Items) where T : BaseItem;
 
-        public async Task<List<T>> GetItemsAsync<T>() where T : BaseItem
+        public async Task<IReadOnlyCollection<T>> GetItemsAsync<T>() where T : BaseItem
         {
             var kind = _kindMap.FirstOrDefault(x => x.Value == typeof(T)).Key;
 
@@ -77,9 +77,9 @@ namespace TarkovItemBot.Services
             return items;
         }
 
-        private record LocationResponse(int Total, List<Location> Items);
+        private record LocationResponse(int Total, IReadOnlyCollection<Location> Items);
 
-        public async Task<List<Location>> GetLocationsAsync(string text = null, int limit = 15)
+        public async Task<IReadOnlyCollection<Location>> GetLocationsAsync(string text = null, int limit = 15)
         {
             var query = new Dictionary<string, object>();
 

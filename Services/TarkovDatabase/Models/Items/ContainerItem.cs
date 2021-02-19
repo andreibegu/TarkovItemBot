@@ -6,7 +6,7 @@ namespace TarkovItemBot.Services
 {
     public class ContainerItem : BaseItem
     {
-        public List<ContainerGrid> Grids { get; set; }
+        public IReadOnlyCollection<ContainerGrid> Grids { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {

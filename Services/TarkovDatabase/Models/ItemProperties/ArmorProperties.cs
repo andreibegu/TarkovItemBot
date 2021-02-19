@@ -2,5 +2,5 @@
 
 namespace TarkovItemBot.Services
 {
-    public record ArmorProperties(int Class, float Durability, MaterialProperties Material, float BluntThroughput, List<string> Zones);
+    public record ArmorProperties(int Class, float Durability, MaterialProperties Material, float BluntThroughput, IReadOnlyCollection<string> Zones);
 }

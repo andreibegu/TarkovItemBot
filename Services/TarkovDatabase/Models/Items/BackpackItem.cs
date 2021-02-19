@@ -7,7 +7,7 @@ namespace TarkovItemBot.Services
 {
     public class BackpackItem : BaseItem
     {
-        public List<ContainerGrid> Grids { get; set; }
+        public IReadOnlyCollection<ContainerGrid> Grids { get; set; }
         public Penalties Penalties { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()

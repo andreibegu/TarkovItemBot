@@ -17,7 +17,7 @@ namespace TarkovItemBot.Services
         public int EscapeTime { get; set; }
         public bool Insurance { get; set; }
         public bool Available { get; set; }
-        public List<Exit> Exits { get; set; }
+        public IReadOnlyCollection<Exit> Exits { get; set; }
         public object Bosses { get; set; }
         [JsonPropertyName("_modified")]
         [JsonConverter(typeof(UnixDateTimeConverter))]

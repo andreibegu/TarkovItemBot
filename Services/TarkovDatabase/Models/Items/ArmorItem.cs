@@ -10,7 +10,7 @@ namespace TarkovItemBot.Services
         public ArmorType Type { get; set; }
         public ArmorProperties Armor { get; set; }
         public Penalties Penalties { get; set; }
-        public List<string> Blocking { get; set; }
+        public IReadOnlyCollection<string> Blocking { get; set; }
         public Dictionary<string, Slot> Slots { get; set; }
         public object Compatibility { get; set; }
 
