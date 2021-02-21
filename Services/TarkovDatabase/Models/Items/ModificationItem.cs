@@ -15,7 +15,7 @@ namespace TarkovItemBot.Services
         public float Recoil { get; set; }
         public int RaidModdable { get; set; }
         public GridModifier GridModifier { get; set; }
-        public Dictionary<string, Slot> Slots { get; set; }
+        public IReadOnlyDictionary<string, Slot> Slots { get; set; }
         public object Compatibility { get; set; }
         public object Conflicts { get; set; }
 

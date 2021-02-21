@@ -8,7 +8,7 @@ namespace TarkovItemBot.Services
     {
         public IReadOnlyCollection<string> Blocking { get; set; }
         public Penalties Penalties { get; set; }
-        public Dictionary<string, Slot> Slots { get; set; }
+        public IReadOnlyDictionary<string, Slot> Slots { get; set; }
         public string Type { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()

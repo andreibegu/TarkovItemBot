@@ -11,7 +11,7 @@ namespace TarkovItemBot.Services
         public ArmorProperties Armor { get; set; }
         public Penalties Penalties { get; set; }
         public IReadOnlyCollection<string> Blocking { get; set; }
-        public Dictionary<string, Slot> Slots { get; set; }
+        public IReadOnlyDictionary<string, Slot> Slots { get; set; }
         public object Compatibility { get; set; }
         public RicochetChance RicochetChance { get; set; }
 

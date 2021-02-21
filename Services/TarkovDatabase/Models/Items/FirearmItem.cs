@@ -24,7 +24,7 @@ namespace TarkovItemBot.Services
         public bool FoldRetractable { get; set; }
         public int RecoilVertical { get; set; }
         public int RecoilHorizontal { get; set; }
-        public Dictionary<string, Slot> Slots { get; set; }
+        public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {

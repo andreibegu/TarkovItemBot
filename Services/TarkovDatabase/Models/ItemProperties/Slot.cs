@@ -1,4 +1,6 @@
-﻿namespace TarkovItemBot.Services
+﻿using System.Collections.Generic;
+
+namespace TarkovItemBot.Services
 {
-    public record Slot(object Filter, bool Required);
+    public record Slot(IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Filter, bool Required);
 }
