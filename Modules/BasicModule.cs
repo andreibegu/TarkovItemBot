@@ -52,10 +52,9 @@ namespace TarkovItemBot.Modules
 
             var appInfo = await Context.Client.GetApplicationInfoAsync();
 
-            builder.AddField("Instance Owner", appInfo.Owner.ToString(), true);
-
             if (appInfo.IsBotPublic) builder.AddField("Invite Link", $"[Invite](https://discord.com/oauth2/authorize?client_id={appInfo.Id}&scope=bot&permissions=16384)", true);
 
+            builder.AddField("Instance Owner", appInfo.Owner.ToString(), true);
             builder.AddField("Guilds", Context.Client.Guilds.Count, true);
 
             var uptime = (DateTime.Now - Process.GetCurrentProcess().StartTime).Humanize();
