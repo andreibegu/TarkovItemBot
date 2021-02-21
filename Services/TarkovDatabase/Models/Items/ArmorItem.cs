@@ -13,6 +13,7 @@ namespace TarkovItemBot.Services
         public IReadOnlyCollection<string> Blocking { get; set; }
         public Dictionary<string, Slot> Slots { get; set; }
         public object Compatibility { get; set; }
+        public RicochetChance RicochetChance { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {
@@ -23,6 +24,7 @@ namespace TarkovItemBot.Services
             builder.AddArmorProperties(Armor);
 
             if (Blocking.Count != 0) builder.AddField("Blocking", Blocking.Humanize(x => x.Transform(To.TitleCase)), true);
+            if (RicochetChance != RicochetChance.None) builder.AddField("Ricochet Chance", RicochetChance.Humanize(), true);
 
             if (Penalties.Speed != 0) builder.AddField("Speed Penalty", $"{Penalties.Speed}%", true);
             if (Penalties.Mouse != 0) builder.AddField("Turning Penalty", $"{Penalties.Mouse}%", true);
