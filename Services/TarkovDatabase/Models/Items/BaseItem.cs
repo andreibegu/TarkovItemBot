@@ -3,6 +3,7 @@ using Discord;
 using Humanizer;
 using System;
 using System.Text.Json.Serialization;
+using System.Web;
 using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
@@ -26,6 +27,7 @@ namespace TarkovItemBot.Services
         public ItemKind Kind { get; set; }
         [JsonIgnore]
         public string IconUrl => $"https://static.tarkov-database.com/image/icon/1-1/{Id}.png";
+        public string WikiUrl => $"https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(Name.Replace(" ", "_"))}";
 
         public virtual EmbedBuilder ToEmbedBuilder()
         {
@@ -34,7 +36,8 @@ namespace TarkovItemBot.Services
                 Title = $"{Name} ({ShortName})",
                 Description = Description,
                 ThumbnailUrl = IconUrl,
-                Color = Grid.Color
+                Color = Grid.Color,
+                Url = WikiUrl
             };
 
             embed.AddField("Weight", $"{Weight} kg", true);
