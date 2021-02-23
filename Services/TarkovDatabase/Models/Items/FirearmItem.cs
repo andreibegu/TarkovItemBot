@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services
 {
-    public class FirearmItem : BaseItem
+    public class FirearmItem : ModifiableItem
     {
         public string Type { get; set; }
         public string Class { get; set; }
@@ -24,7 +24,6 @@ namespace TarkovItemBot.Services
         public bool FoldRetractable { get; set; }
         public int RecoilVertical { get; set; }
         public int RecoilHorizontal { get; set; }
-        public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {

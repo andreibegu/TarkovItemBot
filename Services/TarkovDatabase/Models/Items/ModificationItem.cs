@@ -6,7 +6,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
 {
-    public class ModificationItem : BaseItem
+    public class ModificationItem : ModifiableItem
     {
         [JsonPropertyName("ergonomicsFP")]
         public float ErgonomicsFloat { get; set; }
@@ -15,7 +15,6 @@ namespace TarkovItemBot.Services
         public float Recoil { get; set; }
         public int RaidModdable { get; set; }
         public GridModifier GridModifier { get; set; }
-        public IReadOnlyDictionary<string, Slot> Slots { get; set; }
         public object Compatibility { get; set; }
         public object Conflicts { get; set; }
 
