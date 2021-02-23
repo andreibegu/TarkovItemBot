@@ -108,16 +108,29 @@ namespace TarkovItemBot.Modules
             var commandResult = result.Commands[0];
             var command = commandResult.Command;
 
+            string aliases = !command.Aliases.Any() ? "" : $"({string.Join(", ", command.Aliases)})";
+
             var builder = new EmbedBuilder()
             {
-                Title = $"{_config.Prefix}{commandResult.Alias}",
+                Title = $"{_config.Prefix}{commandResult.Alias} {aliases}",
                 Color = new Color(0x968867),
                 Description = command.Summary ?? "No summary."
             };
 
             builder.AddField("Usage", $"`{command.GetUsage()}`", true);
             builder.AddField("Example", $"`{command.Remarks}`" ?? "None", true);
-            builder.AddField("Aliases", command.Aliases.Humanize(x => $"`{x}`"), true);
+
+            if(command.Parameters.Any())
+            {
+                var parameters = "";
+
+                foreach (var parameter in command.Parameters)
+                {
+                    parameters += $"• `{parameter.Name}` - {parameter.Summary} (`{parameter.GetUsage()}`)\n";
+                }
+
+                builder.AddField("Parameters", parameters, false);
+            }
 
             builder.WithFooter($"{command.Module.Name} Module • Prefix {_config.Prefix}");
 

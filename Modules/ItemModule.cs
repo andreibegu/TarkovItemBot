@@ -25,7 +25,7 @@ namespace TarkovItemBot.Modules
         [Alias("t")]
         [Summary("Returns the total items of a kind.")]
         [Remarks("total Ammunition")]
-        public async Task TotalAsync(ItemKind kind = ItemKind.None)
+        public async Task TotalAsync([Summary("The kind of the item group.")]ItemKind kind = ItemKind.None)
         {
             var info = await _tarkov.GetItemsInfoAsync();
 
@@ -39,7 +39,7 @@ namespace TarkovItemBot.Modules
         [Alias("i", "it")]
         [Summary("Returns detailed information for the item most closely matching the query.")]
         [Remarks("item Zagustin")]
-        public async Task ItemAsync([Remainder][RequireLength(3, 50)] string query)
+        public async Task ItemAsync([Remainder][RequireLength(3, 50)][Summary("The item to look for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
 

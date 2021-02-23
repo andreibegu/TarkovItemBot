@@ -34,7 +34,7 @@ namespace TarkovItemBot.Modules
         [Alias("map", "m", "l")]
         [Summary("Lists information about a specific location.")]
         [Remarks("location The Lab")]
-        public async Task LocationAsync([Remainder][RequireLength(3, 50)] string query)
+        public async Task LocationAsync([Remainder][RequireLength(3, 50)][Summary("The location to look for.")] string query)
         {
             var location = (await _tarkov.GetLocationsAsync(query, 1)).FirstOrDefault();
 

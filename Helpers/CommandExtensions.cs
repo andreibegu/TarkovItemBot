@@ -11,18 +11,21 @@ namespace TarkovItemBot.Helpers
             if (!command.Parameters.Any()) return usage;
 
             foreach (var parameter in command.Parameters)
-            {
-                if (parameter.IsOptional)
-                    usage += $" [{parameter.Name} = {parameter.DefaultValue}]";
-                else if (parameter.IsMultiple)
-                    usage += $" |{parameter.Name}|";
-                else if (parameter.IsRemainder)
-                    usage += $" ...{parameter.Name}";
-                else
-                    usage += $" <{parameter.Name}>";
-            }
+                usage += $" {parameter.GetUsage()}";
 
             return usage;
+        }
+
+        public static string GetUsage(this ParameterInfo parameter)
+        {
+            if (parameter.IsOptional)
+                return $"[{parameter.Name} = {parameter.DefaultValue}]";
+            else if (parameter.IsMultiple)
+                return $"|{parameter.Name}|";
+            else if (parameter.IsRemainder)
+                return $"...{parameter.Name}";
+            else
+                return $"<{parameter.Name}>";
         }
     }
 }

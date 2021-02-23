@@ -25,7 +25,8 @@ namespace TarkovItemBot.Modules
         [Alias("compatibility")]
         [Summary("Check if two items are compatible.")]
         [Remarks("compatible \"m4a1\" \"psg-1 grip\"")]
-        public async Task CompatibilityAsync(string baseQuery, [Remainder]string modQuery)
+        public async Task CompatibilityAsync([Summary("The item the modification fits on to.")][Name("base")] string baseQuery, 
+            [Summary("The modification to look for.")][Name("mod")][Remainder] string modQuery)
         {
             var baseItemResult = (await _tarkovSearch.SearchAsync($"name:{baseQuery}", 1)).FirstOrDefault();
             var modItemResult = (await _tarkovSearch.SearchAsync($"name:{modQuery}", 1)).FirstOrDefault();
@@ -69,7 +70,8 @@ namespace TarkovItemBot.Modules
         [Alias("commission", "flea", "market")]
         [Summary("Returns the Flea Market tax for the item most closely matching the query.")]
         [Remarks("tax 500000 Red Keycard")]
-        public async Task TaxAsync(int price, [Remainder][RequireLength(3, 50)] string query)
+        public async Task TaxAsync([Summary("The price the item is being put up for.")] int price,
+            [Summary("The item that is being put up for sale.")][Remainder][RequireLength(3, 50)] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
 
