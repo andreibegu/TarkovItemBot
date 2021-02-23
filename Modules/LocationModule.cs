@@ -62,7 +62,7 @@ namespace TarkovItemBot.Modules
 
                 foreach (var exit in location.Exits)
                 {
-                    embed.AddField(exit.Name, $"`{exit.Chance}%` chance / `{exit.ExfilTime}` sec. timer", true);
+                    embed.AddField(exit.Name, $"`{exit.ExfilTime}` sec. timer\n`{exit.Chance}%` chance ", true);
                 }
             }
 
