@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Web;
 using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services
@@ -22,5 +23,6 @@ namespace TarkovItemBot.Services
         [JsonPropertyName("_modified")]
         [JsonConverter(typeof(UnixDateTimeConverter))]
         public DateTime Modified { get; set; }
+        public string WikiUrl => $"https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(Name.Replace(" ", "_"))}";
     }
 }

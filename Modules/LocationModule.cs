@@ -48,7 +48,8 @@ namespace TarkovItemBot.Modules
             {
                 Title = location.Name,
                 Color = new Discord.Color(0x968867),
-                Description = location.Description
+                Description = location.Description,
+                Url = location.WikiUrl
             };
 
             embed.AddField("Players", $"{location.MinPlayers}-{location.MaxPlayers}", true);
