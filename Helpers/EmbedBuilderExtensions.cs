@@ -3,7 +3,7 @@ using Humanizer;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TarkovItemBot.Services;
+using TarkovItemBot.Services.TarkovDatabase;
 
 namespace TarkovItemBot.Helpers
 {

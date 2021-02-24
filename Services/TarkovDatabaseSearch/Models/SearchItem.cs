@@ -1,4 +1,6 @@
-﻿namespace TarkovItemBot.Services
+﻿using TarkovItemBot.Services.TarkovDatabase;
+
+namespace TarkovItemBot.Services.TarkovDatabaseSearch
 {
     public class SearchItem
     {

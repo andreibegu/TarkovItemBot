@@ -1,6 +1,6 @@
 ﻿using Discord;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabase
 {
     public class MeleeItem : BaseItem
     {

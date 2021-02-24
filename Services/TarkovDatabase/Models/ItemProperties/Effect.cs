@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabase
 {
     public record Effects(Effect Energy, Effect EnergyRate, Effect Hydration, Effect HydrationRate, Effect Stamina, Effect StaminaRate,
         Effect Health, Effect HealthRate, Effect Bloodloss, Effect LightBleeding, Effect HeavyBleeding, Effect Fracture, Effect Contusion,

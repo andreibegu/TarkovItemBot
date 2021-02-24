@@ -4,7 +4,7 @@ using Humanizer;
 using System.Linq;
 using System.Threading.Tasks;
 using TarkovItemBot.Preconditions;
-using TarkovItemBot.Services;
+using TarkovItemBot.Services.TarkovDatabase;
 
 namespace TarkovItemBot.Modules
 {

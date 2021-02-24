@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabaseSearch
 {
     public class TarkovSearchTokenHandler : DelegatingHandler
     {

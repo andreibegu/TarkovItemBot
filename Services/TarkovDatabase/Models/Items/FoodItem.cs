@@ -2,7 +2,7 @@
 using Humanizer;
 using TarkovItemBot.Helpers;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabase
 {
     public class FoodItem : BaseItem
     {

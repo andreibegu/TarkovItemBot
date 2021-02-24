@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using TarkovItemBot.Helpers;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabase
 {
     public class ItemsInfo
     {

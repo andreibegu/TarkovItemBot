@@ -2,7 +2,7 @@
 using Humanizer;
 using System.Collections.Generic;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabase
 {
     public class ClothingItem : ModifiableItem
     {

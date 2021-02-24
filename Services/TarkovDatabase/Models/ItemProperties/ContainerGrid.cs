@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabase
 {
     public class ContainerGrid
     {

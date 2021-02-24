@@ -10,6 +10,8 @@ using System;
 using System.Threading.Tasks;
 using TarkovItemBot.Options;
 using TarkovItemBot.Services;
+using TarkovItemBot.Services.TarkovDatabase;
+using TarkovItemBot.Services.TarkovDatabaseSearch;
 
 namespace TarkovItemBot
 {

@@ -1,7 +1,7 @@
 ﻿using Discord;
 using System.Text.Json.Serialization;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabase
 {
     public class HeadphoneItem : BaseItem
     {

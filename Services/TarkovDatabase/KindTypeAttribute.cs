@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabase
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class KindTypeAttribute : Attribute

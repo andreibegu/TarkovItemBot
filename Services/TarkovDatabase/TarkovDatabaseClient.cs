@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using TarkovItemBot.Helpers;
 using TarkovItemBot.Options;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabase
 {
     public class TarkovDatabaseClient
     {

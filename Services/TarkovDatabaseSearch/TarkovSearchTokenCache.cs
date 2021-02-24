@@ -3,7 +3,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabaseSearch
 {
     public class TarkovSearchTokenCache
     {

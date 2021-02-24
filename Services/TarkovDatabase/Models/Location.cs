@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using System.Web;
 using TarkovItemBot.Helpers;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabase
 {
     public class Location
     {

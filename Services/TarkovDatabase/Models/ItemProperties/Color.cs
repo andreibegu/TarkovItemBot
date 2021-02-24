@@ -1,7 +1,7 @@
 ﻿using DiscordColor = Discord.Color;
 using StandardColor = System.Drawing.Color;
 
-namespace TarkovItemBot.Services
+namespace TarkovItemBot.Services.TarkovDatabase
 {
     public class Color
     {
