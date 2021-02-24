@@ -65,6 +65,23 @@ namespace TarkovItemBot.Modules
             await ReplyAsync($"Item `{modifiableItem.Name}` fits `{modItem.Name}` in slot `{slotName.Humanize(LetterCasing.Title)}`.");
         }
 
+        [Command("wiki")]
+        [Alias("gamepedia")]
+        [Summary("Finds the wiki page of the queried item.")]
+        [Remarks("wiki m4a1")]
+        public async Task WikiAsync([Summary("The item to look for")][Remainder] string query)
+        {
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
+
+            if (result == null)
+            {
+                await ReplyAsync("No items found for query!");
+                return;
+            }
+
+            var item = await _tarkov.GetEmbedableItemAsync(result.Id, result.Kind) as BaseItem;
+            await ReplyAsync($"<{item.WikiUrl}>");
+        }
 
         [Command("tax")]
         [Alias("commission", "flea", "market")]
