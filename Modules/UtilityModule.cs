@@ -26,7 +26,7 @@ namespace TarkovItemBot.Modules
         [Alias("compatibility")]
         [Summary("Check if two items are compatible.")]
         [Remarks("compatible \"m4a1\" \"psg-1 grip\"")]
-        public async Task CompatibilityAsync([Summary("The item the modification fits on to.")][Name("base")] string baseQuery, 
+        public async Task CompatibilityAsync([Summary("The item the modification fits on to.")][Name("base")] string baseQuery,
             [Summary("The modification to look for.")][Name("mod")][Remainder] string modQuery)
         {
             var baseItemResult = (await _tarkovSearch.SearchAsync($"name:{baseQuery}", 1)).FirstOrDefault();

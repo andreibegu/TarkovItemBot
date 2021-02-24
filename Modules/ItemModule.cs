@@ -1,5 +1,4 @@
-﻿using Discord;
-using Discord.Commands;
+﻿using Discord.Commands;
 using Humanizer;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +24,7 @@ namespace TarkovItemBot.Modules
         [Alias("t")]
         [Summary("Returns the total items of a kind.")]
         [Remarks("total Ammunition")]
-        public async Task TotalAsync([Summary("The kind of the item group.")]ItemKind kind = ItemKind.None)
+        public async Task TotalAsync([Summary("The kind of the item group.")] ItemKind kind = ItemKind.None)
         {
             var info = await _tarkov.GetItemsInfoAsync();
 

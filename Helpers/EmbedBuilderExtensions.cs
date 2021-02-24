@@ -23,7 +23,7 @@ namespace TarkovItemBot.Helpers
                     var effect = value as Effect;
 
                     var action = effect.Removes ? $"*Removes* effect" : "*Adds* effect";
-                    var change = effect.IsPercent ? $"{effect.Value*100:+0.00;-#.00}%" : effect.Value.ToString("+0.00;-#.00");
+                    var change = effect.IsPercent ? $"{effect.Value * 100:+0.00;-#.00}%" : effect.Value.ToString("+0.00;-#.00");
                     var info = effect.Value == 0 ? action : $"`{change}` change";
 
                     if (effect.Duration != 0) info += $"\n`{effect.Duration}` sec. duration";

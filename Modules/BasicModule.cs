@@ -120,7 +120,7 @@ namespace TarkovItemBot.Modules
             builder.AddField("Usage", $"`{command.GetUsage()}`", true);
             builder.AddField("Example", $"`{command.Remarks}`" ?? "None", true);
 
-            if(command.Parameters.Any())
+            if (command.Parameters.Any())
             {
                 var parameters = "";
 
