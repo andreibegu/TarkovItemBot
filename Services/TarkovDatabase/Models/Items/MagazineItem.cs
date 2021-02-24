@@ -1,4 +1,5 @@
 ﻿using Discord;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using TarkovItemBot.Helpers;
 
@@ -13,8 +14,8 @@ namespace TarkovItemBot.Services
         public int Ergonomics { get; set; }
         public MagazineModifier Modifier { get; set; }
         public GridModifier GridModifier { get; set; }
-        public object Compatibility { get; set; }
-        public object Conflicts { get; set; }
+        public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Compatibility { get; set; }
+        public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Conflicts { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {

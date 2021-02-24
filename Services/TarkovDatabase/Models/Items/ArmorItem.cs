@@ -11,7 +11,7 @@ namespace TarkovItemBot.Services
         public ArmorProperties Armor { get; set; }
         public Penalties Penalties { get; set; }
         public IReadOnlyCollection<string> Blocking { get; set; }
-        public object Compatibility { get; set; }
+        public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Compatibility { get; set; }
         public RicochetChance RicochetChance { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()

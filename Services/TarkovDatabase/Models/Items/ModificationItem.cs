@@ -15,8 +15,8 @@ namespace TarkovItemBot.Services
         public float Recoil { get; set; }
         public int RaidModdable { get; set; }
         public GridModifier GridModifier { get; set; }
-        public object Compatibility { get; set; }
-        public object Conflicts { get; set; }
+        public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Compatibility { get; set; }
+        public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Conflicts { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {

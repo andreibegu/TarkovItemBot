@@ -1,4 +1,6 @@
-﻿namespace TarkovItemBot.Services
+﻿using System.Collections.Generic;
+
+namespace TarkovItemBot.Services
 {
     public class ContainerGrid
     {
@@ -6,6 +8,6 @@
         public int Height { get; set; }
         public int Width { get; set; }
         public float MaxWeight { get; set; }
-        public object Filter { get; set; }
+        public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Filter { get; set; }
     }
 }
