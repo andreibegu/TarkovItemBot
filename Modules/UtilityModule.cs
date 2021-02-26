@@ -4,6 +4,7 @@ using Humanizer;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using TarkovItemBot.Preconditions;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
@@ -80,8 +81,7 @@ namespace TarkovItemBot.Modules
                 return;
             }
 
-            var item = await _tarkov.GetEmbedableItemAsync(result.Id, result.Kind) as BaseItem;
-            await ReplyAsync($"<{item.WikiUrl}>");
+            await ReplyAsync($"<https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(result.Name.Replace(" ", "_"))}>");
         }
 
         [Command("tax")]
