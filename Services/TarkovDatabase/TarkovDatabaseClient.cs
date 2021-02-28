@@ -38,7 +38,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public Task<ItemsInfo> GetItemsInfoAsync()
             => _httpClient.GetFromJsonAsync<ItemsInfo>("item");
 
-        public async Task<T> GetItemAsync<T>(string id) where T : BaseItem
+        public async Task<T> GetItemAsync<T>(string id) where T : IItem
         {
             var kind = _kindMap.FirstOrDefault(x => x.Value == typeof(T)).Key;
             var response = await _httpClient.GetFromJsonAsync<T>($"item/{kind.ToString().ToCamelCase()}/{id}");
@@ -54,7 +54,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
         private record Response<T>(int Total, IReadOnlyCollection<T> Items);
 
-        public async Task<IReadOnlyCollection<T>> GetItemsAsync<T>(IEnumerable<string> ids = null) where T : BaseItem
+        public async Task<IReadOnlyCollection<T>> GetItemsAsync<T>(IEnumerable<string> ids = null) where T : IItem
         {
             var kind = _kindMap.FirstOrDefault(x => x.Value == typeof(T)).Key;
             int total;
