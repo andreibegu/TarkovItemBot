@@ -37,8 +37,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
                 _kindMap.TryAdd((ItemKind)field.GetRawConstantValue(), field.GetCustomAttribute<KindTypeAttribute>()?.KindType);
         }
 
-        public Task<ItemsInfo> GetItemsInfoAsync()
-            => _httpClient.GetFromJsonAsync<ItemsInfo>("item");
+        public Task<ItemIndex> GetItemIndexAsync()
+            => _httpClient.GetFromJsonAsync<ItemIndex>("item");
 
         public async Task<T> GetItemAsync<T>(string id) where T : IItem
         {
@@ -62,7 +62,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
             int total;
             if (ids == null)
             {
-                var index = await GetItemsInfoAsync();
+                var index = await GetItemIndexAsync();
                 total = index.Kinds[kind].Count;
             }
             else total = ids.Count();

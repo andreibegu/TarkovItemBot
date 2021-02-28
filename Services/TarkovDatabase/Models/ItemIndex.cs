@@ -5,7 +5,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class ItemsInfo
+    public class ItemIndex
     {
         public int Total { get; set; }
         [JsonConverter(typeof(UnixDateTimeConverter))]

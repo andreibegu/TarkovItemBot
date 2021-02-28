@@ -26,7 +26,7 @@ namespace TarkovItemBot.Modules
         [Remarks("total Ammunition")]
         public async Task TotalAsync([Summary("The kind of the item group.")] ItemKind kind = ItemKind.None)
         {
-            var info = await _tarkov.GetItemsInfoAsync();
+            var info = await _tarkov.GetItemIndexAsync();
 
             int total = kind == ItemKind.None ? info.Total : info.Kinds[kind].Count;
             var updated = kind == ItemKind.None ? info.Modified : info.Kinds[kind].Modified;
