@@ -123,7 +123,8 @@ namespace TarkovItemBot.Modules
                 Title = $"{item.Name} ({item.ShortName})",
                 Color = item.Grid.Color,
                 ThumbnailUrl = item.IconUrl,
-                Description = item.Description
+                Description = item.Description,
+                Url = item.WikiUrl
             };
 
             builder.AddField("Base Price", $"{item.Price:#,##0} ₽", true);
