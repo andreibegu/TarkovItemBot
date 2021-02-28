@@ -106,6 +106,9 @@ namespace TarkovItemBot.Services.TarkovDatabase
             return response.Items ?? new List<Location>();
         }
 
+        public Task<Location> GetLocationAsync(string id)
+            => _httpClient.GetFromJsonAsync<Location>($"location/{id}");
+
         public async Task<IReadOnlyCollection<Module>> GetModulesAsync(string text = null, string material = null, int limit = 15)
         {
             var query = new Dictionary<string, object>();
