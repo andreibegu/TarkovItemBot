@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Humanizer;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -23,48 +24,51 @@ namespace TarkovItemBot.Modules
             _tarkovSearch = tarkovSearch;
         }
 
-        [Command("compatible")]
-        [Alias("compatibility")]
-        [Summary("Check if two items are compatible.")]
-        [Remarks("compatible \"m4a1\" \"psg-1 grip\"")]
-        public async Task CompatibilityAsync([Summary("The item the modification fits on to.")][Name("base")] string baseQuery,
-            [Summary("The modification to look for.")][Name("mod")][Remainder] string modQuery)
+        [Command("slots")]
+        [Alias("attachments")]
+        [Summary("Displays all slots and attachments available for an item.")]
+        [Remarks("slots m4a1")]
+        public async Task SlotsAsync([Summary("The item to display attachments for.")][Remainder] string query)
         {
-            var baseItemResult = (await _tarkovSearch.SearchAsync($"name:{baseQuery}", 1)).FirstOrDefault();
-            var modItemResult = (await _tarkovSearch.SearchAsync($"name:{modQuery}", 1)).FirstOrDefault();
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
 
-            if (baseItemResult == null || modItemResult == null)
+            if (result == null)
             {
                 await ReplyAsync("No items found for query!");
                 return;
             }
 
-            var baseItem = await _tarkov.GetItemAsync(baseItemResult.Id, baseItemResult.Kind);
+            var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
 
-            if (baseItem is not ModifiableItem modifiableItem)
+            if (item is not ModifiableItem modifiableItem)
             {
                 await ReplyAsync("The base item provided is not modifiable!");
                 return;
             }
 
-            var modItem = await _tarkov.GetItemAsync(modItemResult.Id, modItemResult.Kind);
-
-            string slotName = null;
+            var builder = new EmbedBuilder()
+            {
+                Title = $"{item.Name} ({item.ShortName})",
+                Color = item.Grid.Color,
+                ThumbnailUrl = item.IconUrl,
+                Description = item.Description,
+                Url = item.WikiUrl
+            };
 
             foreach (var slot in modifiableItem.Slots)
             {
-                if (!slot.Value.Filter.Any(x => x.Value.Contains(modItem.Id))) continue;
-                slotName = slot.Key;
-                break;
+                var items = new List<IItem>();
+
+                foreach(var filter in slot.Value.Filter)
+                {
+                    var filterItems = await _tarkov.GetItemsAsync(filter.Key, filter.Value);
+                    items.AddRange(filterItems);
+                }
+
+                builder.AddField(slot.Key.Humanize(LetterCasing.Title), items.Humanize(x => $"`{x.ShortName}`"));
             }
 
-            if (slotName == null)
-            {
-                await ReplyAsync($"Item `{modifiableItem.Name}` does not allow for installation of `{modItem.Name}`!");
-                return;
-            }
-
-            await ReplyAsync($"Item `{modifiableItem.Name}` fits `{modItem.Name}` in slot `{slotName.Humanize(LetterCasing.Title)}`.");
+            await ReplyAsync(embed: builder.Build());
         }
 
         [Command("wiki")]
