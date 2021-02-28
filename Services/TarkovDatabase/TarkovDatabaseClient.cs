@@ -14,6 +14,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
 {
     public class TarkovDatabaseClient
     {
+        private const int _pageLimit = 100;
         private readonly ConcurrentDictionary<ItemKind, Type> _kindMap = new ConcurrentDictionary<ItemKind, Type>();
         private readonly HttpClient _httpClient;
         public TarkovDatabaseClient(HttpClient httpClient, IOptions<TarkovDatabaseOptions> config)
@@ -54,9 +55,9 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
         private record Response<T>(int Total, IReadOnlyCollection<T> Items);
 
-        public async Task<IReadOnlyCollection<T>> GetItemsAsync<T>(IEnumerable<string> ids = null) where T : IItem
+        private async Task<IReadOnlyCollection<T>> GetItemsAsync<T>(ItemKind kind, IEnumerable<string> ids = null)
+            where T : IItem
         {
-            var kind = _kindMap.FirstOrDefault(x => x.Value == typeof(T)).Key;
             int total;
 
             if (ids == null)
@@ -66,17 +67,16 @@ namespace TarkovItemBot.Services.TarkovDatabase
             }
             else total = ids.Count();
 
-            int limit = 100;
-            var pages = total % limit == 0 ? total / limit : total / limit + 1;
+            var pages = total % _pageLimit == 0 ? total / _pageLimit : total / _pageLimit + 1;
 
             var items = new List<T>();
             for (int i = 0; i < pages; i++)
             {
-                var offset = limit * i;
+                var offset = _pageLimit * i;
 
                 var query = new Dictionary<string, object>()
                 {
-                    ["limit"] = limit,
+                    ["limit"] = _pageLimit,
                     ["offset"] = offset
                 };
 
@@ -87,13 +87,39 @@ namespace TarkovItemBot.Services.TarkovDatabase
                     query["id"] = string.Join(",", ids);
                 }
 
-                var response = await _httpClient.GetFromJsonAsync<Response<T>>
-                    ($"item/{kind.ToString().ToCamelCase()}{query.AsQueryString()}");
-                items.AddRange(response.Items);
+                // Unsafe workaround for no interface deserialization
+                IReadOnlyCollection<T> response;
+                if(typeof(T) != typeof(IItem))
+                {
+                    var result = await _httpClient.GetFromJsonAsync<Response<T>>
+                        ($"item/{kind.ToString().ToCamelCase()}{query.AsQueryString()}");
+                    response = result.Items;
+                }
+                else
+                {
+                    var kindType = _kindMap[kind];
+                    var responseType = typeof(Response<>).MakeGenericType(kindType);
+                    dynamic result = await _httpClient.GetFromJsonAsync
+                        ($"item/{kind.ToString().ToCamelCase()}{query.AsQueryString()}", responseType);
+                    response = result.Items;
+                }
+
+                items.AddRange(response);
             }
 
             return items;
         }
+
+        public async Task<IReadOnlyCollection<T>> GetItemsAsync<T>(IEnumerable<string> ids = null) where T : IItem
+        {
+            var kind = _kindMap.FirstOrDefault(x => x.Value == typeof(T)).Key;
+            var items = await GetItemsAsync<T>(kind, ids);
+
+            return items;
+        }
+
+        public Task<IReadOnlyCollection<IItem>> GetItemsAsync(ItemKind kind, IEnumerable<string> ids = null)
+            => GetItemsAsync<IItem>(kind, ids);
 
         public async Task<IReadOnlyCollection<Location>> GetLocationsAsync(string text = null, int limit = 15)
         {
