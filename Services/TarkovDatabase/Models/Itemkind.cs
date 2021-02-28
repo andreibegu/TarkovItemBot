@@ -18,7 +18,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         Barter,
         [KindType(typeof(ClothingItem))]
         Clothing,
-        [KindType(typeof(BaseItem))]
+        [KindType(typeof(CommonItem))]
         Common,
         [KindType(typeof(ContainerItem))]
         Container,

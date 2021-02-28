@@ -4,7 +4,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class ContainerItem : BaseItem
+    public class ContainerItem : CommonItem
     {
         public IReadOnlyCollection<ContainerGrid> Grids { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class MeleeItem : BaseItem
+    public class MeleeItem : CommonItem
     {
         public MeleeAttack Slash { get; set; }
         public MeleeAttack Stab { get; set; }

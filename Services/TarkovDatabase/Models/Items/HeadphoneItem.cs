@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class HeadphoneItem : BaseItem
+    public class HeadphoneItem : CommonItem
     {
         [JsonPropertyName("ambientVol")]
         public float AmbientVolume { get; set; }

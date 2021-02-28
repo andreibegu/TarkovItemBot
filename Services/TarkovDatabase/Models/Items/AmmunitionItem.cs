@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class AmmunitionItem : BaseItem
+    public class AmmunitionItem : CommonItem
     {
         public string Caliber { get; set; }
         public string Type { get; set; }

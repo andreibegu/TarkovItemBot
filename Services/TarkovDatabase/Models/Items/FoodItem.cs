@@ -4,7 +4,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class FoodItem : BaseItem
+    public class FoodItem : CommonItem
     {
         public string Type { get; set; }
         public int Resources { get; set; }

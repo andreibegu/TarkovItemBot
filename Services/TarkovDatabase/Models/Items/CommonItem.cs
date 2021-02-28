@@ -8,7 +8,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class BaseItem : IItem
+    public class CommonItem : IItem
     {
         [JsonPropertyName("_id")]
         public string Id { get; set; }

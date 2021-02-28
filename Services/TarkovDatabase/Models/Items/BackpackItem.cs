@@ -5,7 +5,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class BackpackItem : BaseItem
+    public class BackpackItem : CommonItem
     {
         public IReadOnlyCollection<ContainerGrid> Grids { get; set; }
         public Penalties Penalties { get; set; }

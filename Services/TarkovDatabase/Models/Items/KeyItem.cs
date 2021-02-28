@@ -2,7 +2,7 @@
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class KeyItem : BaseItem
+    public class KeyItem : CommonItem
     {
         public string Location { get; set; }
         public int Usages { get; set; }
