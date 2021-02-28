@@ -45,11 +45,11 @@ namespace TarkovItemBot.Services.TarkovDatabase
             return response;
         }
 
-        public async Task<IEmbedableItem> GetEmbedableItemAsync(string id, ItemKind kind)
+        public async Task<IItem> GetItemAsync(string id, ItemKind kind)
         {
             var kindType = _kindMap[kind];
             var response = await _httpClient.GetFromJsonAsync($"item/{kind.ToString().ToCamelCase()}/{id}", kindType);
-            return response as IEmbedableItem;
+            return response as IItem;
         }
 
         private record ItemResponse<T>(int Total, IReadOnlyCollection<T> Items) where T : BaseItem;

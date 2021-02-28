@@ -39,7 +39,7 @@ namespace TarkovItemBot.Modules
                 return;
             }
 
-            var baseItem = await _tarkov.GetEmbedableItemAsync(baseItemResult.Id, baseItemResult.Kind);
+            var baseItem = await _tarkov.GetItemAsync(baseItemResult.Id, baseItemResult.Kind);
 
             if (baseItem is not ModifiableItem modifiableItem)
             {
@@ -47,7 +47,7 @@ namespace TarkovItemBot.Modules
                 return;
             }
 
-            var modItem = await _tarkov.GetEmbedableItemAsync(modItemResult.Id, modItemResult.Kind) as BaseItem;
+            var modItem = await _tarkov.GetItemAsync(modItemResult.Id, modItemResult.Kind);
 
             string slotName = null;
 
@@ -99,7 +99,7 @@ namespace TarkovItemBot.Modules
                 return;
             }
 
-            var item = await _tarkov.GetEmbedableItemAsync(result.Id, result.Kind) as BaseItem;
+            var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
 
             var offerValue = item.Price;
             var requestValue = Convert.ToDouble(price);

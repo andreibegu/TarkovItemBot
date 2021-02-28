@@ -48,7 +48,7 @@ namespace TarkovItemBot.Modules
                 return;
             }
 
-            var item = await _tarkov.GetEmbedableItemAsync(result.Id, result.Kind);
+            var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
             await ReplyAsync(embed: item.ToEmbedBuilder().Build());
         }
     }
