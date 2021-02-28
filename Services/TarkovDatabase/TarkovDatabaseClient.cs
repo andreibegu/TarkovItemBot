@@ -52,7 +52,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
             return response as IItem;
         }
 
-        private record ItemResponse<T>(int Total, IReadOnlyCollection<T> Items) where T : BaseItem;
+        private record Response<T>(int Total, IReadOnlyCollection<T> Items);
 
         public async Task<IReadOnlyCollection<T>> GetItemsAsync<T>(IEnumerable<string> ids = null) where T : BaseItem
         {
@@ -87,15 +87,13 @@ namespace TarkovItemBot.Services.TarkovDatabase
                     query["id"] = string.Join(",", ids);
                 }
 
-                var response = await _httpClient.GetFromJsonAsync<ItemResponse<T>>
+                var response = await _httpClient.GetFromJsonAsync<Response<T>>
                     ($"item/{kind.ToString().ToCamelCase()}{query.AsQueryString()}");
                 items.AddRange(response.Items);
             }
 
             return items;
         }
-
-        private record LocationResponse(int Total, IReadOnlyCollection<Location> Items);
 
         public async Task<IReadOnlyCollection<Location>> GetLocationsAsync(string text = null, int limit = 15)
         {
@@ -104,8 +102,40 @@ namespace TarkovItemBot.Services.TarkovDatabase
             if (text != null) query["text"] = text;
             query["limit"] = limit;
 
-            var response = await _httpClient.GetFromJsonAsync<LocationResponse>("location" + query.AsQueryString());
+            var response = await _httpClient.GetFromJsonAsync<Response<Location>>("location" + query.AsQueryString());
             return response.Items ?? new List<Location>();
         }
+
+        public async Task<IReadOnlyCollection<Module>> GetModulesAsync(string text = null, string material = null, int limit = 15)
+        {
+            var query = new Dictionary<string, object>();
+
+            if (text != null) query["text"] = text;
+            if (material != null) query["material"] = material;
+            query["limit"] = limit;
+
+            var response = await _httpClient.GetFromJsonAsync<Response<Module>>("hideout/module" + query.AsQueryString());
+            return response.Items ?? new List<Module>();
+        }
+
+        public Task<Module> GetModuleAsync(string id)
+            => _httpClient.GetFromJsonAsync<Module>($"hideout/module/{id}");
+
+        public async Task<IReadOnlyCollection<Production>> GetProductionsAsync(string module = null, string material = null,
+            string outcome = null, int limit = 15)
+        {
+            var query = new Dictionary<string, object>();
+
+            if (module != null) query["module"] = module;
+            if (material != null) query["material"] = material;
+            if (outcome != null) query["outcome"] = outcome;
+            query["limit"] = limit;
+
+            var response = await _httpClient.GetFromJsonAsync<Response<Production>>("hideout/production" + query.AsQueryString());
+            return response.Items ?? new List<Production>();
+        }
+
+        public Task<Production> GetProductionAsync(string id)
+            => _httpClient.GetFromJsonAsync<Production>($"hideout/production/{id}");
     }
 }
