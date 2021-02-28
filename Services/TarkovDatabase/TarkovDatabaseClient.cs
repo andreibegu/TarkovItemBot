@@ -17,6 +17,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         private const int _pageLimit = 100;
         private readonly ConcurrentDictionary<ItemKind, Type> _kindMap = new ConcurrentDictionary<ItemKind, Type>();
         private readonly HttpClient _httpClient;
+
         public TarkovDatabaseClient(HttpClient httpClient, IOptions<TarkovDatabaseOptions> config)
         {
             BuildKindMap();
