@@ -54,12 +54,17 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
         private record ItemResponse<T>(int Total, IReadOnlyCollection<T> Items) where T : BaseItem;
 
-        public async Task<IReadOnlyCollection<T>> GetItemsAsync<T>() where T : BaseItem
+        public async Task<IReadOnlyCollection<T>> GetItemsAsync<T>(IEnumerable<string> ids = null) where T : BaseItem
         {
             var kind = _kindMap.FirstOrDefault(x => x.Value == typeof(T)).Key;
+            int total;
 
-            var index = await GetItemsInfoAsync();
-            var total = index.Kinds[kind].Count;
+            if (ids == null)
+            {
+                var index = await GetItemsInfoAsync();
+                total = index.Kinds[kind].Count;
+            }
+            else total = ids.Count();
 
             int limit = 100;
             var pages = total % limit == 0 ? total / limit : total / limit + 1;
@@ -69,8 +74,21 @@ namespace TarkovItemBot.Services.TarkovDatabase
             {
                 var offset = limit * i;
 
+                var query = new Dictionary<string, object>()
+                {
+                    ["limit"] = limit,
+                    ["offset"] = offset
+                };
+
+                if (ids != null)
+                {
+                    var end = total - offset;
+                    ids = ids.Skip(offset).Take(end);
+                    query["id"] = string.Join(",", ids);
+                }
+
                 var response = await _httpClient.GetFromJsonAsync<ItemResponse<T>>
-                    ($"item/{kind.ToString().ToCamelCase()}?limit={limit}&offset={offset}");
+                    ($"item/{kind.ToString().ToCamelCase()}{query.AsQueryString()}");
                 items.AddRange(response.Items);
             }
 
