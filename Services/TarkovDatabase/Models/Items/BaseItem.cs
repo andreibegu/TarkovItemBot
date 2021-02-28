@@ -18,7 +18,6 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public int Price { get; set; }
         public float Weight { get; set; }
         public int MaxStack { get; set; }
-        // public Rarity Rarity { get; set; }
         public Grid Grid { get; set; }
         [JsonPropertyName("_modified")]
         [JsonConverter(typeof(UnixDateTimeConverter))]
@@ -41,7 +40,6 @@ namespace TarkovItemBot.Services.TarkovDatabase
             };
 
             embed.AddField("Weight", $"{Weight} kg", true);
-            // embed.AddField("Rarity", Rarity.Humanize().Transform(To.TitleCase), true);
 
             var width = Grid.Width;
             var height = Grid.Height;
