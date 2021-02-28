@@ -23,13 +23,6 @@ namespace TarkovItemBot.Modules
             _tarkovSearch = tarkovSearch;
         }
 
-        [Command("test")]
-        public async Task TestAsync()
-        {
-            var items = await _tarkov.GetItemsAsync<ArmorItem>();
-            await ReplyAsync(items.Humanize(x => $"`{x.Name}` ({x.GetType().Name})"));
-        }
-
         [Command("compatible")]
         [Alias("compatibility")]
         [Summary("Check if two items are compatible.")]
