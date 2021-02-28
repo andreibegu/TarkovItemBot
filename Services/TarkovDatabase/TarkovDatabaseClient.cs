@@ -59,7 +59,6 @@ namespace TarkovItemBot.Services.TarkovDatabase
             where T : IItem
         {
             int total;
-
             if (ids == null)
             {
                 var index = await GetItemsInfoAsync();
@@ -68,12 +67,11 @@ namespace TarkovItemBot.Services.TarkovDatabase
             else total = ids.Count();
 
             var pages = total % _pageLimit == 0 ? total / _pageLimit : total / _pageLimit + 1;
-
             var items = new List<T>();
+
             for (int i = 0; i < pages; i++)
             {
                 var offset = _pageLimit * i;
-
                 var query = new Dictionary<string, object>()
                 {
                     ["limit"] = _pageLimit,
@@ -87,20 +85,20 @@ namespace TarkovItemBot.Services.TarkovDatabase
                     query["id"] = string.Join(",", ids);
                 }
 
+                string path = $"item/{kind.ToString().ToCamelCase()}{query.AsQueryString()}";
+
                 // Unsafe workaround for no interface deserialization
                 IReadOnlyCollection<T> response;
                 if(typeof(T) != typeof(IItem))
                 {
-                    var result = await _httpClient.GetFromJsonAsync<Response<T>>
-                        ($"item/{kind.ToString().ToCamelCase()}{query.AsQueryString()}");
+                    var result = await _httpClient.GetFromJsonAsync<Response<T>>(path);
                     response = result.Items;
                 }
                 else
                 {
                     var kindType = _kindMap[kind];
                     var responseType = typeof(Response<>).MakeGenericType(kindType);
-                    dynamic result = await _httpClient.GetFromJsonAsync
-                        ($"item/{kind.ToString().ToCamelCase()}{query.AsQueryString()}", responseType);
+                    dynamic result = await _httpClient.GetFromJsonAsync(path, responseType);
                     response = result.Items;
                 }
 
