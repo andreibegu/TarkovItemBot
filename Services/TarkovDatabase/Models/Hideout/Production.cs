@@ -14,7 +14,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public IReadOnlyList<ModuleReference> RequiredModules { get; set; }
         public IReadOnlyList<ItemReference> Materials { get; set; }
         public IReadOnlyList<ItemReference> Outcome { get; set; }
-        public int Duration { get; set; }
+        [JsonConverter(typeof(SecondsTimeSpanConverter))]
+        public TimeSpan Duration { get; set; }
         [JsonPropertyName("_modified")]
         [JsonConverter(typeof(UnixDateTimeConverter))]
         public DateTime Modified { get; set; }

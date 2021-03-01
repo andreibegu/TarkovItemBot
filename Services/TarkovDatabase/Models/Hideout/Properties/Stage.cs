@@ -1,6 +1,8 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
@@ -12,7 +14,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
         [JsonPropertyName("requiredMods")]
         public IReadOnlyList<ModuleReference> RequiredModules { get; set; }
         public IReadOnlyList<ItemReference> Materials { get; set; }
-        public int ConstructionTime { get; set; }
+        [JsonConverter(typeof(SecondsTimeSpanConverter))]
+        public TimeSpan ConstructionTime { get; set; }
 
     }
 }
