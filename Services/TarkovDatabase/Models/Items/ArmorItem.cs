@@ -5,14 +5,14 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class ArmorItem : CommonItem, IModifiableItem
+    public class ArmorItem : CommonItem, IModifiableItem, IAttachableItem
     {
         public ArmorType Type { get; set; }
         public ArmorProperties Armor { get; set; }
         public Penalties Penalties { get; set; }
+        public RicochetChance RicochetChance { get; set; }
         public IReadOnlyCollection<string> Blocking { get; set; }
         public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Compatibility { get; set; }
-        public RicochetChance RicochetChance { get; set; }
         public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()

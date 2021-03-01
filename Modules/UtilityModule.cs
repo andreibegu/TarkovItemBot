@@ -3,6 +3,7 @@ using Discord.Commands;
 using Humanizer;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -40,7 +41,8 @@ namespace TarkovItemBot.Modules
 
             var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
 
-            if (item is not IModifiableItem modifiableItem)
+            if (item is not IModifiableItem modifiableItem ||
+                !modifiableItem.Slots.Any())
             {
                 await ReplyAsync("The base item provided is not modifiable!");
                 return;
@@ -65,7 +67,51 @@ namespace TarkovItemBot.Modules
                     items.AddRange(filterItems);
                 }
 
-                builder.AddField(slot.Key.Humanize(LetterCasing.Title), items.Humanize(x => $"`{x.ShortName}`"));
+                var itemResult = items.Any() ? items.Humanize(x => $"`{x.ShortName}`") : "None";
+                builder.AddField(slot.Key.Humanize(LetterCasing.Title), itemResult);
+            }
+
+            await ReplyAsync(embed: builder.Build());
+        }
+
+        [Command("compatibility")]
+        [Alias("compatible", "attachable")]
+        [Summary("Displays all items an item can be attached to.")]
+        [Remarks("compatibility pk-06")]
+        public async Task CompatibilityAsync([Summary("The item to display compatibility for.")][Remainder] string query)
+        {
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
+
+            if (result == null)
+            {
+                await ReplyAsync("No items found for query!");
+                return;
+            }
+
+            var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
+
+            if (item is not IAttachableItem attachableItem
+                || !attachableItem.Compatibility.Any())
+            {
+                await ReplyAsync("The base item provided is not attachable!");
+                return;
+            }
+
+            var builder = new EmbedBuilder()
+            {
+                Title = $"{item.Name} ({item.ShortName})",
+                Color = item.Grid.Color,
+                ThumbnailUrl = item.IconUrl,
+                Description = item.Description,
+                Url = item.WikiUrl
+            };
+
+            foreach (var slot in attachableItem.Compatibility)
+            {
+                var items = await _tarkov.GetItemsAsync(slot.Key, slot.Value);
+
+                var itemResult = items.Any() ? items.Humanize(x => $"`{x.ShortName}`") : "None";
+                builder.AddField(slot.Key.Humanize(LetterCasing.Title), itemResult);
             }
 
             await ReplyAsync(embed: builder.Build());

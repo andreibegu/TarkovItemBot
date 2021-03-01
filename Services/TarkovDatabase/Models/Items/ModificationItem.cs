@@ -6,7 +6,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class ModificationItem : CommonItem, IModifiableItem
+    public class ModificationItem : CommonItem, IModifiableItem, IAttachableItem
     {
         [JsonPropertyName("ergonomicsFP")]
         public float ErgonomicsFloat { get; set; }

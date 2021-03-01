@@ -5,7 +5,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class MagazineItem : CommonItem
+    public class MagazineItem : CommonItem, IAttachableItem
     {
         public int Capacity { get; set; }
         public string Caliber { get; set; }
