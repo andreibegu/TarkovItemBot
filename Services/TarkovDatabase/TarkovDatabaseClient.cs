@@ -56,18 +56,32 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
         private record Response<T>(int Total, IReadOnlyCollection<T> Items);
 
-        private async Task<IReadOnlyCollection<T>> GetItemsAsync<T>(ItemKind kind, IEnumerable<string> ids = null)
+        private async Task<IReadOnlyCollection<T>> GetItemsAsync<T>(ItemKind kind, Dictionary<string, object> query)
             where T : IItem
         {
-            int total;
-            if (ids == null)
-            {
-                var index = await GetItemIndexAsync();
-                total = index.Kinds[kind].Count;
-            }
-            else total = ids.Count();
+            // Unsafe workaround for no interface deserialization
+            string path = $"item/{kind.ToString().ToCamelCase()}{query.AsQueryString()}";
 
-            var pages = total % _pageLimit == 0 ? total / _pageLimit : total / _pageLimit + 1;
+            IReadOnlyCollection<T> response;
+            if (typeof(T) != typeof(IItem))
+            {
+                var result = await _httpClient.GetFromJsonAsync<Response<T>>(path);
+                response = result.Items;
+            }
+            else
+            {
+                var kindType = _kindMap[kind];
+                var responseType = typeof(Response<>).MakeGenericType(kindType);
+                dynamic result = await _httpClient.GetFromJsonAsync(path, responseType);
+                response = result.Items;
+            }
+
+            return response;
+        }
+
+        private async Task<IReadOnlyCollection<T>> GetItemsByCountAsync<T>(ItemKind kind, int count) where T : IItem
+        {
+            var pages = count % _pageLimit == 0 ? count / _pageLimit : count / _pageLimit + 1;
             var items = new List<T>();
 
             for (int i = 0; i < pages; i++)
@@ -79,53 +93,63 @@ namespace TarkovItemBot.Services.TarkovDatabase
                     ["offset"] = offset
                 };
 
-                if (ids != null)
-                {
-                    var end = total - offset;
-                    ids = ids.Skip(offset).Take(end);
-                    query["id"] = string.Join(",", ids);
-                }
-
-                string path = $"item/{kind.ToString().ToCamelCase()}{query.AsQueryString()}";
-
-                // Unsafe workaround for no interface deserialization
-                IReadOnlyCollection<T> response;
-                if(typeof(T) != typeof(IItem))
-                {
-                    var result = await _httpClient.GetFromJsonAsync<Response<T>>(path);
-                    response = result.Items;
-                }
-                else
-                {
-                    var kindType = _kindMap[kind];
-                    var responseType = typeof(Response<>).MakeGenericType(kindType);
-                    dynamic result = await _httpClient.GetFromJsonAsync(path, responseType);
-                    response = result.Items;
-                }
-
-                items.AddRange(response);
+                items.AddRange(await GetItemsAsync<T>(kind, query));
             }
 
             return items;
         }
 
-        public async Task<IReadOnlyCollection<T>> GetItemsAsync<T>(IEnumerable<string> ids = null) where T : IItem
+        private async Task<IReadOnlyCollection<T>> GetItemsByIdsAsync<T>(ItemKind kind, IEnumerable<string> ids) where T : IItem
         {
-            var kind = _kindMap.FirstOrDefault(x => x.Value == typeof(T)).Key;
-            var items = await GetItemsAsync<T>(kind, ids);
+            var query = new Dictionary<string, object>()
+            {
+                ["limit"] = _pageLimit
+            };
+
+            var items = new List<T>();
+            var queries = EnumerableHelper.ToQueryStrings(ids, _pageLimit);
+            foreach (var idQuery in queries)
+            {
+                query["id"] = idQuery;
+
+                items.AddRange(await GetItemsAsync<T>(kind, query));
+            }
 
             return items;
         }
 
-        public Task<IReadOnlyCollection<IItem>> GetItemsAsync(ItemKind kind, IEnumerable<string> ids = null)
-            => GetItemsAsync<IItem>(kind, ids);
-
-        public async Task<IReadOnlyCollection<Location>> GetLocationsAsync(string text = null, int limit = 15)
+        public async Task<IReadOnlyCollection<T>> GetItemsAsync<T>() where T : IItem
         {
-            var query = new Dictionary<string, object>();
+            var kind = _kindMap.FirstOrDefault(x => x.Value == typeof(T)).Key;
+            var index = await GetItemIndexAsync();
+            var count = index.Kinds[kind].Count;
+            return await GetItemsByCountAsync<T>(kind, count);
+        }
+
+        public async Task<IReadOnlyCollection<T>> GetItemsAsync<T>(IEnumerable<string> ids) where T : IItem
+        {
+            var kind = _kindMap.FirstOrDefault(x => x.Value == typeof(T)).Key;
+            return await GetItemsByIdsAsync<T>(kind, ids);
+        }
+
+        public async Task<IReadOnlyCollection<IItem>> GetItemsAsync(ItemKind kind)
+        {
+            var index = await GetItemIndexAsync();
+            var count = index.Kinds[kind].Count;
+            return await GetItemsByCountAsync<IItem>(kind, count);
+        }
+
+        public Task<IReadOnlyCollection<IItem>> GetItemsAsync(ItemKind kind, IEnumerable<string> ids)
+            => GetItemsByIdsAsync<IItem>(kind, ids);
+
+        public async Task<IReadOnlyCollection<Location>> GetLocationsAsync(int limit = 100, string text = null)
+        {
+            var query = new Dictionary<string, object>()
+            {
+                ["limit"] = limit
+            };
 
             if (text != null) query["text"] = text;
-            query["limit"] = limit;
 
             var response = await _httpClient.GetFromJsonAsync<Response<Location>>("location" + query.AsQueryString());
             return response.Items ?? new List<Location>();
@@ -134,33 +158,108 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public Task<Location> GetLocationAsync(string id)
             => _httpClient.GetFromJsonAsync<Location>($"location/{id}");
 
-        public async Task<IReadOnlyCollection<Module>> GetModulesAsync(string text = null, string material = null, int limit = 15)
+        private Task<Response<Module>> GetModulesAsync(Dictionary<string, object> query)
+            =>  _httpClient.GetFromJsonAsync<Response<Module>>("hideout/module" + query.AsQueryString());
+
+        public async Task<IReadOnlyCollection<Module>> GetModulesAsync(int count = 100, string text = null, string material = null)
         {
-            var query = new Dictionary<string, object>();
+            var query = new Dictionary<string, object>()
+            {
+                ["limit"] = _pageLimit
+            };
 
             if (text != null) query["text"] = text;
             if (material != null) query["material"] = material;
-            query["limit"] = limit;
 
-            var response = await _httpClient.GetFromJsonAsync<Response<Module>>("hideout/module" + query.AsQueryString());
-            return response.Items ?? new List<Module>();
+            var pages = count % _pageLimit == 0 ? count / _pageLimit : count / _pageLimit + 1;
+            var items = new List<Module>();
+
+            for (int i = 0; i < pages; i++)
+            {
+                if (i == pages - 1) query["limit"] = count;
+                var offset = _pageLimit * i;
+                query["offset"] = offset;
+
+                items.AddRange((await GetModulesAsync(query)).Items);
+            }
+
+            return items ?? new List<Module>();
+        }
+
+        public async Task<IReadOnlyCollection<Module>> GetModulesAsync(IEnumerable<string> ids, string text = null, string material = null)
+        {
+            var query = new Dictionary<string, object>()
+            {
+                ["limit"] = _pageLimit
+            };
+
+            if (text != null) query["text"] = text;
+            if (material != null) query["material"] = material;
+
+            var queries = EnumerableHelper.ToQueryStrings(ids, _pageLimit);
+            var items = new List<Module>();
+
+            foreach (var idQuery in queries)
+            {
+                query["id"] = idQuery;
+                items.AddRange((await GetModulesAsync(query)).Items);
+            }
+
+            return items ?? new List<Module>();
         }
 
         public Task<Module> GetModuleAsync(string id)
             => _httpClient.GetFromJsonAsync<Module>($"hideout/module/{id}");
 
-        public async Task<IReadOnlyCollection<Production>> GetProductionsAsync(string module = null, string material = null,
-            string outcome = null, int limit = 15)
+        private Task<Response<Production>> GetProductionsAsync(Dictionary<string, object> query)
+            => _httpClient.GetFromJsonAsync<Response<Production>>("hideout/production" + query.AsQueryString());
+
+        public async Task<IReadOnlyCollection<Production>> GetProductionsAsync(int count = 100, string module = null, 
+            string material = null, string outcome = null)
         {
             var query = new Dictionary<string, object>();
 
             if (module != null) query["module"] = module;
             if (material != null) query["material"] = material;
             if (outcome != null) query["outcome"] = outcome;
-            query["limit"] = limit;
 
-            var response = await _httpClient.GetFromJsonAsync<Response<Production>>("hideout/production" + query.AsQueryString());
-            return response.Items ?? new List<Production>();
+            var pages = count % _pageLimit == 0 ? count / _pageLimit : count / _pageLimit + 1;
+            var items = new List<Production>();
+
+            for (int i = 0; i < pages; i++)
+            {
+                if (i == pages - 1) query["limit"] = count;
+                var offset = _pageLimit * i;
+                query["offset"] = offset;
+
+                items.AddRange((await GetProductionsAsync(query)).Items);
+            }
+
+            return items ?? new List<Production>();
+        }
+
+        public async Task<IReadOnlyCollection<Production>> GetProductionsAsync(IEnumerable<string> ids, string module = null,
+            string material = null, string outcome = null)
+        {
+            var query = new Dictionary<string, object>()
+            {
+                ["limit"] = _pageLimit
+            };
+
+            if (module != null) query["module"] = module;
+            if (material != null) query["material"] = material;
+            if (outcome != null) query["outcome"] = outcome;
+
+            var queries = EnumerableHelper.ToQueryStrings(ids, _pageLimit);
+            var items = new List<Production>();
+
+            foreach (var idQuery in queries)
+            {
+                query["id"] = idQuery;
+                items.AddRange((await GetProductionsAsync(query)).Items);
+            }
+
+            return items ?? new List<Production>();
         }
 
         public Task<Production> GetProductionAsync(string id)

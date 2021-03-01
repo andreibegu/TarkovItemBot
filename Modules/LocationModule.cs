@@ -36,7 +36,7 @@ namespace TarkovItemBot.Modules
         [Remarks("location The Lab")]
         public async Task LocationAsync([Remainder][RequireLength(3, 50)][Summary("The location to look for.")] string query)
         {
-            var location = (await _tarkov.GetLocationsAsync(query, 1)).FirstOrDefault();
+            var location = (await _tarkov.GetLocationsAsync(1, query)).FirstOrDefault();
 
             if (location == null)
             {

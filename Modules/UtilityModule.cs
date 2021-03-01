@@ -61,7 +61,7 @@ namespace TarkovItemBot.Modules
             {
                 var items = new List<IItem>();
 
-                foreach(var filter in slot.Value.Filter)
+                foreach (var filter in slot.Value.Filter)
                 {
                     var filterItems = await _tarkov.GetItemsAsync(filter.Key, filter.Value);
                     items.AddRange(filterItems);
