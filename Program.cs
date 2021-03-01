@@ -56,7 +56,7 @@ namespace TarkovItemBot
 
 
                     // TODO: Ratelimit from config
-                    services.AddHttpClient<TarkovDatabaseClient>().AddHttpMessageHandler(_ => new RateLimitHandler(350, TimeSpan.FromMinutes(1)))
+                    services.AddHttpClient<TarkovDatabaseClient>().AddHttpMessageHandler(_ => new RateLimitHandler(500, TimeSpan.FromMinutes(1)))
                         .AddHttpMessageHandler<TarkovDatabaseTokenHandler>();
 
                     // Tarkov Database Search
@@ -66,7 +66,7 @@ namespace TarkovItemBot
                     services.AddTransient<TarkovSearchTokenHandler>();
 
                     // TODO: Ratelimit from config
-                    services.AddHttpClient<TarkovSearchClient>().AddHttpMessageHandler(_ => new RateLimitHandler(400, TimeSpan.FromMinutes(1)))
+                    services.AddHttpClient<TarkovSearchClient>().AddHttpMessageHandler(_ => new RateLimitHandler(100, TimeSpan.FromSeconds(10)))
                         .AddHttpMessageHandler<TarkovSearchTokenHandler>();
 
                     services.AddHostedService<CommandHandlingService>();
