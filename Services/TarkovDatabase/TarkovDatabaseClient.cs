@@ -14,7 +14,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
 {
     public class TarkovDatabaseClient
     {
-        private const int _pageLimit = 100;
+        private const int PageLimit = 100;
+
         private readonly ConcurrentDictionary<ItemKind, Type> _kindMap = new ConcurrentDictionary<ItemKind, Type>();
         private readonly HttpClient _httpClient;
 
@@ -81,15 +82,15 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
         private async Task<IReadOnlyCollection<T>> GetItemsByCountAsync<T>(ItemKind kind, int count) where T : IItem
         {
-            var pages = count % _pageLimit == 0 ? count / _pageLimit : count / _pageLimit + 1;
+            var pages = count % PageLimit == 0 ? count / PageLimit : count / PageLimit + 1;
             var items = new List<T>();
 
             for (int i = 0; i < pages; i++)
             {
-                var offset = _pageLimit * i;
+                var offset = PageLimit * i;
                 var query = new Dictionary<string, object>()
                 {
-                    ["limit"] = _pageLimit,
+                    ["limit"] = PageLimit,
                     ["offset"] = offset
                 };
 
@@ -103,11 +104,11 @@ namespace TarkovItemBot.Services.TarkovDatabase
         {
             var query = new Dictionary<string, object>()
             {
-                ["limit"] = _pageLimit
+                ["limit"] = PageLimit
             };
 
             var items = new List<T>();
-            var queries = EnumerableHelper.ToQueryStrings(ids, _pageLimit);
+            var queries = EnumerableHelper.ToQueryStrings(ids, PageLimit);
             foreach (var idQuery in queries)
             {
                 query["id"] = idQuery;
@@ -168,19 +169,19 @@ namespace TarkovItemBot.Services.TarkovDatabase
         {
             var query = new Dictionary<string, object>()
             {
-                ["limit"] = _pageLimit
+                ["limit"] = PageLimit
             };
 
             if (text != null) query["text"] = text;
             if (material != null) query["material"] = material;
 
-            var pages = count % _pageLimit == 0 ? count / _pageLimit : count / _pageLimit + 1;
+            var pages = count % PageLimit == 0 ? count / PageLimit : count / PageLimit + 1;
             var items = new List<Module>();
 
             for (int i = 0; i < pages; i++)
             {
                 if (i == pages - 1) query["limit"] = count;
-                var offset = _pageLimit * i;
+                var offset = PageLimit * i;
                 query["offset"] = offset;
 
                 items.AddRange((await GetModulesAsync(query)).Items);
@@ -193,13 +194,13 @@ namespace TarkovItemBot.Services.TarkovDatabase
         {
             var query = new Dictionary<string, object>()
             {
-                ["limit"] = _pageLimit
+                ["limit"] = PageLimit
             };
 
             if (text != null) query["text"] = text;
             if (material != null) query["material"] = material;
 
-            var queries = EnumerableHelper.ToQueryStrings(ids, _pageLimit);
+            var queries = EnumerableHelper.ToQueryStrings(ids, PageLimit);
             var items = new List<Module>();
 
             foreach (var idQuery in queries)
@@ -226,13 +227,13 @@ namespace TarkovItemBot.Services.TarkovDatabase
             if (material != null) query["material"] = material;
             if (outcome != null) query["outcome"] = outcome;
 
-            var pages = count % _pageLimit == 0 ? count / _pageLimit : count / _pageLimit + 1;
+            var pages = count % PageLimit == 0 ? count / PageLimit : count / PageLimit + 1;
             var items = new List<Production>();
 
             for (int i = 0; i < pages; i++)
             {
                 if (i == pages - 1) query["limit"] = count;
-                var offset = _pageLimit * i;
+                var offset = PageLimit * i;
                 query["offset"] = offset;
 
                 items.AddRange((await GetProductionsAsync(query)).Items);
@@ -246,14 +247,14 @@ namespace TarkovItemBot.Services.TarkovDatabase
         {
             var query = new Dictionary<string, object>()
             {
-                ["limit"] = _pageLimit
+                ["limit"] = PageLimit
             };
 
             if (module != null) query["module"] = module;
             if (material != null) query["material"] = material;
             if (outcome != null) query["outcome"] = outcome;
 
-            var queries = EnumerableHelper.ToQueryStrings(ids, _pageLimit);
+            var queries = EnumerableHelper.ToQueryStrings(ids, PageLimit);
             var items = new List<Production>();
 
             foreach (var idQuery in queries)
