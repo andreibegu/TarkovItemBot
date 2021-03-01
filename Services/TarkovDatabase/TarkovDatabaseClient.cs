@@ -142,6 +142,9 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public Task<IReadOnlyCollection<IItem>> GetItemsAsync(ItemKind kind, IEnumerable<string> ids)
             => GetItemsByIdsAsync<IItem>(kind, ids);
 
+        public Task<Location> GetLocationAsync(string id)
+            => _httpClient.GetFromJsonAsync<Location>($"location/{id}");
+
         public async Task<IReadOnlyCollection<Location>> GetLocationsAsync(int limit = 100, string text = null)
         {
             var query = new Dictionary<string, object>()
@@ -155,8 +158,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
             return response.Items ?? new List<Location>();
         }
 
-        public Task<Location> GetLocationAsync(string id)
-            => _httpClient.GetFromJsonAsync<Location>($"location/{id}");
+        public Task<Module> GetModuleAsync(string id)
+            => _httpClient.GetFromJsonAsync<Module>($"hideout/module/{id}");
 
         private Task<Response<Module>> GetModulesAsync(Dictionary<string, object> query)
             =>  _httpClient.GetFromJsonAsync<Response<Module>>("hideout/module" + query.AsQueryString());
@@ -208,8 +211,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
             return items ?? new List<Module>();
         }
 
-        public Task<Module> GetModuleAsync(string id)
-            => _httpClient.GetFromJsonAsync<Module>($"hideout/module/{id}");
+        public Task<Production> GetProductionAsync(string id)
+            => _httpClient.GetFromJsonAsync<Production>($"hideout/production/{id}");
 
         private Task<Response<Production>> GetProductionsAsync(Dictionary<string, object> query)
             => _httpClient.GetFromJsonAsync<Response<Production>>("hideout/production" + query.AsQueryString());
@@ -261,8 +264,5 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
             return items ?? new List<Production>();
         }
-
-        public Task<Production> GetProductionAsync(string id)
-            => _httpClient.GetFromJsonAsync<Production>($"hideout/production/{id}");
     }
 }
