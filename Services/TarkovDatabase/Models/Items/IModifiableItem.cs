@@ -2,7 +2,7 @@
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class ModifiableItem : CommonItem
+    public interface IModifiableItem
     {
         public IReadOnlyDictionary<string, Slot> Slots { get; set; }
     }

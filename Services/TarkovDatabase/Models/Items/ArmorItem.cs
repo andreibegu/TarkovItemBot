@@ -5,7 +5,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class ArmorItem : ModifiableItem
+    public class ArmorItem : CommonItem, IModifiableItem
     {
         public ArmorType Type { get; set; }
         public ArmorProperties Armor { get; set; }
@@ -13,6 +13,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public IReadOnlyCollection<string> Blocking { get; set; }
         public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Compatibility { get; set; }
         public RicochetChance RicochetChance { get; set; }
+        public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {

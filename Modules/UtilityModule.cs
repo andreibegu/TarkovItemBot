@@ -40,7 +40,7 @@ namespace TarkovItemBot.Modules
 
             var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
 
-            if (item is not ModifiableItem modifiableItem)
+            if (item is not IModifiableItem modifiableItem)
             {
                 await ReplyAsync("The base item provided is not modifiable!");
                 return;

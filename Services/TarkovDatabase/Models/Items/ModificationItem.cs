@@ -6,7 +6,7 @@ using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class ModificationItem : ModifiableItem
+    public class ModificationItem : CommonItem, IModifiableItem
     {
         [JsonPropertyName("ergonomicsFP")]
         public float ErgonomicsFloat { get; set; }
@@ -17,6 +17,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public GridModifier GridModifier { get; set; }
         public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Compatibility { get; set; }
         public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Conflicts { get; set; }
+        public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {

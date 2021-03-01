@@ -4,11 +4,12 @@ using System.Collections.Generic;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
-    public class ClothingItem : ModifiableItem
+    public class ClothingItem : CommonItem, IModifiableItem
     {
         public IReadOnlyCollection<string> Blocking { get; set; }
         public Penalties Penalties { get; set; }
         public string Type { get; set; }
+        public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {
