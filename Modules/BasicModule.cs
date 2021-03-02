@@ -79,10 +79,11 @@ namespace TarkovItemBot.Modules
             builder.WithAuthor($"{Context.Client.CurrentUser.Username} Help", Context.Client.CurrentUser.GetAvatarUrl());
             builder.WithFooter($"(?) Use {_config.Prefix}about for more info");
 
-            foreach (var module in _commands.Modules.Where(x => x.Parent == null))
+            foreach (var module in _commands.Modules.Where(x => x.Parent == null)
+                .OrderByDescending(x => x.Commands.Count))
             {
                 if (!module.Commands.Any()) continue;
-                builder.AddField($"{module.Name} Commands", string.Join("\n", module.Commands.Where(x => x.Name != "help")
+                builder.AddField($"{module.Name} Commands", string.Join("\n", module.Commands
                     .Select(x => $"• `{x.GetUsage()}`")), true);
             }
 
