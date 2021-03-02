@@ -172,7 +172,7 @@ namespace TarkovItemBot.Modules
                 .ToDictionary(x => x.Id, x => x);
 
             var productionList = "";
-            foreach (var production in productions.OrderBy(x => x.Module))
+            foreach (var production in productions)
             {
                 string lambda(ItemReference x) => x.Id == result.Id ? $"**{x.Count:N0}x {items[x.Id].ShortName}**" :
                     $"{x.Count:N0}x {items[x.Id].ShortName}";
