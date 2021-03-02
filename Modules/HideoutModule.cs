@@ -85,9 +85,7 @@ namespace TarkovItemBot.Modules
             }
 
             if (stage.Requirements.Any())
-            {
                 builder.AddField("Other Requirements", stage.Requirements.Humanize(x => $"{x.Name} L{x.Level}"));
-            }
 
             var bonuses = "";
 
@@ -103,8 +101,6 @@ namespace TarkovItemBot.Modules
                     bonuses += $"• {bonus.Description} {value}\n";
                 }
             }
-            else
-                bonuses = "None for this level\n";
 
             var previousBonuses = module.Stages.Take(level - 1).SelectMany(x => x.Bonuses)
                 .Where(x => !types.Contains(x.Type)).Distinct(new BonusTypeComparer());
@@ -120,7 +116,7 @@ namespace TarkovItemBot.Modules
                 }
             }
 
-            builder.AddField("Bonuses", bonuses);
+            if(!string.IsNullOrEmpty(bonuses)) builder.AddField("Bonuses", bonuses);
 
             await ReplyAsync(embed: builder.Build());
         }
