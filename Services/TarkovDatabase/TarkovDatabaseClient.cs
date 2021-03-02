@@ -162,8 +162,11 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public Task<Module> GetModuleAsync(string id)
             => _httpClient.GetFromJsonAsync<Module>($"hideout/module/{id}");
 
-        private Task<Response<Module>> GetModulesAsync(Dictionary<string, object> query)
-            =>  _httpClient.GetFromJsonAsync<Response<Module>>("hideout/module" + query.AsQueryString());
+        private async Task<IReadOnlyCollection<Module>> GetModulesAsync(Dictionary<string, object> query)
+        {
+            var result = await _httpClient.GetFromJsonAsync<Response<Module>>("hideout/module" + query.AsQueryString());
+            return result.Items ?? new List<Module>();
+        }
 
         public async Task<IReadOnlyCollection<Module>> GetModulesAsync(int count = 100, string text = null, string material = null)
         {
@@ -184,10 +187,10 @@ namespace TarkovItemBot.Services.TarkovDatabase
                 var offset = PageLimit * i;
                 query["offset"] = offset;
 
-                items.AddRange((await GetModulesAsync(query)).Items);
+                items.AddRange(await GetModulesAsync(query));
             }
 
-            return items ?? new List<Module>();
+            return items;
         }
 
         public async Task<IReadOnlyCollection<Module>> GetModulesAsync(IEnumerable<string> ids, string text = null, string material = null)
@@ -206,19 +209,22 @@ namespace TarkovItemBot.Services.TarkovDatabase
             foreach (var idQuery in queries)
             {
                 query["id"] = idQuery;
-                items.AddRange((await GetModulesAsync(query)).Items);
+                items.AddRange(await GetModulesAsync(query));
             }
 
-            return items ?? new List<Module>();
+            return items;
         }
 
         public Task<Production> GetProductionAsync(string id)
             => _httpClient.GetFromJsonAsync<Production>($"hideout/production/{id}");
 
-        private Task<Response<Production>> GetProductionsAsync(Dictionary<string, object> query)
-            => _httpClient.GetFromJsonAsync<Response<Production>>("hideout/production" + query.AsQueryString());
+        private async Task<IReadOnlyCollection<Production>> GetProductionsAsync(Dictionary<string, object> query)
+        {
+            var result = await _httpClient.GetFromJsonAsync<Response<Production>>("hideout/production" + query.AsQueryString());
+            return result.Items ?? new List<Production>();
+        }
 
-        public async Task<IReadOnlyCollection<Production>> GetProductionsAsync(int count = 100, string module = null, 
+        public async Task<IReadOnlyCollection<Production>> GetProductionsAsync(int count = 100, string module = null,
             string material = null, string outcome = null)
         {
             var query = new Dictionary<string, object>();
@@ -236,10 +242,10 @@ namespace TarkovItemBot.Services.TarkovDatabase
                 var offset = PageLimit * i;
                 query["offset"] = offset;
 
-                items.AddRange((await GetProductionsAsync(query)).Items);
+                items.AddRange((await GetProductionsAsync(query)));
             }
 
-            return items ?? new List<Production>();
+            return items;
         }
 
         public async Task<IReadOnlyCollection<Production>> GetProductionsAsync(IEnumerable<string> ids, string module = null,
@@ -260,10 +266,10 @@ namespace TarkovItemBot.Services.TarkovDatabase
             foreach (var idQuery in queries)
             {
                 query["id"] = idQuery;
-                items.AddRange((await GetProductionsAsync(query)).Items);
+                items.AddRange((await GetProductionsAsync(query)));
             }
 
-            return items ?? new List<Production>();
+            return items;
         }
     }
 }
