@@ -12,7 +12,7 @@ namespace TarkovItemBot.Helpers
             var count = ids.Count();
             var pages = count % limit == 0 ? count / limit : count / limit + 1;
 
-            for(int i = 0; i < pages; i++)
+            for (int i = 0; i < pages; i++)
             {
                 var offset = limit * i;
                 var end = count - offset;
