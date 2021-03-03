@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Humanizer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +31,9 @@ namespace TarkovItemBot.Modules
         public async Task ModuleAsync([RequireLength(3, 50)][Summary("The module to look for.")] string query,
             [Summary("The level of the module to look for")] int level = 1)
         {
-            var module = (await _tarkov.GetModulesAsync(1, query)).FirstOrDefault();
+            var searchResult = await _tarkov.GetModulesAsync(2, query);
+            // Workaround for some ambiguities
+            var module = searchResult.OrderBy(x => x.Name.Length - query.Length).FirstOrDefault();
 
             if (module == null)
             {
