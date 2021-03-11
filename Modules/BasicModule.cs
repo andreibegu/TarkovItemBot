@@ -36,9 +36,11 @@ namespace TarkovItemBot.Modules
         [Remarks("about")]
         public async Task AboutAsync()
         {
+            var appInfo = await Context.Client.GetApplicationInfoAsync();
+
             var builder = new EmbedBuilder()
             {
-                Description = "A free and open source Discord bot providing item and location information for the game Escape from Tarkov.",
+                Description = appInfo.Description,
                 Color = new Color(0x968867)
             };
 
@@ -49,8 +51,6 @@ namespace TarkovItemBot.Modules
 
             builder.AddField("Data Source", "[Tarkov Database](https://tarkov-database.com/)", true);
             builder.AddField("Source Code", "[Github](https://github.com/Andrewww1/TarkovItemBot)", true);
-
-            var appInfo = await Context.Client.GetApplicationInfoAsync();
 
             if (appInfo.IsBotPublic) builder.AddField("Invite Link", $"[Invite](https://discord.com/oauth2/authorize?client_id={appInfo.Id}&scope=bot&permissions=16384)", true);
 
