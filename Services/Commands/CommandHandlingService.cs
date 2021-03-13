@@ -43,11 +43,17 @@ namespace TarkovItemBot.Services.Commands
             if (rawMessage is not SocketUserMessage message) return;
             if (message.Source != MessageSource.User) return;
 
-            if (!CommandUtilities.HasPrefix(message.Content, _config.Prefix, out var output)) return;
+            var prefixes = new string[] { _config.Prefix, _discord.CurrentUser.Mention };
+            if (!CommandUtilities.HasAnyPrefix(message.Content, prefixes, out _, out var output)) return;
 
             var context = new DiscordCommandContext(_discord, message, _services);
             var result = await _commands.ExecuteAsync(output, context);
 
+            await HandleResultAsync(result, context);
+        }
+        
+        private static async Task HandleResultAsync(IResult result, DiscordCommandContext context)
+        {
             if (result is FailedResult failedResult)
             {
                 if (failedResult is CommandNotFoundResult) return;
