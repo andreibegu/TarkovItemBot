@@ -67,7 +67,7 @@ namespace TarkovItemBot
                     services.AddSingleton(new CommandService(new CommandServiceConfiguration()
                     {
                         DefaultRunMode = RunMode.Parallel,
-                        CooldownBucketKeyGenerator = CooldownBucketKeyGenerators.DiscordDefault 
+                        CooldownBucketKeyGenerator = CooldownBucketKeyGenerators.DiscordDefault
                     }));
 
                     services.AddHostedService<CommandHandlingService>();
