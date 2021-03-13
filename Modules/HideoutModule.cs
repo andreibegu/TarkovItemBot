@@ -106,7 +106,7 @@ namespace TarkovItemBot.Modules
                 bonuses = bonuses.AddBonuses(module, level, previousBonuses, true);
             }
 
-            if(!string.IsNullOrEmpty(bonuses)) builder.AddField("Bonuses", bonuses);
+            if (!string.IsNullOrEmpty(bonuses)) builder.AddField("Bonuses", bonuses);
 
             await ReplyAsync(embed: builder.Build());
         }

@@ -33,7 +33,7 @@ namespace TarkovItemBot.Helpers
                     .Where(x => x.Type == bonus.Type).Sum(x => x.Value);
 
                 string value = "";
-                if(bonus.Value != 0)
+                if (bonus.Value != 0)
                 {
                     var totalDisplay = $"`{total:+0.00;-#.00}` total";
                     value = !previous ? $"(`{bonus.Value:+0.00;-#.00}` curr. / {totalDisplay})"

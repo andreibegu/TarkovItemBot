@@ -54,7 +54,6 @@ namespace TarkovItemBot
                     services.AddScoped<TarkovDatabaseTokenCache>();
                     services.AddTransient<TarkovDatabaseTokenHandler>();
 
-
                     // TODO: Ratelimit from config
                     services.AddHttpClient<TarkovDatabaseClient>().AddHttpMessageHandler(_ => new RateLimitHandler(500, TimeSpan.FromMinutes(1)))
                         .AddHttpMessageHandler<TarkovDatabaseTokenHandler>();
