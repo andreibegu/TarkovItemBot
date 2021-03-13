@@ -16,6 +16,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float Damage { get; set; }
         public float Penetration { get; set; }
         public float ArmorDamage { get; set; }
+        public float Retardation { get; set; }
         public FragmentationProperties Fragmentation { get; set; }
         public AmmunitionEffectProperties Effects { get; set; }
         public int Pellets { get; set; }
