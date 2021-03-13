@@ -4,6 +4,7 @@
     {
         public string Description { get; set; }
         public float Value { get; set; }
+        public string SkillType { get; set; }
         public BonusType Type { get; set; }
     }
 }

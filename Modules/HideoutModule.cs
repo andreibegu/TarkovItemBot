@@ -92,17 +92,10 @@ namespace TarkovItemBot.Modules
 
             var bonuses = "";
 
-            var types = new List<BonusType>();
+            var types = stage.Bonuses.Select(x => x.Type);
             if (stage.Bonuses.Any())
             {
-                foreach (var bonus in stage.Bonuses)
-                {
-                    types.Add(bonus.Type);
-                    var total = module.Stages.Take(level).SelectMany(x => x.Bonuses)
-                        .Where(x => x.Type == bonus.Type).Sum(x => x.Value);
-                    var value = bonus.Value != 0 ? $"(`{bonus.Value:+0.00;-#.00}` / `{total}` total)" : "";
-                    bonuses += $"• {bonus.Description} {value}\n";
-                }
+                bonuses = bonuses.AddBonuses(module, level, stage.Bonuses);
             }
 
             var previousBonuses = module.Stages.Take(level - 1).SelectMany(x => x.Bonuses)
@@ -110,13 +103,7 @@ namespace TarkovItemBot.Modules
             if (previousBonuses.Any())
             {
                 bonuses += "**Previous Levels**\n";
-                foreach (var bonus in previousBonuses)
-                {
-                    var total = module.Stages.Take(level).SelectMany(x => x.Bonuses)
-                        .Where(x => x.Type == bonus.Type).Sum(x => x.Value);
-                    var value = total != 0 ? $"(`{total:+0.00;-#.00}` total)" : "";
-                    bonuses += $"• {bonus.Description} {value}\n";
-                }
+                bonuses = bonuses.AddBonuses(module, level, previousBonuses, true);
             }
 
             if(!string.IsNullOrEmpty(bonuses)) builder.AddField("Bonuses", bonuses);
