@@ -30,7 +30,7 @@ namespace TarkovItemBot.Modules
         [Remarks("slots m4a1")]
         public async Task SlotsAsync([Summary("The item to display attachments for.")][Remainder] string query)
         {
-            var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
@@ -79,7 +79,7 @@ namespace TarkovItemBot.Modules
         [Remarks("compatibility pk-06")]
         public async Task CompatibilityAsync([Summary("The item to display compatibility for.")][Remainder] string query)
         {
-            var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
@@ -122,7 +122,7 @@ namespace TarkovItemBot.Modules
         [Remarks("wiki m4a1")]
         public async Task WikiAsync([Summary("The item to look for")][Remainder] string query)
         {
-            var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
@@ -140,7 +140,7 @@ namespace TarkovItemBot.Modules
         public async Task TaxAsync([Summary("The price the item is being put up for.")] int price,
             [Summary("The item that is being put up for sale.")][Remainder][RequireLength(3, 50)] string query)
         {
-            var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {

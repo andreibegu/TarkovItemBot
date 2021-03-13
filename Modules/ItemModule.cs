@@ -40,7 +40,7 @@ namespace TarkovItemBot.Modules
         [Remarks("item Zagustin")]
         public async Task ItemAsync([Remainder][RequireLength(3, 50)][Summary("The item to look for.")] string query)
         {
-            var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {

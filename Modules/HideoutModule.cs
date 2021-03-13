@@ -117,7 +117,7 @@ namespace TarkovItemBot.Modules
         [Remarks("crafting car battery")]
         public async Task CraftingAsync([Remainder][Summary("The item to find crafting information for.")] string query)
         {
-            var result = (await _tarkovSearch.SearchAsync($"name:{query}", 1)).FirstOrDefault();
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {

@@ -23,12 +23,14 @@ namespace TarkovItemBot.Services.TarkovDatabaseSearch
 
         private record SearchResult(int Count, IReadOnlyCollection<SearchItem> Data);
 
-        public async Task<IReadOnlyCollection<SearchItem>> SearchAsync(string query, int limit = 30)
+        public async Task<IReadOnlyCollection<SearchItem>> SearchAsync(string query, DocType type, int limit = 30, bool conjunction = true)
         {
             var uriQuery = new Dictionary<string, object>
             {
                 ["query"] = query,
                 ["limit"] = limit,
+                ["type"] = type.ToString().ToCamelCase(),
+                ["conjunction"] = conjunction.ToString().ToLower()
             };
 
             var response = await _httpClient.GetFromJsonAsync<SearchResult>("search" + uriQuery.AsQueryString());
