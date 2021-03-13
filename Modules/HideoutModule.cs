@@ -1,19 +1,19 @@
 ﻿using Discord;
-using Discord.Commands;
 using Humanizer;
+using Qmmands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TarkovItemBot.Helpers;
-using TarkovItemBot.Preconditions;
+using TarkovItemBot.Services.Commands;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
 
 namespace TarkovItemBot.Modules
 {
     [Name("Hideout")]
-    public class HideoutModule : ItemBotModuleBase
+    public class HideoutModule : DiscordModuleBase
     {
         private readonly TarkovDatabaseClient _tarkov;
         private readonly TarkovSearchClient _tarkovSearch;
@@ -24,12 +24,13 @@ namespace TarkovItemBot.Modules
             _tarkovSearch = tarkovSearch;
         }
 
-        [Command("module")]
-        [Alias("mod", "area")]
-        [Summary("Returns detailed information for the hideout module most closely matching the query.")]
+        [Command("module", "mod", "area")]
+        [Description("Returns detailed information for the hideout module most closely matching the query.")]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
         [Remarks("module \"Intelligence Center\" 3")]
-        public async Task ModuleAsync([RequireLength(3, 50)][Summary("The module to look for.")] string query,
-            [Summary("The level of the module to look for")] int level = 1)
+        public async Task ModuleAsync(
+            [Range(3, 32, true, true)][Description("The module to look for.")] string query,
+            [Description("The level of the module to look for")] int level = 1)
         {
             var searchResult = await _tarkov.GetModulesAsync(2, query);
             // Workaround for some ambiguities
@@ -111,11 +112,12 @@ namespace TarkovItemBot.Modules
             await ReplyAsync(embed: builder.Build());
         }
 
-        [Command("crafting")]
-        [Alias("crafts", "craft", "production")]
-        [Summary("Returns crafting information about the queried item.")]
+        [Command("crafting", "crafts", "craft", "production")]
+        [Description("Returns crafting information about the queried item.")]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
         [Remarks("crafting car battery")]
-        public async Task CraftingAsync([Remainder][Summary("The item to find crafting information for.")] string query)
+        public async Task CraftingAsync(
+            [Range(3, 100, true, true)][Remainder][Description("The item to find crafting information for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 

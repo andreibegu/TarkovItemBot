@@ -1,11 +1,11 @@
-﻿using Discord.Commands;
+﻿using Qmmands;
 using System.Linq;
 
 namespace TarkovItemBot.Helpers
 {
     public static class CommandExtensions
     {
-        public static string GetUsage(this CommandInfo command)
+        public static string GetUsage(this Command command)
         {
             var usage = command.Name;
             if (!command.Parameters.Any()) return usage;
@@ -16,7 +16,7 @@ namespace TarkovItemBot.Helpers
             return usage;
         }
 
-        public static string GetUsage(this ParameterInfo parameter)
+        public static string GetUsage(this Parameter parameter)
         {
             if (parameter.IsOptional)
                 return $"[{parameter.Name} = {parameter.DefaultValue}]";

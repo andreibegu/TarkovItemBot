@@ -1,15 +1,15 @@
 ﻿using Discord;
-using Discord.Commands;
 using Humanizer;
+using Qmmands;
 using System.Linq;
 using System.Threading.Tasks;
-using TarkovItemBot.Preconditions;
+using TarkovItemBot.Services.Commands;
 using TarkovItemBot.Services.TarkovDatabase;
 
 namespace TarkovItemBot.Modules
 {
     [Name("Location")]
-    public class LocationModule : ItemBotModuleBase
+    public class LocationModule : DiscordModuleBase
     {
         private readonly TarkovDatabaseClient _tarkov;
 
@@ -18,9 +18,9 @@ namespace TarkovItemBot.Modules
             _tarkov = tarkov;
         }
 
-        [Command("locations")]
-        [Alias("maps")]
-        [Summary("Lists all available locations to be queried for.")]
+        [Command("locations", "maps")]
+        [Description("Lists all available locations to be queried for.")]
+        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownType.User)]
         [Remarks("locations")]
         public async Task LocationsAsync()
         {
@@ -30,11 +30,12 @@ namespace TarkovItemBot.Modules
             await ReplyAsync($"All available locations: {string.Join(", ", names)}.");
         }
 
-        [Command("location")]
-        [Alias("map", "m", "l")]
-        [Summary("Lists information about a specific location.")]
+        [Command("location", "map", "m", "l")]
+        [Description("Lists information about a specific location.")]
+        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownType.User)]
         [Remarks("location The Lab")]
-        public async Task LocationAsync([Remainder][RequireLength(3, 50)][Summary("The location to look for.")] string query)
+        public async Task LocationAsync(
+            [Remainder][Range(3, 32, true, true)][Description("The location to look for.")] string query)
         {
             var location = (await _tarkov.GetLocationsAsync(1, query)).FirstOrDefault();
 

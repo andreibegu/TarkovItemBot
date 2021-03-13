@@ -1,15 +1,15 @@
-﻿using Discord.Commands;
-using Humanizer;
+﻿using Humanizer;
+using Qmmands;
 using System.Linq;
 using System.Threading.Tasks;
-using TarkovItemBot.Preconditions;
+using TarkovItemBot.Services.Commands;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
 
 namespace TarkovItemBot.Modules
 {
     [Name("Item")]
-    public class ItemModule : ItemBotModuleBase
+    public class ItemModule : DiscordModuleBase
     {
         private readonly TarkovDatabaseClient _tarkov;
         private readonly TarkovSearchClient _tarkovSearch;
@@ -20,11 +20,12 @@ namespace TarkovItemBot.Modules
             _tarkovSearch = tarkovSearch;
         }
 
-        [Command("total")]
-        [Alias("t")]
-        [Summary("Returns the total items of a kind.")]
+        [Command("total", "t")]
+        [Description("Returns the total items of a kind.")]
+        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownType.User)]
         [Remarks("total Ammunition")]
-        public async Task TotalAsync([Summary("The kind of the item group.")] ItemKind kind = ItemKind.None)
+        public async Task TotalAsync(
+            [Description("The kind of the item group.")] ItemKind kind = ItemKind.None)
         {
             var info = await _tarkov.GetItemIndexAsync();
 
@@ -34,11 +35,12 @@ namespace TarkovItemBot.Modules
             await ReplyAsync($"Total of items: `{total}` (Updated `{updated.Humanize()}`).");
         }
 
-        [Command("item")]
-        [Alias("i", "it")]
-        [Summary("Returns detailed information for the item most closely matching the query.")]
+        [Command("item", "i", "it")]
+        [Description("Returns detailed information for the item most closely matching the query.")]
+        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownType.User)]
         [Remarks("item Zagustin")]
-        public async Task ItemAsync([Remainder][RequireLength(3, 50)][Summary("The item to look for.")] string query)
+        public async Task ItemAsync(
+            [Remainder][Range(3, 100, true, true)][Description("The item to look for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 

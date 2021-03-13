@@ -1,15 +1,16 @@
 ﻿using Discord.Addons.Hosting;
-using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Qmmands;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using System;
 using System.Threading.Tasks;
 using TarkovItemBot.Options;
 using TarkovItemBot.Services;
+using TarkovItemBot.Services.Commands;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
 
@@ -33,11 +34,6 @@ namespace TarkovItemBot
                 .ConfigureDiscordHost<DiscordSocketClient>((context, config) =>
                 {
                     config.Token = context.Configuration["Bot:Token"];
-                })
-                .UseCommandService((context, config) =>
-                {
-                    config.DefaultRunMode = RunMode.Async;
-                    config.CaseSensitiveCommands = false;
                 })
                 .ConfigureServices((context, services) =>
                 {
@@ -67,6 +63,12 @@ namespace TarkovItemBot
                     // TODO: Ratelimit from config
                     services.AddHttpClient<TarkovSearchClient>().AddHttpMessageHandler(_ => new RateLimitHandler(100, TimeSpan.FromSeconds(10)))
                         .AddHttpMessageHandler<TarkovSearchTokenHandler>();
+
+                    services.AddSingleton(new CommandService(new CommandServiceConfiguration()
+                    {
+                        DefaultRunMode = RunMode.Parallel,
+                        CooldownBucketKeyGenerator = CooldownBucketKeyGenerators.DiscordDefault 
+                    }));
 
                     services.AddHostedService<CommandHandlingService>();
                     services.AddHostedService<PresenceService>();

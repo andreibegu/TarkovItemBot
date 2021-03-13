@@ -1,19 +1,19 @@
 ﻿using Discord;
-using Discord.Commands;
 using Humanizer;
+using Qmmands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using TarkovItemBot.Preconditions;
+using TarkovItemBot.Services.Commands;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
 
 namespace TarkovItemBot.Modules
 {
     [Name("Utility")]
-    public class UtilityModule : ItemBotModuleBase
+    public class UtilityModule : DiscordModuleBase
     {
         private readonly TarkovDatabaseClient _tarkov;
         private readonly TarkovSearchClient _tarkovSearch;
@@ -24,11 +24,12 @@ namespace TarkovItemBot.Modules
             _tarkovSearch = tarkovSearch;
         }
 
-        [Command("slots")]
-        [Alias("attachments")]
-        [Summary("Displays all slots and attachments available for an item.")]
+        [Command("slots", "attachments")]
+        [Description("Displays all slots and attachments available for an item.")]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
         [Remarks("slots m4a1")]
-        public async Task SlotsAsync([Summary("The item to display attachments for.")][Remainder] string query)
+        public async Task SlotsAsync(
+            [Remainder][Range(3, 100, true, true)][Description("The item to display attachments for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
@@ -73,11 +74,12 @@ namespace TarkovItemBot.Modules
             await ReplyAsync(embed: builder.Build());
         }
 
-        [Command("compatibility")]
-        [Alias("compatible", "attachable")]
-        [Summary("Displays all items an item can be attached to.")]
+        [Command("compatibility", "compatible", "attachable")]
+        [Description("Displays all items an item can be attached to.")]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
         [Remarks("compatibility pk-06")]
-        public async Task CompatibilityAsync([Summary("The item to display compatibility for.")][Remainder] string query)
+        public async Task CompatibilityAsync(
+            [Remainder][Range(3, 100, true, true)][Description("The item to display compatibility for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
@@ -116,11 +118,12 @@ namespace TarkovItemBot.Modules
             await ReplyAsync(embed: builder.Build());
         }
 
-        [Command("wiki")]
-        [Alias("gamepedia")]
-        [Summary("Finds the wiki page of the queried item.")]
+        [Command("wiki", "gamepedia")]
+        [Description("Finds the wiki page of the queried item.")]
+        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownType.User)]
         [Remarks("wiki m4a1")]
-        public async Task WikiAsync([Summary("The item to look for")][Remainder] string query)
+        public async Task WikiAsync(
+            [Remainder][Range(3, 100, true, true)][Description("The item to look for")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
@@ -133,12 +136,13 @@ namespace TarkovItemBot.Modules
             await ReplyAsync($"<https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(result.Name.Replace(" ", "_"))}>");
         }
 
-        [Command("tax")]
-        [Alias("commission", "flea", "market")]
-        [Summary("Returns the Flea Market tax for the item most closely matching the query.")]
+        [Command("tax", "commission", "flea", "market")]
+        [Description("Returns the Flea Market tax for the item most closely matching the query.")]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
         [Remarks("tax 500000 Red Keycard")]
-        public async Task TaxAsync([Summary("The price the item is being put up for.")] int price,
-            [Summary("The item that is being put up for sale.")][Remainder][RequireLength(3, 50)] string query)
+        public async Task TaxAsync(
+            [Description("The price the item is being put up for.")] int price,
+            [Remainder][Range(3, 100, true, true)][Description("The item that is being put up for sale.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
