@@ -2,9 +2,9 @@
 using Discord.Addons.Hosting;
 using Discord.WebSocket;
 using Humanizer;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Qmmands;
-using Serilog;
 using System;
 using System.Reflection;
 using System.Threading;
@@ -20,13 +20,16 @@ namespace TarkovItemBot.Services.Commands
         private readonly DiscordSocketClient _discord;
         private readonly IServiceProvider _services;
         private readonly BotOptions _config;
+        private readonly ILogger<CommandHandlingService> _log;
 
-        public CommandHandlingService(IServiceProvider services, DiscordSocketClient client, CommandService commandService, IOptions<BotOptions> config)
+        public CommandHandlingService(IServiceProvider services, DiscordSocketClient client, CommandService commandService,
+            IOptions<BotOptions> config, ILogger<CommandHandlingService> log)
         {
             _commands = commandService;
             _discord = client;
             _config = config.Value;
             _services = services;
+            _log = log;
 
             _discord.MessageReceived += MessageReceivedAsync;
             _commands.CommandExecutionFailed += CommandExecutionFailedAsync;
@@ -83,7 +86,7 @@ namespace TarkovItemBot.Services.Commands
         {
             var context = args.Context as DiscordCommandContext;
             var result = args.Result;
-            Log.Logger.Error(result.Exception, result.Reason);
+            _log.LogError(result.Exception, result.Reason);
 
             await context.Message.ReplyAsync($"An error occured! {result.Exception.Message}",
                 allowedMentions: AllowedMentions.None);
