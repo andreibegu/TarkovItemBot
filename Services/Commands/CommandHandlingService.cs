@@ -71,10 +71,10 @@ namespace TarkovItemBot.Services.Commands
                         $"{cooldownResult.Cooldowns[0].Cooldown.BucketType.Humanize(LetterCasing.LowerCase)} cooldown! " +
                         $"Retry after {cooldownResult.Cooldowns[0].RetryAfter.Humanize()}.",
                     ParameterChecksFailedResult parameterChecksResult =>
-                        parameterChecksResult.FailedChecks[0].Result.Reason,
+                        parameterChecksResult.FailedChecks[0].Result.FailureReason,
                     ChecksFailedResult checksResult =>
-                        checksResult.FailedChecks[0].Result.Reason,
-                    _ => failedResult.Reason
+                        checksResult.FailedChecks[0].Result.FailureReason,
+                    _ => failedResult.FailureReason
                 };
 
                 await context.Message.ReplyAsync($"An error occured! {reason}",
@@ -86,7 +86,7 @@ namespace TarkovItemBot.Services.Commands
         {
             var context = args.Context as DiscordCommandContext;
             var result = args.Result;
-            _log.LogError(result.Exception, result.Reason);
+            _log.LogError(result.Exception, result.FailureReason);
 
             await context.Message.ReplyAsync($"An error occured! {result.Exception.Message}",
                 allowedMentions: AllowedMentions.None);
