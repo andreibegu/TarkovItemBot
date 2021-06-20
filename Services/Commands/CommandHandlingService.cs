@@ -14,7 +14,7 @@ using TarkovItemBot.Options;
 
 namespace TarkovItemBot.Services.Commands
 {
-    public class CommandHandlingService : InitializedService
+    public class CommandHandlingService : DiscordClientService
     {
         private readonly CommandService _commands;
         private readonly DiscordSocketClient _discord;
@@ -23,7 +23,7 @@ namespace TarkovItemBot.Services.Commands
         private readonly ILogger<CommandHandlingService> _log;
 
         public CommandHandlingService(IServiceProvider services, DiscordSocketClient client, CommandService commandService,
-            IOptions<BotOptions> config, ILogger<CommandHandlingService> log)
+            IOptions<BotOptions> config, ILogger<CommandHandlingService> log) : base (client, log)
         {
             _commands = commandService;
             _discord = client;
@@ -35,7 +35,7 @@ namespace TarkovItemBot.Services.Commands
             _commands.CommandExecutionFailed += CommandExecutionFailedAsync;
         }
 
-        public override Task InitializeAsync(CancellationToken cancellationToken)
+        protected override Task ExecuteAsync(CancellationToken cancellationToken)
         {
             _commands.AddModules(Assembly.GetEntryAssembly());
             return Task.CompletedTask;

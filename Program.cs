@@ -31,7 +31,7 @@ namespace TarkovItemBot
                 {
                     config.AddEnvironmentVariables("TarkovItemBot_");
                 })
-                .ConfigureDiscordHost<DiscordSocketClient>((context, config) =>
+                .ConfigureDiscordHost((context, config) =>
                 {
                     config.Token = context.Configuration["Bot:Token"];
                 })

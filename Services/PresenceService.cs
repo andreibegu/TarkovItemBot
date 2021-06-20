@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Addons.Hosting;
 using Discord.WebSocket;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,23 +9,23 @@ using TarkovItemBot.Options;
 
 namespace TarkovItemBot.Services
 {
-    public class PresenceService : InitializedService
+    public class PresenceService : DiscordClientService
     {
-        private readonly DiscordSocketClient _discord;
+        private readonly DiscordSocketClient _client;
         private readonly BotOptions _config;
 
-        public PresenceService(DiscordSocketClient discord, IOptions<BotOptions> config)
+        public PresenceService(DiscordSocketClient client, IOptions<BotOptions> config, ILogger<PresenceService> log) : base(client, log)
         {
-            _discord = discord;
+            _client = client;
             _config = config.Value;
 
-            _discord.LatencyUpdated += LatencyUpdatedAsync;
+            _client.LatencyUpdated += LatencyUpdatedAsync;
         }
 
         private async Task LatencyUpdatedAsync(int before, int after)
         {
-            if (_discord.ConnectionState != ConnectionState.Connected) return;
-            var curentStatus = _discord.CurrentUser.Status;
+            if (_client.ConnectionState != ConnectionState.Connected) return;
+            var curentStatus = _client.CurrentUser.Status;
 
             var newStatus = after switch
             {
@@ -34,10 +35,10 @@ namespace TarkovItemBot.Services
             };
 
             if (curentStatus != newStatus)
-                await _discord.SetStatusAsync(newStatus);
+                await _client.SetStatusAsync(newStatus);
         }
 
-        public override Task InitializeAsync(CancellationToken cancellationToken)
-            => _discord.SetGameAsync(_config.Prefix + "help");
+        protected override Task ExecuteAsync(CancellationToken cancellationToken)
+            => _client.SetGameAsync(_config.Prefix + "help");
     }
 }
