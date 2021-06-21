@@ -25,7 +25,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         [JsonPropertyName("_kind")]
         public ItemKind Kind { get; set; }
         [JsonIgnore]
-        public string IconUrl => $"https://static.tarkov-database.com/image/icon/1-1/{Id}.png";
+        public string IconUrl => $"https://storage.tarkov-database.com/assets/icons/1-1/{Id}.png";
         public string WikiUrl => $"https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(Name.Replace(" ", "_"))}";
 
         public virtual EmbedBuilder ToEmbedBuilder()
