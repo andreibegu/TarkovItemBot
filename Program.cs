@@ -13,6 +13,7 @@ using TarkovItemBot.Services;
 using TarkovItemBot.Services.Commands;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
+using TarkovItemBot.Services.TarkovTools;
 
 namespace TarkovItemBot
 {
@@ -40,6 +41,7 @@ namespace TarkovItemBot
                     //Config
                     services.Configure<BotOptions>(context.Configuration.GetSection("Bot"));
                     services.Configure<TarkovDatabaseOptions>(context.Configuration.GetSection("TarkovDatabase"));
+                    services.Configure<TarkovToolsOptions>(context.Configuration.GetSection("TarkovTools"));
 
                     // Cache
                     services.AddMemoryCache();
@@ -63,6 +65,8 @@ namespace TarkovItemBot
                     // TODO: Ratelimit from config
                     services.AddHttpClient<TarkovSearchClient>().AddHttpMessageHandler(_ => new RateLimitHandler(100, TimeSpan.FromSeconds(10)))
                         .AddHttpMessageHandler<TarkovSearchTokenHandler>();
+
+                    services.AddHttpClient<TarkovToolsClient>();
 
                     services.AddSingleton(new CommandService(new CommandServiceConfiguration()
                     {

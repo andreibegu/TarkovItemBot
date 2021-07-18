@@ -9,6 +9,7 @@ using System.Web;
 using TarkovItemBot.Services.Commands;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
+using TarkovItemBot.Services.TarkovTools;
 
 namespace TarkovItemBot.Modules
 {
@@ -17,11 +18,13 @@ namespace TarkovItemBot.Modules
     {
         private readonly TarkovDatabaseClient _tarkov;
         private readonly TarkovSearchClient _tarkovSearch;
+        private readonly TarkovToolsClient _tarkovTools;
 
-        public UtilityModule(TarkovDatabaseClient tarkov, TarkovSearchClient tarkovSearch)
+        public UtilityModule(TarkovDatabaseClient tarkov, TarkovSearchClient tarkovSearch, TarkovToolsClient tarkovTools)
         {
             _tarkov = tarkov;
             _tarkovSearch = tarkovSearch;
+            _tarkovTools = tarkovTools;
         }
 
         [Command("slots", "attachments")]
@@ -136,7 +139,7 @@ namespace TarkovItemBot.Modules
             await ReplyAsync($"<https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(result.Name.Replace(" ", "_"))}>");
         }
 
-        [Command("tax", "commission", "flea", "market")]
+        [Command("tax", "commission", "fleatax", "markettax")]
         [Description("Returns the Flea Market tax for the item most closely matching the query.")]
         [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
         [Remarks("tax 500000 Red Keycard")]
@@ -185,6 +188,46 @@ namespace TarkovItemBot.Modules
             builder.AddField("Profit", $"{price - tax:#,##0} ₽", true);
 
             builder.WithFooter($"{item.Kind.Humanize()} • Modified {item.Modified.Humanize()}");
+
+            await ReplyAsync(embed: builder.Build());
+        }
+
+        [Command("pricecheck", "price", "pc", "flea", "market", "fleamarket")]
+        [Description("Displays current and past prices of an item on the player-driven market.")]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
+        [Remarks("price Red Keycard")]
+        public async Task PriceCheckAsync(
+            [Remainder][Range(3, 100, true, true)][Description("The item to display prices for.")] string query)
+        {
+            var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
+
+            if (result == null)
+            {
+                await ReplyAsync("No items found for query!");
+                return;
+            }
+
+            var priceData = await _tarkovTools.GetItemPriceDataAsync(result.Id);
+
+            if(priceData.Avg24hPrice == 0)
+            {
+                await ReplyAsync($"No price data found for item `{result.Name}`!");
+                return;
+            }
+
+            var builder = new EmbedBuilder()
+            {
+                Title = $"{result.Name} ({result.ShortName})",
+                Color = new Discord.Color(0x968867),
+                ThumbnailUrl = result.IconUrl,
+                Description = result.Description,
+                Url = result.WikiUrl
+            };
+
+            builder.AddField("Avg 24h Price", $"{priceData.Avg24hPrice:#,##0} ₽", true);
+            builder.AddField("Low 24h Price", $"{priceData.Low24hPrice:#,##0} ₽", true);
+            builder.AddField("High 24h Price", $"{priceData.High24hPrice:#,##0} ₽", true);
+            builder.AddField("48h Price Change", $"{priceData.ChangeLast48h:+0.00;-#.00}%", true);
 
             await ReplyAsync(embed: builder.Build());
         }
