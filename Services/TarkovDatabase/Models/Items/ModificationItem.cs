@@ -38,6 +38,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float Length { get; set; }
         public float Velocity { get; set; }
         public bool Supressor { get; set; }
+        public float DurabilityBurn { get; set; }
+        public float HeatFactor { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {
@@ -47,6 +49,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
             builder.AddField("Supresses", Supressor ? "Yes" : "No", true);
 
             if (Velocity != 0) builder.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
+            if (DurabilityBurn != 0) builder.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
 
             return builder;
         }
@@ -82,10 +85,22 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
     public class GasblockItem : ModificationItem
     {
+        public float DurabilityBurn { get; set; }
+        public float HeatFactor { get; set; }
+
+        public override EmbedBuilder ToEmbedBuilder()
+        {
+            var builder = base.ToEmbedBuilder();
+
+            if (DurabilityBurn != 0) builder.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
+
+            return builder;
+        }
     }
 
     public class HandguardItem : ModificationItem
     {
+        public float HeatFactor { get; set; }
     }
 
     public class LauncherItem : ModificationItem
@@ -98,6 +113,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
     public class MountItem : ModificationItem
     {
+        public float HeatFactor { get; set; }
     }
 
     public class MuzzleItem : ModificationItem
@@ -105,6 +121,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public string Type { get; set; }
         public float Velocity { get; set; }
         public float Loudness { get; set; }
+        public float DurabilityBurn { get; set; }
+        public float HeatFactor { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {
@@ -114,6 +132,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
             builder.AddField("Loudness", Loudness.ToString("+0.00;-#.00"), true);
 
             if (Velocity != 0) builder.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
+            if (DurabilityBurn != 0) builder.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
 
             return builder;
         }
@@ -126,12 +145,15 @@ namespace TarkovItemBot.Services.TarkovDatabase
     public class ReceiverItem : ModificationItem
     {
         public float Velocity { get; set; }
+        public float DurabilityBurn { get; set; }
+        public float HeatFactor { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
         {
             var builder = base.ToEmbedBuilder();
 
             if (Velocity != 0) builder.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
+            if (DurabilityBurn != 0) builder.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
 
             return builder;
         }
@@ -167,6 +189,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
     public class StockItem : ModificationItem
     {
         public bool FoldRetractable { get; set; }
+        public float HeatFactor { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
             => base.ToEmbedBuilder().AddField("Foldable", FoldRetractable ? "Yes" : "No", true);

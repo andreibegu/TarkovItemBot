@@ -24,6 +24,10 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public bool FoldRetractable { get; set; }
         public int RecoilVertical { get; set; }
         public int RecoilHorizontal { get; set; }
+        public float OperatingResources { get; set; }
+        public float MalfunctionChance { get; set; }
+        public float DurabilityRatio { get; set; }
+        public float HeatFactor { get; set; }
         public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
         public override EmbedBuilder ToEmbedBuilder()
@@ -40,6 +44,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
             builder.AddField("Effective Distance", $"{EffectiveDistance} m.", true);
             builder.AddField("Ergonomics", ErgonomicsFloat, true);
             builder.AddField("Recoil", $"{RecoilVertical} vert. {RecoilHorizontal} hor.", true);
+            builder.AddField("Malfunction Chance", $"{MalfunctionChance:0.00;-#.00}%", true);
 
             return builder;
         }

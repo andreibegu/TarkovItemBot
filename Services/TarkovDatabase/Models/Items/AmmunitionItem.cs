@@ -24,6 +24,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public WeaponModifiers WeaponModifier { get; set; }
         [JsonPropertyName("grenadeProps")]
         public GrenadeProperties GrenadeProperties { get; set; }
+
         public override EmbedBuilder ToEmbedBuilder()
         {
             var builder = base.ToEmbedBuilder();
@@ -42,6 +43,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
             if (WeaponModifier.Accuracy != 0) builder.AddField("Accuracy", $"{WeaponModifier.Accuracy:+0.00;-#.00}%", true);
             if (WeaponModifier.Recoil != 0) builder.AddField("Recoil", $"{WeaponModifier.Recoil:+0.00;-#.00}%", true);
+            if (WeaponModifier.DurabilityBurn != 0) builder.AddField("Durability Burn", $"{WeaponModifier.DurabilityBurn:+0.00;-#.00}%", true);
+            if (WeaponModifier.MalfunctionChance != 0) builder.AddField("Malfunction Chance", $"{WeaponModifier.MalfunctionChance:0.00;-#.00}%", true);
 
             if (Effects.HeavyBleedingChance != 0) builder.AddField("Heavy Bleeding Chance", $"{Effects.HeavyBleedingChance * 100}%", true);
             if (Effects.LightBleedingChance != 0) builder.AddField("Light Bleeding Chance", $"{Effects.LightBleedingChance * 100}%", true);
