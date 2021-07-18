@@ -41,7 +41,6 @@ namespace TarkovItemBot.Services.TarkovTools
             };
 
             var request = await _httpClient.PostAsJsonAsync("", query);
-            var text = await request.Content.ReadAsStringAsync();
             var response = await request.Content.ReadFromJsonAsync<Response>();
 
             return response.Data.Item;
