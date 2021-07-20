@@ -215,18 +215,23 @@ namespace TarkovItemBot.Modules
                 return;
             }
 
+            var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
+
             var builder = new EmbedBuilder()
             {
-                Title = $"{result.Name} ({result.ShortName})",
-                Color = new Discord.Color(0x968867),
-                ThumbnailUrl = result.IconUrl,
-                Description = result.Description,
-                Url = result.WikiUrl
+                Title = $"{item.Name} ({item.ShortName})",
+                Color = item.Grid.Color,
+                ThumbnailUrl = item.IconUrl,
+                Description = item.Description,
+                Url = item.WikiUrl
             };
+
+            var size = item.Grid.Height * item.Grid.Width;
 
             builder.AddField("Avg 24h Price", $"{priceData.Avg24hPrice:#,##0} ₽", true);
             builder.AddField("Low 24h Price", $"{priceData.Low24hPrice:#,##0} ₽", true);
             builder.AddField("High 24h Price", $"{priceData.High24hPrice:#,##0} ₽", true);
+            builder.AddField("Price per Slot", $"{priceData.Avg24hPrice / size:#,##0} ₽ ({size} slots)", true);
             builder.AddField("Daily Price Change", $"{priceData.ChangeLast48h:+0.00;-#.00}%", true);
 
             await ReplyAsync(embed: builder.Build());
