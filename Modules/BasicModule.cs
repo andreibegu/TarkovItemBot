@@ -48,7 +48,8 @@ namespace TarkovItemBot.Modules
 
             builder.WithFooter($"(?) Use {_config.Prefix}help for command info");
 
-            builder.AddField("Data Source", "[Tarkov Database](https://tarkov-database.com/)", true);
+            builder.AddField("Data Source", "[Tarkov Database](https://tarkov-database.com/) & " +
+                "[Tarkov Tools](https://tarkov-tools.com/)", true);
             builder.AddField("Source Code", "[Github](https://github.com/Andrewww1/TarkovItemBot)", true);
 
             if (appInfo.IsBotPublic) builder.AddField("Invite Link", 
