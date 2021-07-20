@@ -227,7 +227,7 @@ namespace TarkovItemBot.Modules
             builder.AddField("Avg 24h Price", $"{priceData.Avg24hPrice:#,##0} ₽", true);
             builder.AddField("Low 24h Price", $"{priceData.Low24hPrice:#,##0} ₽", true);
             builder.AddField("High 24h Price", $"{priceData.High24hPrice:#,##0} ₽", true);
-            builder.AddField("48h Price Change", $"{priceData.ChangeLast48h:+0.00;-#.00}%", true);
+            builder.AddField("Daily Price Change", $"{priceData.ChangeLast48h:+0.00;-#.00}%", true);
 
             await ReplyAsync(embed: builder.Build());
         }
