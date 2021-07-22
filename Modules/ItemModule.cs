@@ -1,8 +1,14 @@
-﻿using Disqord.Bot;
+﻿using Disqord;
+using Disqord.Bot;
+using Disqord.Extensions.Interactivity.Menus;
+using Disqord.Rest;
 using Humanizer;
 using Qmmands;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TarkovItemBot.Helpers;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
 
@@ -42,15 +48,23 @@ namespace TarkovItemBot.Modules
         public async Task<DiscordCommandResult> ItemAsync(
             [Remainder][Range(3, 100, true, true)][Description("The item to look for.")] string query)
         {
-            var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
+            var results = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 25));
 
-            if (result == null)
+            if (results.Count == 0)
             {
                 return Reply("No items found for query!");
             }
 
-            var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
-            return Reply(item.ToEmbed());
+            if (results.Count == 1)
+            {
+                var result = results.First();
+                var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
+                return Reply(item.ToEmbed());
+            }
+
+            var searchView = new SearchView(results, _tarkov);
+
+            return View(searchView);
         }
     }
 }
