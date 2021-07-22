@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY . .
 
+RUN dotnet nuget add source https://www.myget.org/F/disqord/api/v3/index.json -n Disqord
+
 RUN dotnet publish --self-contained -c Release -r alpine-x64 -o ./publish \
     -p:PublishSingleFile=true \
     -p:PublishTrimmed=true
