@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using Disqord;
+using Disqord.Bot;
 using Humanizer;
 using Qmmands;
 using System;
@@ -6,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using TarkovItemBot.Services.Commands;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
 using TarkovItemBot.Services.TarkovTools;
@@ -29,17 +29,16 @@ namespace TarkovItemBot.Modules
 
         [Command("slots", "attachments")]
         [Description("Displays all slots and attachments available for an item.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
         [Remarks("slots m4a1")]
-        public async Task SlotsAsync(
+        public async Task<DiscordCommandResult> SlotsAsync(
             [Remainder][Range(3, 100, true, true)][Description("The item to display attachments for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
-                await ReplyAsync("No items found for query!");
-                return;
+                return Reply("No items found for query!");
             }
 
             var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
@@ -47,11 +46,10 @@ namespace TarkovItemBot.Modules
             if (item is not IModifiableItem modifiableItem ||
                 !modifiableItem.Slots.Any())
             {
-                await ReplyAsync("The base item provided is not modifiable!");
-                return;
+                return Reply("The base item provided is not modifiable!");
             }
 
-            var builder = new EmbedBuilder()
+            var embed = new LocalEmbed()
             {
                 Title = $"{item.Name} ({item.ShortName})",
                 Color = item.Grid.Color,
@@ -71,25 +69,24 @@ namespace TarkovItemBot.Modules
                 }
 
                 var itemResult = items.Any() ? items.Humanize(x => $"`{x.ShortName}`") : "None";
-                builder.AddField(slot.Key.Humanize(LetterCasing.Title), itemResult);
+                embed.AddField(slot.Key.Humanize(LetterCasing.Title), itemResult);
             }
 
-            await ReplyAsync(embed: builder.Build());
+            return Reply(embed);
         }
 
         [Command("compatibility", "compatible", "attachable")]
         [Description("Displays all items an item can be attached to.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
         [Remarks("compatibility pk-06")]
-        public async Task CompatibilityAsync(
+        public async Task<DiscordCommandResult> CompatibilityAsync(
             [Remainder][Range(3, 100, true, true)][Description("The item to display compatibility for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
-                await ReplyAsync("No items found for query!");
-                return;
+                return Reply("No items found for query!");
             }
 
             var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
@@ -97,11 +94,10 @@ namespace TarkovItemBot.Modules
             if (item is not IAttachableItem attachableItem
                 || !attachableItem.Compatibility.Any())
             {
-                await ReplyAsync("The base item provided is not attachable!");
-                return;
+                return Reply("The base item provided is not attachable!");
             }
 
-            var builder = new EmbedBuilder()
+            var embed = new LocalEmbed()
             {
                 Title = $"{item.Name} ({item.ShortName})",
                 Color = item.Grid.Color,
@@ -115,35 +111,34 @@ namespace TarkovItemBot.Modules
                 var items = await _tarkov.GetItemsAsync(slot.Key, slot.Value);
 
                 var itemResult = items.Any() ? items.Humanize(x => $"`{x.ShortName}`") : "None";
-                builder.AddField(slot.Key.Humanize(LetterCasing.Title), itemResult);
+                embed.AddField(slot.Key.Humanize(LetterCasing.Title), itemResult);
             }
 
-            await ReplyAsync(embed: builder.Build());
+            return Reply(embed);
         }
 
         [Command("wiki", "gamepedia")]
         [Description("Finds the wiki page of the queried item.")]
-        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownType.User)]
+        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
         [Remarks("wiki m4a1")]
-        public async Task WikiAsync(
+        public async Task<DiscordCommandResult> WikiAsync(
             [Remainder][Range(3, 100, true, true)][Description("The item to look for")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
-                await ReplyAsync("No items found for query!");
-                return;
+                return Reply("No items found for query!");
             }
 
-            await ReplyAsync($"<https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(result.Name.Replace(" ", "_"))}>");
+            return Reply($"<https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(result.Name.Replace(" ", "_"))}>");
         }
 
         [Command("tax", "commission", "fleatax", "markettax")]
         [Description("Returns the Flea Market tax for the item most closely matching the query.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
         [Remarks("tax 500000 Red Keycard")]
-        public async Task TaxAsync(
+        public async Task<DiscordCommandResult> TaxAsync(
             [Description("The price the item is being put up for.")] int price,
             [Remainder][Range(3, 100, true, true)][Description("The item that is being put up for sale.")] string query)
         {
@@ -151,8 +146,7 @@ namespace TarkovItemBot.Modules
 
             if (result == null)
             {
-                await ReplyAsync("No items found for query!");
-                return;
+                return Reply("No items found for query!");
             }
 
             var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
@@ -174,7 +168,7 @@ namespace TarkovItemBot.Modules
 
             var tax = offerValue * 0.05 * Math.Pow(4, offerModifier) + requestValue * 0.05 * Math.Pow(4, requestModifier);
 
-            var builder = new EmbedBuilder()
+            var embed = new LocalEmbed()
             {
                 Title = $"{item.Name} ({item.ShortName})",
                 Color = item.Grid.Color,
@@ -183,41 +177,39 @@ namespace TarkovItemBot.Modules
                 Url = item.WikiUrl
             };
 
-            builder.AddField("Base Price", $"{item.Price:#,##0} ₽", true);
-            builder.AddField("Base Tax", $"{tax:#,##0} ₽", true);
-            builder.AddField("Profit", $"{price - tax:#,##0} ₽", true);
+            embed.AddField("Base Price", $"{item.Price:#,##0} ₽", true);
+            embed.AddField("Base Tax", $"{tax:#,##0} ₽", true);
+            embed.AddField("Profit", $"{price - tax:#,##0} ₽", true);
 
-            builder.WithFooter($"{item.Kind.Humanize()} • Modified {item.Modified.Humanize()}");
+            embed.WithFooter($"{item.Kind.Humanize()} • Modified {item.Modified.Humanize()}");
 
-            await ReplyAsync(embed: builder.Build());
+            return Reply(embed);
         }
 
         [Command("pricecheck", "price", "pc", "flea", "market", "fleamarket")]
         [Description("Displays current and past prices of an item on the player-driven market.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
         [Remarks("price Red Keycard")]
-        public async Task PriceCheckAsync(
+        public async Task<DiscordCommandResult> PriceCheckAsync(
             [Remainder][Range(3, 100, true, true)][Description("The item to display prices for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
-                await ReplyAsync("No items found for query!");
-                return;
+                return Reply("No items found for query!");
             }
 
             var priceData = await _tarkovTools.GetItemPriceDataAsync(result.Id);
 
             if(priceData.Avg24hPrice == 0)
             {
-                await ReplyAsync($"No price data found for item `{result.Name}`!");
-                return;
+                return Reply($"No price data found for item `{result.Name}`!");
             }
 
             var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
 
-            var builder = new EmbedBuilder()
+            var embed = new LocalEmbed()
             {
                 Title = $"{item.Name} ({item.ShortName})",
                 Color = item.Grid.Color,
@@ -228,13 +220,13 @@ namespace TarkovItemBot.Modules
 
             var size = item.Grid.Height * item.Grid.Width;
 
-            builder.AddField("Avg 24h Price", $"{priceData.Avg24hPrice:#,##0} ₽", true);
-            builder.AddField("Low 24h Price", $"{priceData.Low24hPrice:#,##0} ₽", true);
-            builder.AddField("High 24h Price", $"{priceData.High24hPrice:#,##0} ₽", true);
-            builder.AddField("Price per Slot", $"{priceData.Avg24hPrice / size:#,##0} ₽ ({size} slots)", true);
-            builder.AddField("Daily Price Change", $"{priceData.ChangeLast48h:+0.00;-#.00}%", true);
+            embed.AddField("Avg 24h Price", $"{priceData.Avg24hPrice:#,##0} ₽", true);
+            embed.AddField("Low 24h Price", $"{priceData.Low24hPrice:#,##0} ₽", true);
+            embed.AddField("High 24h Price", $"{priceData.High24hPrice:#,##0} ₽", true);
+            embed.AddField("Price per Slot", $"{priceData.Avg24hPrice / size:#,##0} ₽ ({size} slots)", true);
+            embed.AddField("Daily Price Change", $"{priceData.ChangeLast48h:+0.00;-#.00}%", true);
 
-            await ReplyAsync(embed: builder.Build());
+            return Reply(embed);
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿using Discord;
-using Discord.Addons.Hosting;
-using Discord.WebSocket;
-using Microsoft.Extensions.Logging;
+﻿using Disqord;
+using Disqord.Bot.Hosting;
+using Disqord.Gateway;
 using Microsoft.Extensions.Options;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,36 +8,19 @@ using TarkovItemBot.Options;
 
 namespace TarkovItemBot.Services
 {
-    public class PresenceService : DiscordClientService
+    public class PresenceService : DiscordBotService
     {
-        private readonly DiscordSocketClient _client;
         private readonly BotOptions _config;
 
-        public PresenceService(DiscordSocketClient client, IOptions<BotOptions> config, ILogger<PresenceService> log) : base(client, log)
+        public PresenceService(IOptions<BotOptions> config)
         {
-            _client = client;
             _config = config.Value;
-
-            _client.LatencyUpdated += LatencyUpdatedAsync;
         }
 
-        private async Task LatencyUpdatedAsync(int before, int after)
+        protected override async ValueTask OnReady(ReadyEventArgs args)
         {
-            if (_client.ConnectionState != ConnectionState.Connected) return;
-            var curentStatus = _client.CurrentUser.Status;
-
-            var newStatus = after switch
-            {
-                var i when i > 150 && i < 500 => UserStatus.AFK,
-                var i when i >= 500 => UserStatus.DoNotDisturb,
-                _ => UserStatus.Online
-            };
-
-            if (curentStatus != newStatus)
-                await _client.SetStatusAsync(newStatus);
+            await Bot.SetPresenceAsync(
+                new LocalActivity(_config.Prefix + "help", ActivityType.Playing));
         }
-
-        protected override Task ExecuteAsync(CancellationToken cancellationToken)
-            => _client.SetGameAsync(_config.Prefix + "help");
     }
 }

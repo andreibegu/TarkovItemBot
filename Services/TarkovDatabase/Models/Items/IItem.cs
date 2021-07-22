@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using System;
 
 namespace TarkovItemBot.Services.TarkovDatabase
@@ -17,6 +17,6 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public ItemKind Kind { get; set; }
         public string IconUrl { get; }
         public string WikiUrl { get; }
-        public EmbedBuilder ToEmbedBuilder();
+        public LocalEmbed ToEmbed();
     }
 }

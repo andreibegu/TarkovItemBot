@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
@@ -7,13 +7,13 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public string Location { get; set; }
         public int Usages { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            if (Usages != 0) builder.AddField("Uses", Usages, true);
+            if (Usages != 0) embed.AddField("Uses", Usages, true);
 
-            return builder;
+            return embed;
         }
     }
 }

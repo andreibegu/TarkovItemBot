@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using Humanizer;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -19,17 +19,17 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Conflicts { get; set; }
         public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            if (ErgonomicsFloat != 0) builder.AddField("Ergonomics", ErgonomicsFloat.ToString("+0.00;-#.00"), true);
-            if (Accuracy != 0) builder.AddField("Accuracy", Accuracy.ToString("+0.00;-#.00"), true);
-            if (Recoil != 0) builder.AddField("Recoil", Recoil.ToString("+0.00;-#.00"), true);
+            if (ErgonomicsFloat != 0) embed.AddField("Ergonomics", ErgonomicsFloat.ToString("+0.00;-#.00"), true);
+            if (Accuracy != 0) embed.AddField("Accuracy", Accuracy.ToString("+0.00;-#.00"), true);
+            if (Recoil != 0) embed.AddField("Recoil", Recoil.ToString("+0.00;-#.00"), true);
 
-            builder.AddGridModifier(GridModifier);
+            embed.AddGridModifier(GridModifier);
 
-            return builder;
+            return embed;
         }
     }
 
@@ -41,17 +41,17 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float DurabilityBurn { get; set; }
         public float HeatFactor { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            builder.AddField("Length", $"{Length} mm", true);
-            builder.AddField("Supresses", Supressor ? "Yes" : "No", true);
+            embed.AddField("Length", $"{Length} mm", true);
+            embed.AddField("Supresses", Supressor ? "Yes" : "No", true);
 
-            if (Velocity != 0) builder.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
-            if (DurabilityBurn != 0) builder.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
+            if (Velocity != 0) embed.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
+            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
 
-            return builder;
+            return embed;
         }
     }
 
@@ -68,14 +68,14 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public string Type { get; set; }
         public IReadOnlyCollection<string> Modes { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            builder.AddField("Type", Type.Transform(To.TitleCase), true);
-            builder.AddField("Modes", Modes.Humanize(x => x.Transform(To.TitleCase)), true);
+            embed.AddField("Type", Type.Transform(To.TitleCase), true);
+            embed.AddField("Modes", Modes.Humanize(x => x.Transform(To.TitleCase)), true);
 
-            return builder;
+            return embed;
         }
     }
 
@@ -88,13 +88,13 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float DurabilityBurn { get; set; }
         public float HeatFactor { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            if (DurabilityBurn != 0) builder.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
+            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
 
-            return builder;
+            return embed;
         }
     }
 
@@ -107,8 +107,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
     {
         public string Caliber { get; set; }
 
-        //public override EmbedBuilder ToEmbedBuilder()
-        //    => base.ToEmbedBuilder().AddField("Caliber", Caliber, true);
+        //public override LocalEmbed ToEmbed()
+        //    => base.ToEmbed().AddField("Caliber", Caliber, true);
     }
 
     public class MountItem : ModificationItem
@@ -124,17 +124,17 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float DurabilityBurn { get; set; }
         public float HeatFactor { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            builder.AddField("Type", Type.Transform(To.TitleCase), true);
-            builder.AddField("Loudness", Loudness.ToString("+0.00;-#.00"), true);
+            embed.AddField("Type", Type.Transform(To.TitleCase), true);
+            embed.AddField("Loudness", Loudness.ToString("+0.00;-#.00"), true);
 
-            if (Velocity != 0) builder.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
-            if (DurabilityBurn != 0) builder.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
+            if (Velocity != 0) embed.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
+            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
 
-            return builder;
+            return embed;
         }
     }
 
@@ -148,14 +148,14 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float DurabilityBurn { get; set; }
         public float HeatFactor { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            if (Velocity != 0) builder.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
-            if (DurabilityBurn != 0) builder.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
+            if (Velocity != 0) embed.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
+            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
 
-            return builder;
+            return embed;
         }
     }
 
@@ -166,16 +166,16 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public bool VariableZoom { get; set; }
         public IReadOnlyCollection<int> ZeroDistances { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            builder.AddField("Type", Type.Transform(To.TitleCase), true);
-            builder.AddField("Variable Zoom", VariableZoom ? "Yes" : "No", true);
-            builder.AddField("Magnification", Magnification.Humanize(), true);
-            builder.AddField("Zero Distances", ZeroDistances.Humanize(x => $"{x} m."), true);
+            embed.AddField("Type", Type.Transform(To.TitleCase), true);
+            embed.AddField("Variable Zoom", VariableZoom ? "Yes" : "No", true);
+            embed.AddField("Magnification", Magnification.Humanize(), true);
+            embed.AddField("Zero Distances", ZeroDistances.Humanize(x => $"{x} m."), true);
 
-            return builder;
+            return embed;
         }
     }
 
@@ -191,8 +191,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public bool FoldRetractable { get; set; }
         public float HeatFactor { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
-            => base.ToEmbedBuilder().AddField("Foldable", FoldRetractable ? "Yes" : "No", true);
+        public override LocalEmbed ToEmbed()
+            => base.ToEmbed().AddField("Foldable", FoldRetractable ? "Yes" : "No", true);
     }
 
     public class GogglesItem : ModificationItem
@@ -202,7 +202,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public Color Color { get; set; }
         public string Noise { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
-            => base.ToEmbedBuilder().AddField("Type", Type.Transform(To.TitleCase), true);
+        public override LocalEmbed ToEmbed()
+            => base.ToEmbed().AddField("Type", Type.Transform(To.TitleCase), true);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using Humanizer;
 using System.Collections.Generic;
 using TarkovItemBot.Helpers;
@@ -15,9 +15,9 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Compatibility { get; set; }
         public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var builder = base.ToEmbed();
 
             builder.AddField("Type", Type.Humanize(), true);
 

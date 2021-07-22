@@ -1,4 +1,7 @@
-﻿using Discord;
+﻿using Disqord;
+using Disqord.Bot;
+using Disqord.Gateway;
+using Disqord.Rest;
 using Humanizer;
 using Microsoft.Extensions.Options;
 using Qmmands;
@@ -8,7 +11,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TarkovItemBot.Helpers;
 using TarkovItemBot.Options;
-using TarkovItemBot.Services.Commands;
 
 namespace TarkovItemBot.Modules
 {
@@ -27,83 +29,85 @@ namespace TarkovItemBot.Modules
         [Command("ping", "latency", "pong")]
         [Description("Returns the bot's latency to the Discord servers.")]
         [Remarks("ping")]
-        public Task PingAsync()
-            => ReplyAsync($"Current latency: `{Context.Client.Latency}`");
+        public DiscordCommandResult Ping()
+        {
+            var time = DateTime.UtcNow - Context.Message.CreatedAt().UtcDateTime;
+            return Reply($"Current latency: `{time.Milliseconds}ms`");
+        }
 
         [Command("about", "info")]
         [Description("Displays general information about the bot.")]
         [Remarks("about")]
-        public async Task AboutAsync()
+        public async Task<DiscordCommandResult> AboutAsync()
         {
-            var appInfo = await Context.Client.GetApplicationInfoAsync();
+            var appInfo = await Context.Bot.FetchCurrentApplicationAsync();
 
-            var builder = new EmbedBuilder()
+            var embed = new LocalEmbed()
             {
                 Description = appInfo.Description,
                 Color = new Color(0x968867)
             };
 
-            builder.WithAuthor($"{Context.Client.CurrentUser.Username} (v{AssemblyHelper.GetInformationalVersion()})",
-                Context.Client.CurrentUser.GetAvatarUrl());
+            embed.WithAuthor($"{Context.Bot.CurrentUser.Name} (v{AssemblyHelper.GetInformationalVersion()})",
+                Context.Bot.CurrentUser.GetAvatarUrl());
 
-            builder.WithFooter($"(?) Use {_config.Prefix}help for command info");
+            embed.WithFooter($"(?) Use {_config.Prefix}help for command info");
 
-            builder.AddField("Data Source", "[Tarkov Database](https://tarkov-database.com/) & " +
+            embed.AddField("Data Source", "[Tarkov Database](https://tarkov-database.com/) & " +
                 "[Tarkov Tools](https://tarkov-tools.com/)", true);
-            builder.AddField("Source Code", "[Github](https://github.com/Andrewww1/TarkovItemBot)", true);
+            embed.AddField("Source Code", "[Github](https://github.com/Andrewww1/TarkovItemBot)", true);
 
-            if (appInfo.IsBotPublic) builder.AddField("Invite Link", 
+            if (appInfo.IsBotPublic) embed.AddField("Invite Link", 
                 $"[Invite](https://discord.com/oauth2/authorize?client_id={appInfo.Id}&scope=bot&permissions=16384)", true);
 
-            builder.AddField("Instance Owner", appInfo.Owner.ToString(), true);
-            builder.AddField("Guilds", Context.Client.Guilds.Count, true);
+            embed.AddField("Instance Owner", appInfo.Owner.ToString(), true);
+            embed.AddField("Guilds", Context.Bot.GetGuilds().Count, true);
 
             var uptime = (DateTime.Now - Process.GetCurrentProcess().StartTime).Humanize();
-            builder.AddField("Uptime", uptime, true);
+            embed.AddField("Uptime", uptime, true);
 
-            await ReplyAsync(embed: builder.Build());
+            return Reply(embed);
         }
 
         [Command("help", "h")]
         [Description("Lists all commands available for use.")]
         [Remarks("help")]
-        public async Task HelpAsync()
+        public DiscordCommandResult Help()
         {
-            var builder = new EmbedBuilder()
+            var embed = new LocalEmbed()
             {
                 Color = new Color(0x968867),
-                Description = $"A list of commands available for use. Prefix commands with `{_config.Prefix}` or {Context.Client.CurrentUser.Mention}.\n" +
+                Description = $"A list of commands available for use. Prefix commands with `{_config.Prefix}` or {Context.Bot.CurrentUser.Mention}.\n" +
                     $"For more information on a specific command use `{_config.Prefix}help <command>`.\n"
             };
 
-            builder.WithAuthor($"{Context.Client.CurrentUser.Username} Help", Context.Client.CurrentUser.GetAvatarUrl());
-            builder.WithFooter($"(?) Use {_config.Prefix}about for more info");
+            embed.WithAuthor($"{Context.Bot.CurrentUser.Name} Help", Context.Bot.CurrentUser.GetAvatarUrl());
+            embed.WithFooter($"(?) Use {_config.Prefix}about for more info");
 
             var modules = _commands.GetAllModules();
             foreach (var module in modules.Where(x => x.Parent == null)
                 .OrderByDescending(x => x.Commands.Count))
             {
                 if (!module.Commands.Any()) continue;
-                builder.AddField($"{module.Name} Commands", string.Join("\n", module.Commands
+                embed.AddField($"{module.Name} Commands", string.Join("\n", module.Commands
                     .Select(x => $"• `{x.GetUsage()}`")), true);
             }
 
-            builder.AddField("How to read parameter info", $"`<required>`, `[optional = Default]`, `...remainder`, `|multiple values|`.");
+            embed.AddField("How to read parameter info", $"`<required>`, `[optional = Default]`, `...remainder`, `|multiple values|`.");
 
-            await ReplyAsync(embed: builder.Build());
+            return Reply(embed);
         }
 
         [Command("help", "h")]
         [Description("Returns information about a specific command.")]
         [Remarks("help item")]
-        public async Task HelpAsync([Remainder] string query)
+        public DiscordCommandResult Help([Remainder] string query)
         {
             var result = _commands.FindCommands(query);
 
             if (!result.Any())
             {
-                await ReplyAsync("No commands have been found!");
-                return;
+                return Reply("No commands have been found!");
             }
 
             var commandResult = result[0];
@@ -111,25 +115,25 @@ namespace TarkovItemBot.Modules
 
             string aliases = !command.Aliases.Any() ? "" : $"({string.Join(", ", command.Aliases)})";
 
-            var builder = new EmbedBuilder()
+            var embed = new LocalEmbed()
             {
                 Title = $"{_config.Prefix}{commandResult.Alias} {aliases}",
                 Color = new Color(0x968867),
                 Description = command.Description ?? "No command description."
             };
 
-            builder.AddField("Usage", $"`{command.GetUsage()}`", true);
-            builder.AddField("Example", $"`{command.Remarks}`" ?? "None", true);
+            embed.AddField("Usage", $"`{command.GetUsage()}`", true);
+            embed.AddField("Example", $"`{command.Remarks}`" ?? "None", true);
 
             if (command.Parameters.Any())
             {
                 var parameters = command.Parameters.Select(x => $"• `{x.Name}` - {x.Description}");
-                builder.AddField("Parameters", string.Join("\n", parameters), false);
+                embed.AddField("Parameters", string.Join("\n", parameters), false);
             }
 
-            builder.WithFooter($"{command.Module.Name} Module • Prefix {_config.Prefix}");
+            embed.WithFooter($"{command.Module.Name} Module • Prefix {_config.Prefix}");
 
-            await ReplyAsync(embed: builder.Build());
+            return Reply(embed);
         }
     }
 }

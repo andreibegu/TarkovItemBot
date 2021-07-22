@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using System.Collections.Generic;
 using TarkovItemBot.Helpers;
 
@@ -10,21 +10,21 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public Penalties Penalties { get; set; }
         public ArmorProperties Armor { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
             if (Armor != null)
             {
-                builder.AddArmorProperties(Armor);
+                embed.AddArmorProperties(Armor);
             }
 
-            if (Penalties.Speed != 0) builder.AddField("Speed Penalty", $"{Penalties.Speed}%", true);
-            if (Penalties.Mouse != 0) builder.AddField("Turning Penalty", $"{Penalties.Mouse}%", true);
+            if (Penalties.Speed != 0) embed.AddField("Speed Penalty", $"{Penalties.Speed}%", true);
+            if (Penalties.Mouse != 0) embed.AddField("Turning Penalty", $"{Penalties.Mouse}%", true);
 
-            builder.AddGrids(Grids);
+            embed.AddGrids(Grids);
 
-            return builder;
+            return embed;
         }
     }
 }

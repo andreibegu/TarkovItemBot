@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using Humanizer;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -30,23 +30,23 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float HeatFactor { get; set; }
         public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            builder.AddField("Type", Type.Transform(To.TitleCase), true);
-            builder.AddField("Class", Class.Transform(To.TitleCase), true);
-            builder.AddField("Caliber", Caliber, true);
-            builder.AddField("Fire Rate", $"{RateOfFire} rpm", true);
-            builder.AddField("Action", Action.Transform(To.TitleCase), true);
-            builder.AddField("Foldable", FoldRetractable ? "Yes" : "No", true);
-            builder.AddField("Modes", Modes.Humanize(x => x.Transform(To.TitleCase)), true);
-            builder.AddField("Effective Distance", $"{EffectiveDistance} m.", true);
-            builder.AddField("Ergonomics", ErgonomicsFloat, true);
-            builder.AddField("Recoil", $"{RecoilVertical} vert. {RecoilHorizontal} hor.", true);
-            builder.AddField("Malfunction Chance", $"{MalfunctionChance:0.00;-#.00}%", true);
+            embed.AddField("Type", Type.Transform(To.TitleCase), true);
+            embed.AddField("Class", Class.Transform(To.TitleCase), true);
+            embed.AddField("Caliber", Caliber, true);
+            embed.AddField("Fire Rate", $"{RateOfFire} rpm", true);
+            embed.AddField("Action", Action.Transform(To.TitleCase), true);
+            embed.AddField("Foldable", FoldRetractable ? "Yes" : "No", true);
+            embed.AddField("Modes", Modes.Humanize(x => x.Transform(To.TitleCase)), true);
+            embed.AddField("Effective Distance", $"{EffectiveDistance} m.", true);
+            embed.AddField("Ergonomics", ErgonomicsFloat, true);
+            embed.AddField("Recoil", $"{RecoilVertical} vert. {RecoilHorizontal} hor.", true);
+            embed.AddField("Malfunction Chance", $"{MalfunctionChance:0.00;-#.00}%", true);
 
-            return builder;
+            return embed;
         }
     }
 }

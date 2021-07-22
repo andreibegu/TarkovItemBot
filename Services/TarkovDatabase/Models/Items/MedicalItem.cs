@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using Humanizer;
 using TarkovItemBot.Helpers;
 
@@ -12,17 +12,17 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float UseTime { get; set; }
         public Effects Effects { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            builder.AddField("Type", Type.Transform(To.TitleCase), true);
-            if (Resources != 0) builder.AddField("Resources", ResourceRate == 0 ? Resources : $"{Resources} / {ResourceRate}", true);
-            builder.AddField("Use time", $"{UseTime} sec.", true);
+            embed.AddField("Type", Type.Transform(To.TitleCase), true);
+            if (Resources != 0) embed.AddField("Resources", ResourceRate == 0 ? Resources : $"{Resources} / {ResourceRate}", true);
+            embed.AddField("Use time", $"{UseTime} sec.", true);
 
-            builder.AddEffects(Effects);
+            embed.AddEffects(Effects);
 
-            return builder;
+            return embed;
         }
     }
 }

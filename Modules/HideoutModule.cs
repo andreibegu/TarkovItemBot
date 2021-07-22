@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using Disqord;
+using Disqord.Bot;
 using Humanizer;
 using Qmmands;
 using System;
@@ -6,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TarkovItemBot.Helpers;
-using TarkovItemBot.Services.Commands;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
 
@@ -26,9 +26,9 @@ namespace TarkovItemBot.Modules
 
         [Command("module", "mod", "area")]
         [Description("Returns detailed information for the hideout module most closely matching the query.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
         [Remarks("module \"Intelligence Center\" 3")]
-        public async Task ModuleAsync(
+        public async Task<DiscordCommandResult> ModuleAsync(
             [Range(3, 32, true, true)][Description("The module to look for.")] string query,
             [Description("The level of the module to look for")] int level = 1)
         {
@@ -38,30 +38,28 @@ namespace TarkovItemBot.Modules
 
             if (module == null)
             {
-                await ReplyAsync("No module found for query!");
-                return;
+                return Reply("No module found for query!");
             }
 
             if (level - 1 > module.Stages.Count)
             {
-                await ReplyAsync($"The specified module only has {module.Stages.Count} level(s)!");
-                return;
+                return Reply($"The specified module only has {module.Stages.Count} level(s)!");
             }
 
             var stage = module.Stages[level - 1];
 
-            var builder = new EmbedBuilder()
+            var embed = new LocalEmbed()
             {
                 Title = module.Name,
                 Description = stage.Description,
-                Color = new Discord.Color(0x968867)
+                Color = new Disqord.Color(0x968867)
             };
 
-            builder.AddField("Requires Power", module.RequiresPower ? "Yes" : "No", true);
-            builder.AddField("Levels", $"{module.Stages.Count} (Showing {level})", true);
+            embed.AddField("Requires Power", module.RequiresPower ? "Yes" : "No", true);
+            embed.AddField("Levels", $"{module.Stages.Count} (Showing {level})", true);
             var time = stage.ConstructionTime.TotalSeconds == 0 ? "Instant" : stage.ConstructionTime.Humanize(3);
-            builder.AddField("Building Time", time, true);
-            builder.WithFooter($"Modified {module.Modified.Humanize()}");
+            embed.AddField("Building Time", time, true);
+            embed.WithFooter($"Modified {module.Modified.Humanize()}");
 
             if (stage.Materials.Any())
             {
@@ -76,7 +74,7 @@ namespace TarkovItemBot.Modules
                         materials.Add(item, requirement.FirstOrDefault(x => x.Id == item.Id).Count);
                 }
 
-                builder.AddField("Building Materials", materials.Humanize(x => $"{x.Value:N0}x {x.Key.Name}"), false);
+                embed.AddField("Building Materials", materials.Humanize(x => $"{x.Value:N0}x {x.Key.Name}"), false);
             }
 
             if (stage.RequiredModules.Any())
@@ -85,11 +83,11 @@ namespace TarkovItemBot.Modules
                 var modules = requiredModules
                     .ToDictionary(x => x, x => stage.RequiredModules.FirstOrDefault(y => y.Id == x.Id).Stage);
 
-                builder.AddField("Required Modules", modules.Humanize(x => $"{x.Key.Name} L{x.Value + 1}"));
+                embed.AddField("Required Modules", modules.Humanize(x => $"{x.Key.Name} L{x.Value + 1}"));
             }
 
             if (stage.Requirements.Any())
-                builder.AddField("Other Requirements", stage.Requirements.Humanize(x => $"{x.Name} L{x.Level}"));
+                embed.AddField("Other Requirements", stage.Requirements.Humanize(x => $"{x.Name} L{x.Level}"));
 
             var bonuses = "";
 
@@ -107,24 +105,23 @@ namespace TarkovItemBot.Modules
                 bonuses = bonuses.AddBonuses(module, level, previousBonuses, true);
             }
 
-            if (!string.IsNullOrEmpty(bonuses)) builder.AddField("Bonuses", bonuses);
+            if (!string.IsNullOrEmpty(bonuses)) embed.AddField("Bonuses", bonuses);
 
-            await ReplyAsync(embed: builder.Build());
+            return Reply(embed);
         }
 
         [Command("crafting", "crafts", "craft", "production")]
         [Description("Returns crafting information about the queried item.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownType.User)]
+        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
         [Remarks("crafting car battery")]
-        public async Task CraftingAsync(
+        public async Task<DiscordCommandResult> CraftingAsync(
             [Range(3, 100, true, true)][Remainder][Description("The item to find crafting information for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
-                await ReplyAsync("No items found for query!");
-                return;
+                return Reply("No items found for query!");
             }
 
             var resultsIn = await _tarkov.GetProductionsAsync(outcome: result.Id);
@@ -133,17 +130,16 @@ namespace TarkovItemBot.Modules
             var productions = resultsIn.Union(usedIn);
             if (!productions.Any())
             {
-                await ReplyAsync("No crafting schemes found for query!");
-                return;
+                return Reply("No crafting schemes found for query!");
             }
 
-            var builder = new EmbedBuilder()
+            var embed = new LocalEmbed()
             {
                 Title = result.Name,
                 Description = result.Description,
                 ThumbnailUrl = result.IconUrl,
                 Url = result.WikiUrl,
-                Color = new Discord.Color(0x968867)
+                Color = new Disqord.Color(0x968867)
             };
 
             var groups = productions.SelectMany(x => x.Materials.Union(x.Outcome)).GroupBy(x => x.Kind);
@@ -174,8 +170,8 @@ namespace TarkovItemBot.Modules
                     $"({production.Duration.Humanize(2)} in {modules[production.Module].Name}{stage})\n\n";
             }
 
-            builder.AddField("Crafts", productionList);
-            await ReplyAsync(embed: builder.Build());
+            embed.AddField("Crafts", productionList);
+            return Reply(embed);
         }
     }
 }

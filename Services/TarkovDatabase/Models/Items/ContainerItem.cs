@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using System.Collections.Generic;
 using TarkovItemBot.Helpers;
 
@@ -8,13 +8,13 @@ namespace TarkovItemBot.Services.TarkovDatabase
     {
         public IReadOnlyCollection<ContainerGrid> Grids { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            builder.AddGrids(Grids);
+            embed.AddGrids(Grids);
 
-            return builder;
+            return embed;
         }
     }
 }

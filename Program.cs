@@ -1,5 +1,6 @@
-﻿using Discord.Addons.Hosting;
-using Discord.WebSocket;
+﻿using Disqord.Bot;
+using Disqord.Bot.Hosting;
+using Disqord.Gateway;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,7 +11,6 @@ using System;
 using System.Threading.Tasks;
 using TarkovItemBot.Options;
 using TarkovItemBot.Services;
-using TarkovItemBot.Services.Commands;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
 using TarkovItemBot.Services.TarkovTools;
@@ -32,9 +32,12 @@ namespace TarkovItemBot
                 {
                     config.AddEnvironmentVariables("TarkovItemBot_");
                 })
-                .ConfigureDiscordHost((context, config) =>
+                .ConfigureDiscordBot((context, bot) =>
                 {
-                    config.Token = context.Configuration["Bot:Token"];
+                    bot.Token = context.Configuration["Bot:Token"];
+                    bot.Prefixes = new[] { context.Configuration["Bot:Prefix"] };
+                    bot.Intents -= GatewayIntent.Members;
+
                 })
                 .ConfigureServices((context, services) =>
                 {
@@ -71,11 +74,10 @@ namespace TarkovItemBot
                     services.AddSingleton(new CommandService(new CommandServiceConfiguration()
                     {
                         DefaultRunMode = RunMode.Parallel,
-                        CooldownBucketKeyGenerator = CooldownBucketKeyGenerators.DiscordDefault
+                        CooldownBucketKeyGenerator = CooldownBucketKeyGenerator.Instance
                     }));
 
-                    services.AddHostedService<CommandHandlingService>();
-                    services.AddHostedService<PresenceService>();
+                    services.AddSingleton<PresenceService>();
                 });
 
             await hostBuilder.RunConsoleAsync();

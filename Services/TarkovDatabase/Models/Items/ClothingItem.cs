@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using Humanizer;
 using System.Collections.Generic;
 
@@ -11,19 +11,19 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public string Type { get; set; }
         public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            builder.AddField("Type", Type.Transform(To.TitleCase), true);
+            embed.AddField("Type", Type.Transform(To.TitleCase), true);
 
-            if (Blocking.Count != 0) builder.AddField("Blocking", Blocking.Humanize(x => x.Transform(To.TitleCase)), true);
+            if (Blocking.Count != 0) embed.AddField("Blocking", Blocking.Humanize(x => x.Transform(To.TitleCase)), true);
 
-            if (Penalties.Speed != 0) builder.AddField("Speed Penalty", $"{Penalties.Speed}%", true);
-            if (Penalties.Mouse != 0) builder.AddField("Turning Penalty", $"{Penalties.Mouse}%", true);
-            if (Penalties.Deafness != Deafness.None) builder.AddField("Deafness", Penalties.Deafness.Humanize(), true);
+            if (Penalties.Speed != 0) embed.AddField("Speed Penalty", $"{Penalties.Speed}%", true);
+            if (Penalties.Mouse != 0) embed.AddField("Turning Penalty", $"{Penalties.Mouse}%", true);
+            if (Penalties.Deafness != Deafness.None) embed.AddField("Deafness", Penalties.Deafness.Humanize(), true);
 
-            return builder;
+            return embed;
         }
     }
 }

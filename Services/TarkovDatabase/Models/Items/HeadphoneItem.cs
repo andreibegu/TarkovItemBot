@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using System.Text.Json.Serialization;
 
 namespace TarkovItemBot.Services.TarkovDatabase
@@ -14,15 +14,15 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public HighPass HighPass { get; set; }
         public Compressor Compressor { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            builder.AddField("Ambient Volume", $"{AmbientVolume:+0.00;-#.00} dB", true);
-            builder.AddField("Distortion", $"{Distortion * 100}%", true);
-            builder.AddField("Cutoff Frequency", $"< {HighPass.CutoffFrequency} Hz", true);
+            embed.AddField("Ambient Volume", $"{AmbientVolume:+0.00;-#.00} dB", true);
+            embed.AddField("Distortion", $"{Distortion * 100}%", true);
+            embed.AddField("Cutoff Frequency", $"< {HighPass.CutoffFrequency} Hz", true);
 
-            return builder;
+            return embed;
         }
     }
 }

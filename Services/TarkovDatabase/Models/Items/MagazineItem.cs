@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using TarkovItemBot.Helpers;
@@ -18,22 +18,22 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Compatibility { get; set; }
         public IReadOnlyDictionary<ItemKind, IReadOnlyList<string>> Conflicts { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            builder.AddField("Capacity", $"{Capacity} rounds", true);
-            builder.AddField("Caliber", Caliber, true);
+            embed.AddField("Capacity", $"{Capacity} rounds", true);
+            embed.AddField("Caliber", Caliber, true);
 
-            if (MalfunctionChance != 0) builder.AddField("Malfunction Chance", $"{MalfunctionChance:0.00;-#.00}%", true);
-            if (ErgonomicsFloat != 0) builder.AddField("Ergonomics", ErgonomicsFloat.ToString("+0.00;-#.00"), true);
+            if (MalfunctionChance != 0) embed.AddField("Malfunction Chance", $"{MalfunctionChance:0.00;-#.00}%", true);
+            if (ErgonomicsFloat != 0) embed.AddField("Ergonomics", ErgonomicsFloat.ToString("+0.00;-#.00"), true);
 
-            if (Modifier.CheckTime != 0) builder.AddField("Check Time", $"{Modifier.CheckTime:+0.00;-#.00}%", true);
-            if (Modifier.LoadUnload != 0) builder.AddField("Load/Unload Time", $"{Modifier.LoadUnload:+0.00;-#.00}%", true);
+            if (Modifier.CheckTime != 0) embed.AddField("Check Time", $"{Modifier.CheckTime:+0.00;-#.00}%", true);
+            if (Modifier.LoadUnload != 0) embed.AddField("Load/Unload Time", $"{Modifier.LoadUnload:+0.00;-#.00}%", true);
 
-            builder.AddGridModifier(GridModifier);
+            embed.AddGridModifier(GridModifier);
 
-            return builder;
+            return embed;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using Humanizer;
 using System.Text.Json.Serialization;
 
@@ -25,9 +25,9 @@ namespace TarkovItemBot.Services.TarkovDatabase
         [JsonPropertyName("grenadeProps")]
         public GrenadeProperties GrenadeProperties { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var builder = base.ToEmbed();
 
             builder.AddField("Caliber", Caliber, true);
             builder.AddField("Type", Type.Transform(To.TitleCase), true);

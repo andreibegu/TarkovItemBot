@@ -1,4 +1,4 @@
-﻿using Discord;
+﻿using Disqord;
 using Humanizer;
 using System.Text.Json.Serialization;
 
@@ -16,19 +16,19 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float Strength { get; set; }
         public float EmitTime { get; set; }
 
-        public override EmbedBuilder ToEmbedBuilder()
+        public override LocalEmbed ToEmbed()
         {
-            var builder = base.ToEmbedBuilder();
+            var embed = base.ToEmbed();
 
-            builder.AddField("Type", Type.Transform(To.TitleCase), true);
-            builder.AddField("Delay", $"{Delay} sec.", true);
+            embed.AddField("Type", Type.Transform(To.TitleCase), true);
+            embed.AddField("Delay", $"{Delay} sec.", true);
 
-            if (MinDistance != 0) builder.AddField("Distance", $"{MinDistance}-{MaxDistance} m.", true);
-            if (FragmentCount != 0) builder.AddField("Fragments", FragmentCount, true);
-            if (EmitTime != 0) builder.AddField("Burn time", $"{EmitTime} sec.", true);
-            if (ContusionDistance != 0) builder.AddField("Contusion distance", $"{ContusionDistance} m.", true);
+            if (MinDistance != 0) embed.AddField("Distance", $"{MinDistance}-{MaxDistance} m.", true);
+            if (FragmentCount != 0) embed.AddField("Fragments", FragmentCount, true);
+            if (EmitTime != 0) embed.AddField("Burn time", $"{EmitTime} sec.", true);
+            if (ContusionDistance != 0) embed.AddField("Contusion distance", $"{ContusionDistance} m.", true);
 
-            return builder;
+            return embed;
         }
     }
 }

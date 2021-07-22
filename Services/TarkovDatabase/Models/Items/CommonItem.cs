@@ -1,5 +1,5 @@
 ﻿
-using Discord;
+using Disqord;
 using Humanizer;
 using System;
 using System.Text.Json.Serialization;
@@ -28,9 +28,9 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public string IconUrl => $"https://storage.tarkov-database.com/assets/icons/1-1/{Id}.png";
         public string WikiUrl => $"https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(Name.Replace(" ", "_"))}";
 
-        public virtual EmbedBuilder ToEmbedBuilder()
+        public virtual LocalEmbed ToEmbed()
         {
-            var embed = new EmbedBuilder()
+            var embed = new LocalEmbed()
             {
                 Title = $"{Name} ({ShortName})",
                 Description = Description,
