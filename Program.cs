@@ -71,12 +71,6 @@ namespace TarkovItemBot
 
                     services.AddHttpClient<TarkovToolsClient>();
 
-                    services.AddSingleton(new CommandService(new CommandServiceConfiguration()
-                    {
-                        DefaultRunMode = RunMode.Parallel,
-                        CooldownBucketKeyGenerator = CooldownBucketKeyGenerator.Instance
-                    }));
-
                     services.AddSingleton<PresenceService>();
                 });
 
