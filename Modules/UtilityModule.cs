@@ -166,7 +166,7 @@ namespace TarkovItemBot.Modules
                 offerModifier = Math.Pow(offerModifier, 1.08);
             }
 
-            var tax = offerValue * 0.05 * Math.Pow(4, offerModifier) + requestValue * 0.05 * Math.Pow(4, requestModifier);
+            var tax = offerValue * 0.07 * Math.Pow(4, offerModifier) + requestValue * 0.05 * Math.Pow(4, requestModifier);
 
             var embed = new LocalEmbed()
             {
