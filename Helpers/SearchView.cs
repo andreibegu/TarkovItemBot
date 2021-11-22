@@ -20,13 +20,13 @@ namespace TarkovItemBot.Helpers
                 this.Menu.Stop();
                 this.ClearComponents();
 
-                var response = args.Interaction.SelectedValues.FirstOrDefault().Split("/");
+                var response = args.Interaction.SelectedValues[0].Split("/");
                 var itemId = response[0];
                 var kind = Enum.Parse<ItemKind>(response[1]);
 
                 var item = await client.GetItemAsync(itemId, kind);
                 this.TemplateMessage = new LocalMessage().WithEmbeds(item.ToEmbed());
-                await (this.Menu as InteractiveMenu).ApplyChangesAsync();
+                await (this.Menu as DefaultMenu).ApplyChangesAsync();
             });
 
             foreach (var item in items)
