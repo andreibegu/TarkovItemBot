@@ -14,6 +14,6 @@ namespace TarkovItemBot.Services.TarkovDatabase
             => StandardColor.FromArgb(color.A, color.R, color.G, color.B);
 
         public static implicit operator DisqordColor(Color color)
-            => new DisqordColor(color.R, color.G, color.B);
+            => new(color.R, color.G, color.B);
     };
 }
