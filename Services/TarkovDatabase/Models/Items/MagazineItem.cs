@@ -25,7 +25,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
             embed.AddField("Capacity", $"{Capacity} rounds", true);
             embed.AddField("Caliber", Caliber, true);
 
-            if (MalfunctionChance != 0) embed.AddField("Malfunction Chance", $"{MalfunctionChance:0.00;-#.00}%", true);
+            if (MalfunctionChance != 0) embed.AddField("Malfunction Chance", $"{MalfunctionChance * 100:+0.00;-#.00}%", true);
             if (ErgonomicsFloat != 0) embed.AddField("Ergonomics", ErgonomicsFloat.ToString("+0.00;-#.00"), true);
 
             if (Modifier.CheckTime != 0) embed.AddField("Check Time", $"{Modifier.CheckTime:+0.00;-#.00}%", true);

@@ -40,6 +40,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public bool Supressor { get; set; }
         public float DurabilityBurn { get; set; }
         public float HeatFactor { get; set; }
+        public float CoolFactor { get; set; }
 
         public override LocalEmbed ToEmbed()
         {
@@ -49,7 +50,10 @@ namespace TarkovItemBot.Services.TarkovDatabase
             embed.AddField("Supresses", Supressor ? "Yes" : "No", true);
 
             if (Velocity != 0) embed.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
-            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
+
+            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn * 100:+0.00;-#.00}%", true);
+            if (HeatFactor != 0) embed.AddField("Heat", $"{HeatFactor * 100:+0.00;-#.00}%", true);
+            if (CoolFactor != 0) embed.AddField("Cooling", $"{CoolFactor * 100:+0.00;-#.00}%", true);
 
             return embed;
         }
@@ -87,12 +91,15 @@ namespace TarkovItemBot.Services.TarkovDatabase
     {
         public float DurabilityBurn { get; set; }
         public float HeatFactor { get; set; }
+        public float CoolFactor { get; set; }
 
         public override LocalEmbed ToEmbed()
         {
             var embed = base.ToEmbed();
 
-            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
+            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn * 100:+0.00;-#.00}%", true);
+            if (HeatFactor != 0) embed.AddField("Heat", $"{HeatFactor * 100:+0.00;-#.00}%", true);
+            if (CoolFactor != 0) embed.AddField("Cooling", $"{CoolFactor * 100:+0.00;-#.00}%", true);
 
             return embed;
         }
@@ -123,6 +130,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float Loudness { get; set; }
         public float DurabilityBurn { get; set; }
         public float HeatFactor { get; set; }
+        public float CoolFactor { get; set; }
 
         public override LocalEmbed ToEmbed()
         {
@@ -132,7 +140,10 @@ namespace TarkovItemBot.Services.TarkovDatabase
             embed.AddField("Loudness", Loudness.ToString("+0.00;-#.00"), true);
 
             if (Velocity != 0) embed.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
-            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
+
+            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn * 100:+0.00;-#.00}%", true);
+            if (HeatFactor != 0) embed.AddField("Heat", $"{HeatFactor * 100:+0.00;-#.00}%", true);
+            if (CoolFactor != 0) embed.AddField("Cooling", $"{CoolFactor * 100:+0.00;-#.00}%", true);
 
             return embed;
         }
@@ -147,13 +158,17 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float Velocity { get; set; }
         public float DurabilityBurn { get; set; }
         public float HeatFactor { get; set; }
+        public float CoolFactor { get; set; }
 
         public override LocalEmbed ToEmbed()
         {
             var embed = base.ToEmbed();
 
             if (Velocity != 0) embed.AddField("Velocity", Velocity.ToString("+0.00;-#.00"), true);
-            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn:+0.00;-#.00}%", true);
+
+            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn * 100:+0.00;-#.00}%", true);
+            if (HeatFactor != 0) embed.AddField("Heat", $"{HeatFactor * 100:+0.00;-#.00}%", true);
+            if (CoolFactor != 0) embed.AddField("Cooling", $"{CoolFactor * 100:+0.00;-#.00}%", true);
 
             return embed;
         }
@@ -190,9 +205,19 @@ namespace TarkovItemBot.Services.TarkovDatabase
     {
         public bool FoldRetractable { get; set; }
         public float HeatFactor { get; set; }
+        public float CoolFactor { get; set; }
 
         public override LocalEmbed ToEmbed()
-            => base.ToEmbed().AddField("Foldable", FoldRetractable ? "Yes" : "No", true);
+        {
+            var embed = base.ToEmbed();
+
+            if (HeatFactor != 0) embed.AddField("Heat", $"{HeatFactor}%", true);
+            if (CoolFactor != 0) embed.AddField("Cooling", $"{CoolFactor}%", true);
+
+            embed.AddField("Foldable", FoldRetractable ? "Yes" : "No", true);
+
+            return embed;
+        }
     }
 
     public class GogglesItem : ModificationItem
@@ -204,5 +229,23 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
         public override LocalEmbed ToEmbed()
             => base.ToEmbed().AddField("Type", Type.Transform(To.TitleCase), true);
+    }
+
+    public class AuxiliaryItem : ModificationItem
+    {
+        public float DurabilityBurn { get; set; }
+        public float HeatFactor { get; set; }
+        public float CoolFactor { get; set; }
+
+        public override LocalEmbed ToEmbed()
+        {
+            var embed = base.ToEmbed();
+
+            if (DurabilityBurn != 0) embed.AddField("Durability Burn", $"{DurabilityBurn * 100:+0.00;-#.00}%", true);
+            if (HeatFactor != 0) embed.AddField("Heat", $"{HeatFactor * 100:+0.00;-#.00}%", true);
+            if (CoolFactor != 0) embed.AddField("Cooling", $"{CoolFactor * 100:+0.00;-#.00}%", true);
+
+            return embed;
+        }
     }
 }

@@ -43,8 +43,9 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
             if (WeaponModifier.Accuracy != 0) builder.AddField("Accuracy", $"{WeaponModifier.Accuracy:+0.00;-#.00}%", true);
             if (WeaponModifier.Recoil != 0) builder.AddField("Recoil", $"{WeaponModifier.Recoil:+0.00;-#.00}%", true);
-            if (WeaponModifier.DurabilityBurn != 0) builder.AddField("Durability Burn", $"{WeaponModifier.DurabilityBurn:+0.00;-#.00}%", true);
-            if (WeaponModifier.MalfunctionChance != 0) builder.AddField("Malfunction Chance", $"{WeaponModifier.MalfunctionChance:0.00;-#.00}%", true);
+            if (WeaponModifier.DurabilityBurn != 0) builder.AddField("Durability Burn", $"{WeaponModifier.DurabilityBurn * 100:+0.00;-#.00}%", true);
+            if (WeaponModifier.MalfunctionChance != 0) builder.AddField("Malfunction Chance", $"{WeaponModifier.MalfunctionChance * 100:+0.00;-#.00}%", true);
+            if (WeaponModifier.HeatFactor != 0) builder.AddField("Heat", $"{WeaponModifier.HeatFactor * 100:+0.00;-#.00}%", true);
 
             if (Effects.HeavyBleedingChance != 0) builder.AddField("Heavy Bleeding Chance", $"{Effects.HeavyBleedingChance * 100}%", true);
             if (Effects.LightBleedingChance != 0) builder.AddField("Light Bleeding Chance", $"{Effects.LightBleedingChance * 100}%", true);
