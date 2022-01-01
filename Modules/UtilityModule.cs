@@ -134,58 +134,6 @@ namespace TarkovItemBot.Modules
             return Reply($"<https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(result.Name.Replace(" ", "_"))}>");
         }
 
-        [Command("tax", "commission", "fleatax", "markettax")]
-        [Description("Returns the Flea Market tax for the item most closely matching the query.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("tax 500000 Red Keycard")]
-        public async Task<DiscordCommandResult> TaxAsync(
-            [Description("The price the item is being put up for.")] int price,
-            [Remainder][Range(3, 100, true, true)][Description("The item that is being put up for sale.")] string query)
-        {
-            var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
-
-            if (result == null)
-            {
-                return Reply("No items found for query!");
-            }
-
-            var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
-
-            var offerValue = item.Price;
-            var requestValue = Convert.ToDouble(price);
-
-            var offerModifier = Math.Log10(offerValue / requestValue);
-            var requestModifier = Math.Log10(requestValue / offerValue);
-
-            if (requestValue >= offerValue)
-            {
-                requestModifier = Math.Pow(requestModifier, 1.08);
-            }
-            else
-            {
-                offerModifier = Math.Pow(offerModifier, 1.08);
-            }
-
-            var tax = offerValue * 0.07 * Math.Pow(4, offerModifier) + requestValue * 0.05 * Math.Pow(4, requestModifier);
-
-            var embed = new LocalEmbed()
-            {
-                Title = $"{item.Name} ({item.ShortName})",
-                Color = item.Grid.Color,
-                ThumbnailUrl = item.IconUrl,
-                Description = item.Description,
-                Url = item.WikiUrl
-            };
-
-            embed.AddField("Base Price", $"{item.Price:#,##0} ₽", true);
-            embed.AddField("Base Tax", $"{tax:#,##0} ₽", true);
-            embed.AddField("Profit", $"{price - tax:#,##0} ₽", true);
-
-            embed.WithFooter($"{item.Kind.Humanize()} • Modified {item.Modified.Humanize()}");
-
-            return Reply(embed);
-        }
-
         [Command("pricecheck", "price", "pc", "flea", "market", "fleamarket")]
         [Description("Displays current and past prices of an item on the player-driven market.")]
         [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]

@@ -9,7 +9,6 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public string Name { get; set; }
         public string ShortName { get; set; }
         public string Description { get; set; }
-        public int Price { get; set; }
         public float Weight { get; set; }
         public int MaxStack { get; set; }
         public Grid Grid { get; set; }
