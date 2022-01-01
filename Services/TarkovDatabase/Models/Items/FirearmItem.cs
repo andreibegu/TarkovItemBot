@@ -28,6 +28,8 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public float MalfunctionChance { get; set; }
         public float DurabilityRatio { get; set; }
         public float HeatFactor { get; set; }
+        public float CoolFactor { get; set; }
+        public float CenterOfImpact { get; set; }
         public IReadOnlyDictionary<string, Slot> Slots { get; set; }
 
         public override LocalEmbed ToEmbed()
@@ -45,6 +47,9 @@ namespace TarkovItemBot.Services.TarkovDatabase
             embed.AddField("Ergonomics", ErgonomicsFloat, true);
             embed.AddField("Recoil", $"{RecoilVertical} vert. {RecoilHorizontal} hor.", true);
             embed.AddField("Malfunction Chance", $"{MalfunctionChance:0.00;-#.00}%", true);
+
+            var accuracy = 100 * CenterOfImpact / 2.9089;
+            if (accuracy != 0) embed.AddField("Accuracy", $"{accuracy:0.00} MOA", true);
 
             return embed;
         }

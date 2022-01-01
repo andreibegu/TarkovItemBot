@@ -90,6 +90,9 @@ namespace TarkovItemBot.Services.TarkovDatabase
         [KindType(typeof(StockItem))]
         [Description("Stock")]
         ModificationStock,
+        [KindType(typeof(AuxiliaryItem))]
+        [Description("Auxiliary")]
+        ModificationAuxiliary,
         [KindType(typeof(MoneyItem))]
         Money,
         [KindType(typeof(TacticalrigItem))]
