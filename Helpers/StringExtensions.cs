@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using TarkovItemBot.Services.TarkovDatabase;
 
 namespace TarkovItemBot.Helpers
@@ -13,6 +16,31 @@ namespace TarkovItemBot.Helpers
                 return char.ToLowerInvariant(str[0]) + str[1..];
             }
             return str;
+        }
+
+        public static string RemoveAccents(this string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
+
+            text = text.Normalize(NormalizationForm.FormD);
+            char[] chars = text
+                .Where(c => CharUnicodeInfo.GetUnicodeCategory(c)
+                != UnicodeCategory.NonSpacingMark).ToArray();
+
+            return new string(chars).Normalize(NormalizationForm.FormC);
+        }
+
+        public static string Slugify(this string phrase)
+        { 
+            string value = phrase.RemoveAccents().ToLower();
+
+            value = Regex.Replace(value, @"\s", "-", RegexOptions.Compiled);
+            value = Regex.Replace(value, @"[^\w\s\p{Pd}]", "-", RegexOptions.Compiled);
+            value = value.Trim('-', '_');
+            value = Regex.Replace(value, @"([-_]){2,}", "$1", RegexOptions.Compiled);
+
+            return value;
         }
 
         public static string FirstCharUpper(this string str)

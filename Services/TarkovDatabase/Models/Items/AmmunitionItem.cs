@@ -1,6 +1,7 @@
 ﻿using Disqord;
 using Humanizer;
 using System.Text.Json.Serialization;
+using TarkovItemBot.Helpers;
 
 namespace TarkovItemBot.Services.TarkovDatabase
 {
@@ -12,7 +13,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public string TracerColor { get; set; }
         public bool Subsonic { get; set; }
         public float Velocity { get; set; }
-        public float BalIReadOnlyCollectionicCoef { get; set; }
+        public float BallisticCoeficient { get; set; }
         public float Damage { get; set; }
         public float Penetration { get; set; }
         public float ArmorDamage { get; set; }
@@ -26,6 +27,9 @@ namespace TarkovItemBot.Services.TarkovDatabase
         public WeaponModifiers WeaponModifier { get; set; }
         [JsonPropertyName("grenadeProps")]
         public GrenadeProperties GrenadeProperties { get; set; }
+
+        public string BallisticsLink 
+            => $"https://tarkov-ballistics.com/charts/{Caliber.Slugify()}/{Name.Slugify()}.html";
 
         public override LocalEmbed ToEmbed()
         {

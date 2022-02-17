@@ -271,5 +271,49 @@ namespace TarkovItemBot.Services.TarkovDatabase
 
             return items;
         }
+
+        public async Task<IReadOnlyCollection<DistanceStatistics>> GetDistanceStatisticsAsync(string id, int gte, int lte)
+        {
+            var query = new Dictionary<string, object>()
+            {
+                ["limit"] = PageLimit,
+                ["ammo"] = id,
+                ["range"] = $"{gte},{lte}"
+            };
+
+            var items = new List<DistanceStatistics>();
+            int total = 0;
+            int offset = 0;
+
+            do
+            {
+                var result = 
+                    await _httpClient.GetFromJsonAsync<Response<DistanceStatistics>>("statistic/ammunition/distance" + query.AsQueryString());
+                items.AddRange(result.Items);
+
+                total = result.Total;
+                offset += result.Items.Count;
+                query["offset"] = offset;
+            } while (total > offset);
+
+
+            return items;
+        }
+
+        public async Task<IReadOnlyCollection<ArmorStatistics>> GetArmorStatisticsAsync(string ammoId, string armorId, int gte, int lte)
+        {
+            var query = new Dictionary<string, object>()
+            {
+                ["limit"] = PageLimit,
+                ["ammo"] = ammoId,
+                ["armor"] = armorId,
+                ["range"] = $"{gte},{lte}"
+            };
+
+            var result =
+                await _httpClient.GetFromJsonAsync<Response<ArmorStatistics>>("statistic/ammunition/armor" + query.AsQueryString());
+
+            return result.Items;
+        }
     }
 }
