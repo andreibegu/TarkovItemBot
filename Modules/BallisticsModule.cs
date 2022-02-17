@@ -63,7 +63,15 @@ namespace TarkovItemBot.Modules
             var interval = ammoItem.Type == "buckshot" ? 25 : 100;
             var gte = ammoItem.Type == "buckshot" ? 25 : 100;
             var lte = ammoItem.Type == "buckshot" ? 250 : 1000;
-            var stats = (await _tarkov.GetDistanceStatisticsAsync(item.Id, gte, lte))
+
+            var statsResult = await _tarkov.GetDistanceStatisticsAsync(item.Id, gte, lte);
+
+            if (statsResult == null)
+            {
+                return Reply("No simulation results found for the given item!");
+            }
+
+            var stats = statsResult
                 .Where(x => x.Distance % interval == 0);
 
             var card = new ConsoleTable("Range", "Velocity", "Damage", "Pen.", "Drop", "TOF");
@@ -113,7 +121,14 @@ namespace TarkovItemBot.Modules
                 return Reply("The item provided is not armor!");
             }
 
-            var simulation = (await _tarkov.GetArmorStatisticsAsync(ammoItem.Id, armorItem.Id, 0, 1000))
+            var results = await _tarkov.GetArmorStatisticsAsync(ammoItem.Id, armorItem.Id, 0, 1000);
+
+            if (results == null)
+            {
+                return Reply("No simulation results found for the given items!");
+            }
+
+            var simulation = results
                 .OrderBy(x => Math.Abs(x.Distance - range)).FirstOrDefault();
 
             var embed = new LocalEmbed()
