@@ -11,8 +11,8 @@ namespace TarkovItemBot.Services
         private int _requestCount;
         private readonly int _requestLimit;
         private readonly TimeSpan _resetDuration;
-        private readonly SemaphoreSlim _requestLock = new SemaphoreSlim(1, 1);
-        private readonly SemaphoreSlim _timeLock = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _requestLock = new(1, 1);
+        private readonly SemaphoreSlim _timeLock = new(1, 1);
 
         public RateLimitHandler(int requestLimit, TimeSpan resetDuration)
         {

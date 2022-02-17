@@ -16,7 +16,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
     {
         private const int PageLimit = 100;
 
-        private readonly ConcurrentDictionary<ItemKind, Type> _kindMap = new ConcurrentDictionary<ItemKind, Type>();
+        private readonly ConcurrentDictionary<ItemKind, Type> _kindMap = new();
         private readonly HttpClient _httpClient;
 
         public TarkovDatabaseClient(HttpClient httpClient, IOptions<TarkovDatabaseOptions> config)
@@ -282,12 +282,12 @@ namespace TarkovItemBot.Services.TarkovDatabase
             };
 
             var items = new List<DistanceStatistics>();
-            int total = 0;
             int offset = 0;
 
+            int total;
             do
             {
-                var result = 
+                var result =
                     await _httpClient.GetFromJsonAsync<Response<DistanceStatistics>>("statistic/ammunition/distance" + query.AsQueryString());
                 items.AddRange(result.Items);
 
