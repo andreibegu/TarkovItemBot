@@ -4,11 +4,8 @@ using Disqord.Bot;
 using Humanizer;
 using Qmmands;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using TarkovItemBot.Helpers;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
 
@@ -33,19 +30,15 @@ namespace TarkovItemBot.Modules
         public async Task<DiscordCommandResult> BallisticsAsync(
             [Remainder][Range(3, 100, true, true)][Description("The item to display the range card for.")] string query)
         {
-            var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
+            var result = (await _tarkovSearch.SearchAsync($"(name:{query}) AND kind:ammunition",
+                DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
                 return Reply("No items found for query!");
             }
 
-            var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
-
-            if (item is not AmmunitionItem ammoItem)
-            {
-                return Reply("The item provided is not a cartridge!");
-            }
+            var item = await _tarkov.GetItemAsync<AmmunitionItem>(result.Id);
 
             var embed = new LocalEmbed()
             {
@@ -53,16 +46,16 @@ namespace TarkovItemBot.Modules
                 Color = item.Grid.Color,
                 ThumbnailUrl = item.IconUrl,
                 Description = item.Description,
-                Url = ammoItem.BallisticsLink
+                Url = item.BallisticsLink
             };
 
-            embed.AddField("Initial Damage", ammoItem.Damage, true);
-            embed.AddField("Initial Penetration", ammoItem.Penetration, true);
-            embed.AddField("Initial Velocity", $"{ammoItem.Velocity}m/s", true);
+            embed.AddField("Initial Damage", item.Damage, true);
+            embed.AddField("Initial Penetration", item.Penetration, true);
+            embed.AddField("Initial Velocity", $"{item.Velocity}m/s", true);
 
-            var interval = ammoItem.Type == "buckshot" ? 25 : 100;
-            var gte = ammoItem.Type == "buckshot" ? 25 : 100;
-            var lte = ammoItem.Type == "buckshot" ? 250 : 1000;
+            var interval = item.Type == "buckshot" ? 25 : 100;
+            var gte = item.Type == "buckshot" ? 25 : 100;
+            var lte = item.Type == "buckshot" ? 250 : 1000;
 
             var statsResult = await _tarkov.GetDistanceStatisticsAsync(item.Id, gte, lte);
 
@@ -99,33 +92,27 @@ namespace TarkovItemBot.Modules
             [Range(3, 100, true, true)][Description("The armor to simulate against.")] string armor,
             [Description("The range to simulate at.")] int range = 20)
         {
-            var ammoResult = (await _tarkovSearch.SearchAsync($"name:{ammo}", DocType.Item, 1)).FirstOrDefault();
-            var armorResult = (await _tarkovSearch.SearchAsync($"name:{armor}", DocType.Item, 1)).FirstOrDefault();
+            var ammoResult = (await _tarkovSearch.SearchAsync($"(name:{ammo}) AND kind:ammunition",
+                DocType.Item, 1)).FirstOrDefault();
+            var armorResult = (await _tarkovSearch.SearchAsync($"(name:{armor}) AND kind:armor",
+                DocType.Item, 1)).FirstOrDefault();
 
-            if (ammoResult == null || armorResult == null)
+            if (ammoResult == null)
             {
-                return Reply("No items found for query!");
+                return Reply("No ammunition found for the query!");
+            } else if (armorResult == null)
+            {
+                return Reply("No armor found for the query!");
             }
 
-            var ammoItem = await _tarkov.GetItemAsync(ammoResult.Id, ammoResult.Kind);
-
-            if (ammoItem is not AmmunitionItem)
-            {
-                return Reply("The item provided is not a cartridge!");
-            }
-
-            var armorItem = await _tarkov.GetItemAsync(armorResult.Id, armorResult.Kind);
-
-            if (armorItem is not ArmorItem)
-            {
-                return Reply("The item provided is not armor!");
-            }
+            var ammoItem = await _tarkov.GetItemAsync<AmmunitionItem>(ammoResult.Id);
+            var armorItem = await _tarkov.GetItemAsync<ArmorItem>(armorResult.Id);
 
             var results = await _tarkov.GetArmorStatisticsAsync(ammoItem.Id, armorItem.Id, 0, 1000);
 
             if (results == null)
             {
-                return Reply("No simulation results found for the given items!");
+                return Reply($"No simulation results found for `{ammoItem.Name}` & `{armorItem.Name}`!");
             }
 
             var simulation = results
@@ -138,7 +125,7 @@ namespace TarkovItemBot.Modules
                     $"Summary of simulating the impact of `{ammoItem.Name}` against `{armorItem.Name}` at a range of `{simulation.Distance}`m. " +
                     $"Values presented are means of multiple simulations, followed by the min. and max. values across them.",
                 Color = new Disqord.Color(0x968867),
-                Url = (ammoItem as AmmunitionItem).BallisticsLink
+                Url = ammoItem.BallisticsLink
             };
 
             var penetrationResult = "";
@@ -152,7 +139,7 @@ namespace TarkovItemBot.Modules
             embed.AddField("Average Shots to Destruction:", $"**{simulation.AverageShotsToDestruction.Mean:F2}** shots " +
                 $"({simulation.AverageShotsToDestruction.Min:F2}-{simulation.AverageShotsToDestruction.Max:F2})", true);
 
-            var buckshotNotice = (ammoItem as AmmunitionItem).Type == "buckshot" ?
+            var buckshotNotice = ammoItem.Type == "buckshot" ?
                 " For these simulations, projectile dispersion was taken into account." : "";
             embed.AddField("Notice", $"Data was simulated given no weapon velocity modifiers or attachments and a {simulation.Distance}m zero. {buckshotNotice}");
 
