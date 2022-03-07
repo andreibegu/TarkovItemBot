@@ -4,6 +4,7 @@ using Humanizer;
 using Qmmands;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -141,38 +142,47 @@ namespace TarkovItemBot.Modules
         public async Task<DiscordCommandResult> PriceCheckAsync(
             [Remainder][Range(3, 100, true, true)][Description("The item to display prices for.")] string query)
         {
-            var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
-
-            if (result == null)
-            {
-                return Reply("No items found for query!");
-            }
-
-            var priceData = await _tarkovTools.GetItemPriceDataAsync(result.Id);
-
-            if(priceData.Avg24hPrice == 0)
-            {
-                return Reply($"No price data found for item `{result.Name}`!");
-            }
-
-            var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
-
             var embed = new LocalEmbed()
             {
-                Title = $"{item.Name} ({item.ShortName})",
-                Color = item.Grid.Color,
-                ThumbnailUrl = item.IconUrl,
-                Description = item.Description,
-                Url = item.WikiUrl
+                Title = "Notice!",
+                Description = "This command has been temporarily disabled as the bot's [flea market data source has closed](https://tarkov-tools.com/). This command" +
+                " will be disabled until a new data source is found and implemented. Thank you for understanding!",
+                Color = Disqord.Color.Red,
+                ThumbnailUrl = Context.Bot.CurrentUser.GetAvatarUrl()
             };
 
-            var size = item.Grid.Height * item.Grid.Width;
+            //var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
-            embed.AddField("Avg 24h Price", $"{priceData.Avg24hPrice:#,##0} ₽", true);
-            embed.AddField("Low 24h Price", $"{priceData.Low24hPrice:#,##0} ₽", true);
-            embed.AddField("High 24h Price", $"{priceData.High24hPrice:#,##0} ₽", true);
-            embed.AddField("Price per Slot", $"{priceData.Avg24hPrice / size:#,##0} ₽ ({size} slots)", true);
-            embed.AddField("Daily Price Change", $"{priceData.ChangeLast48h:+0.00;-#.00}%", true);
+            //if (result == null)
+            //{
+            //    return Reply("No items found for query!");
+            //}
+
+            //var priceData = await _tarkovTools.GetItemPriceDataAsync(result.Id);
+
+            //if(priceData.Avg24hPrice == 0)
+            //{
+            //    return Reply($"No price data found for item `{result.Name}`!");
+            //}
+
+            //var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
+
+            //var embed = new LocalEmbed()
+            //{
+            //    Title = $"{item.Name} ({item.ShortName})",
+            //    Color = item.Grid.Color,
+            //    ThumbnailUrl = item.IconUrl,
+            //    Description = item.Description,
+            //    Url = item.WikiUrl
+            //};
+
+            //var size = item.Grid.Height * item.Grid.Width;
+
+            //embed.AddField("Avg 24h Price", $"{priceData.Avg24hPrice:#,##0} ₽", true);
+            //embed.AddField("Low 24h Price", $"{priceData.Low24hPrice:#,##0} ₽", true);
+            //embed.AddField("High 24h Price", $"{priceData.High24hPrice:#,##0} ₽", true);
+            //embed.AddField("Price per Slot", $"{priceData.Avg24hPrice / size:#,##0} ₽ ({size} slots)", true);
+            //embed.AddField("Daily Price Change", $"{priceData.ChangeLast48h:+0.00;-#.00}%", true);
 
             return Reply(embed);
         }
