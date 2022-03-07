@@ -71,7 +71,7 @@ namespace TarkovItemBot.Modules
 
             foreach (var stat in stats)
                 card.AddRow($"{stat.Distance}m", $"{stat.Velocity:F2}m/s", $"{stat.Damage:F2}",
-                    $"{stat.PenetrationPower:F2}", $"{stat.Drop:F2}cm", $"{stat.TimeOfFlight:F2}s");
+                    $"{stat.PenetrationPower:F2}", $"{stat.Drop:F2}m", $"{stat.TimeOfFlight:F2}s");
 
             embed.AddField("Range Card", $"```{card.ToMinimalString()}```");
 
