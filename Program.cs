@@ -1,6 +1,7 @@
 ﻿using Disqord.Bot;
 using Disqord.Bot.Hosting;
 using Disqord.Gateway;
+using Humanizer.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,9 +23,6 @@ namespace TarkovItemBot
     {
         static async Task Main()
         {
-            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
-            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
-
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .WriteTo.Console(theme: ConsoleTheme.None)

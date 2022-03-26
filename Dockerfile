@@ -12,10 +12,8 @@ RUN dotnet publish --self-contained -c Release -r alpine-x64 -o ./publish \
 
 FROM alpine:3.15.2
 
-RUN apk add --no-cache libstdc++ libintl krb5-libs
+RUN apk add --no-cache libstdc++ libintl krb5-libs icu-libs
 
 COPY --from=build /app/publish /app
-
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true
 
 CMD ["/app/TarkovItemBot"]
