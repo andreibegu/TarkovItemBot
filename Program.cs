@@ -8,6 +8,7 @@ using Qmmands;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using TarkovItemBot.Options;
 using TarkovItemBot.Services;
@@ -21,6 +22,9 @@ namespace TarkovItemBot
     {
         static async Task Main()
         {
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .WriteTo.Console(theme: ConsoleTheme.None)
