@@ -6,7 +6,7 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
     <DockerfileRunEnvironmentFiles Condition="'$(BuildingInsideVisualStudio)' == 'true'">docker.env</DockerfileRunEnvironmentFiles>
-    <Version>0.6.2-alpha.2</Version>
+    <Version>0.7.0-alpha.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
