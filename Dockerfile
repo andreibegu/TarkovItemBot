@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine3.15 AS build
 
 WORKDIR /app
 
@@ -16,6 +16,6 @@ RUN apk add --no-cache libstdc++ libintl krb5-libs
 
 COPY --from=build /app/publish /app
 
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 CMD ["/app/TarkovItemBot"]
