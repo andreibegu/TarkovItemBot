@@ -61,7 +61,7 @@ namespace TarkovItemBot.Modules
                 $"[Invite](https://discord.com/oauth2/authorize?client_id={appInfo.Id}&scope=bot&permissions=16384)", true);
 
             embed.AddField("Instance Owner", appInfo.Owner.ToString(), true);
-            embed.AddField("Guilds", Context.Bot.GetGuilds().Count, true);
+            if (Context.Bot.GetGuilds().Count != 0) embed.AddField("Guilds", Context.Bot.GetGuilds().Count, true);
 
             var uptime = (DateTime.Now - Process.GetCurrentProcess().StartTime).Humanize();
             embed.AddField("Uptime", uptime, true);
