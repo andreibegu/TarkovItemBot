@@ -36,6 +36,10 @@ namespace TarkovItemBot.Services.TarkovTools
                         changeLast48h
                         low24hPrice
                         high24hPrice
+                    	sellFor {{
+                          price
+                          source
+                       }}
                     }}
                 }}",
             };
