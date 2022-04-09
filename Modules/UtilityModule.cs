@@ -175,11 +175,11 @@ namespace TarkovItemBot.Modules
             embed.AddField("Price per Slot", $"{priceData.Avg24hPrice / size:#,##0} ₽ ({size} slots)", true);
             embed.AddField("Daily Price Change", $"{priceData.ChangeLast48h:+0.00;-#.00}%", true);
 
-            var lowestPrice = priceData.SellData.Where(x => x.Source != ItemPriceSource.FleaMarket)
+            var maximumProfit = priceData.SellData.Where(x => x.Source != ItemPriceSource.FleaMarket)
                 .MaxBy(x => x.Price);
 
-            embed.AddField("Maximum trader profit", $"Sell to {lowestPrice.Source.Humanize()} " +
-                $"for {lowestPrice.Price:#,##0} ₽ ({lowestPrice.Price/size:#,##0} ₽ per slot)");
+            embed.AddField("Maximum trader profit", $"Sell to {maximumProfit.Source.Humanize()} " +
+                $"for {maximumProfit.Price:#,##0} ₽ ({maximumProfit.Price/size:#,##0} ₽ per slot)");
 
             return Reply(embed);
         }
