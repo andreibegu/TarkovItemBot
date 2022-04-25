@@ -179,7 +179,8 @@ namespace TarkovItemBot.Modules
                 .MaxBy(x => x.Price);
 
             embed.AddField("Maximum trader profit", $"Sell to {maximumProfit.Source.Humanize()} " +
-                $"for {maximumProfit.Price:#,##0} ₽ ({maximumProfit.Price/size:#,##0} ₽ per slot)");
+                $"for {maximumProfit.Price:#,##0} {maximumProfit.Currency.Humanize()}" +
+                $" ({maximumProfit.Price/size:#,##0} {maximumProfit.Currency.Humanize()} per slot)");
 
             return Reply(embed);
         }

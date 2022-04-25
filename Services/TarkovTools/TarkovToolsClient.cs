@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace TarkovItemBot.Services.TarkovTools
 
         public TarkovToolsClient(HttpClient httpClient, IOptions<TarkovToolsOptions> config)
         {
+            Console.WriteLine(config.Value.BaseUri);
             httpClient.BaseAddress = new Uri(config.Value.BaseUri);
             httpClient.DefaultRequestHeaders.Add("User-Agent",
                 $"TarkovItemBot/{AssemblyHelper.GetInformationalVersion()}");
@@ -26,25 +28,14 @@ namespace TarkovItemBot.Services.TarkovTools
 
         public async Task<ItemPriceData> GetItemPriceDataAsync(string id)
         {
-            var query = new
+            var queryObject = new Dictionary<string, string>()
             {
-                Query = $@"
-                query Query {{
-                    item(id: ""{id}"") {{
-                        id
-                        avg24hPrice
-                        changeLast48h
-                        low24hPrice
-                        high24hPrice
-                    	sellFor {{
-                          price
-                          source
-                       }}
-                    }}
-                }}",
+                {"query",
+                    $"query {{ item(id: \"{id}\")" + 
+                    "{ id avg24hPrice changeLast48h low24hPrice high24hPrice sellFor { price source currency } } }" }
             };
 
-            var request = await _httpClient.PostAsJsonAsync("", query);
+            var request = await _httpClient.PostAsJsonAsync("", queryObject);
             var response = await request.Content.ReadFromJsonAsync<Response>();
 
             return response.Data.Item;

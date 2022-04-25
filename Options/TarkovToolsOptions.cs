@@ -2,6 +2,6 @@
 {
     public class TarkovToolsOptions
     {
-        public string BaseUri { get; set; } = "https://tarkov-tools.com/graphql";
+        public string BaseUri { get; set; } = "https://api.tarkov.dev/graphql";
     }
 }
