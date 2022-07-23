@@ -1,5 +1,7 @@
 ﻿using Disqord;
 using Disqord.Bot;
+using Disqord.Bot.Commands;
+using Disqord.Bot.Commands.Application;
 using Humanizer;
 using Qmmands;
 using System;
@@ -13,7 +15,7 @@ using TarkovItemBot.Services.TarkovDatabaseSearch;
 namespace TarkovItemBot.Modules
 {
     [Name("Hideout")]
-    public class HideoutModule : DiscordModuleBase
+    public class HideoutModule : DiscordApplicationModuleBase
     {
         private readonly TarkovDatabaseClient _tarkov;
         private readonly TarkovSearchClient _tarkovSearch;
@@ -24,12 +26,11 @@ namespace TarkovItemBot.Modules
             _tarkovSearch = tarkovSearch;
         }
 
-        [Command("module", "mod", "area")]
+        [SlashCommand("module")]
         [Description("Returns detailed information for the hideout module most closely matching the query.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("module \"Intelligence Center\" 3")]
-        public async Task<DiscordCommandResult> ModuleAsync(
-            [Range(3, 32, true, true)][Description("The module to look for.")] string query,
+        [RateLimit(5, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> ModuleAsync(
+            [Range(3, 32)][Description("The module to look for.")] string query,
             [Description("The level of the module to look for")] int level = 1)
         {
             var searchResult = await _tarkov.GetModulesAsync(2, query);
@@ -38,12 +39,12 @@ namespace TarkovItemBot.Modules
 
             if (module == null)
             {
-                return Reply("No module found for query!");
+                return Response("No module found for query!");
             }
 
             if (level - 1 > module.Stages.Count)
             {
-                return Reply($"The specified module only has {module.Stages.Count} level(s)!");
+                return Response($"The specified module only has {module.Stages.Count} level(s)!");
             }
 
             var stage = module.Stages[level - 1];
@@ -107,21 +108,20 @@ namespace TarkovItemBot.Modules
 
             if (!string.IsNullOrEmpty(bonuses)) embed.AddField("Bonuses", bonuses);
 
-            return Reply(embed);
+            return Response(embed);
         }
 
-        [Command("crafting", "crafts", "craft", "production")]
+        [SlashCommand("craft")]
         [Description("Returns crafting information about the queried item.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("crafting car battery")]
-        public async Task<DiscordCommandResult> CraftingAsync(
-            [Range(3, 100, true, true)][Remainder][Description("The item to find crafting information for.")] string query)
+        [RateLimit(5, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> CraftingAsync(
+            [Range(3, 100)][Description("The item to find crafting information for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
-                return Reply("No items found for query!");
+                return Response("No items found for query!");
             }
 
             var resultsIn = await _tarkov.GetProductionsAsync(outcome: result.Id);
@@ -130,7 +130,7 @@ namespace TarkovItemBot.Modules
             var productions = resultsIn.Union(usedIn);
             if (!productions.Any())
             {
-                return Reply("No crafting schemes found for query!");
+                return Response("No crafting schemes found for query!");
             }
 
             var embed = new LocalEmbed()
@@ -171,7 +171,7 @@ namespace TarkovItemBot.Modules
             }
 
             embed.AddField("Crafts", productionList);
-            return Reply(embed);
+            return Response(embed);
         }
     }
 }

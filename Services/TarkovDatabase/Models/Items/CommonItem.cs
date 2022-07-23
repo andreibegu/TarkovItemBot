@@ -1,6 +1,7 @@
 ﻿
 using Disqord;
 using Humanizer;
+using Qommon;
 using System;
 using System.Text.Json.Serialization;
 using System.Web;
@@ -34,7 +35,7 @@ namespace TarkovItemBot.Services.TarkovDatabase
                 Title = $"{Name} ({ShortName})",
                 Description = Description,
                 ThumbnailUrl = IconUrl,
-                Color = Grid.Color,
+                Color = new Optional<Disqord.Color>(Grid.Color),
                 Url = WikiUrl
             };
 

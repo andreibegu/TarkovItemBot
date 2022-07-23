@@ -1,5 +1,7 @@
 ﻿using Disqord;
 using Disqord.Bot;
+using Disqord.Bot.Commands;
+using Disqord.Bot.Commands.Application;
 using Disqord.Gateway;
 using Disqord.Rest;
 using Humanizer;
@@ -15,30 +17,26 @@ using TarkovItemBot.Options;
 namespace TarkovItemBot.Modules
 {
     [Name("Basic")]
-    public class BasicModule : DiscordModuleBase
+    public class BasicModule : DiscordApplicationModuleBase
     {
-        private readonly CommandService _commands;
         private readonly BotOptions _config;
 
-        public BasicModule(IOptions<BotOptions> config, CommandService commands)
+        public BasicModule(IOptions<BotOptions> config)
         {
             _config = config.Value;
-            _commands = commands;
         }
 
-        [Command("ping", "latency", "pong")]
+        [SlashCommand("ping")]
         [Description("Returns the bot's latency to the Discord servers.")]
-        [Remarks("ping")]
-        public DiscordCommandResult Ping()
+        public IResult Ping()
         {
-            var time = DateTime.UtcNow - Context.Message.CreatedAt().UtcDateTime;
-            return Reply($"Current latency: `{time.Milliseconds}ms`");
+            var time = DateTime.UtcNow - Context.Interaction.CreatedAt().UtcDateTime;
+            return Response($"Current latency: `{time.Milliseconds}ms`");
         }
 
-        [Command("about", "info")]
+        [SlashCommand("about")]
         [Description("Displays general information about the bot.")]
-        [Remarks("about")]
-        public async Task<DiscordCommandResult> AboutAsync()
+        public async Task<IResult> AboutAsync()
         {
             var appInfo = await Context.Bot.FetchCurrentApplicationAsync();
 
@@ -66,74 +64,7 @@ namespace TarkovItemBot.Modules
             var uptime = (DateTime.Now - Process.GetCurrentProcess().StartTime).Humanize();
             embed.AddField("Uptime", uptime, true);
 
-            return Reply(embed);
-        }
-
-        [Command("help", "h")]
-        [Description("Lists all commands available for use.")]
-        [Remarks("help")]
-        public DiscordCommandResult Help()
-        {
-            var embed = new LocalEmbed()
-            {
-                Color = new Color(0x968867),
-                Description = $"A list of commands available for use. Prefix commands with `{_config.Prefix}` or {Context.Bot.CurrentUser.Mention}.\n" +
-                    $"For more information on a specific command use `{_config.Prefix}help <command>`.\n"
-            };
-
-            embed.WithAuthor($"{Context.Bot.CurrentUser.Name} Help", Context.Bot.CurrentUser.GetAvatarUrl());
-            embed.WithFooter($"(?) Use {_config.Prefix}about for more info");
-
-            var modules = _commands.GetAllModules();
-            foreach (var module in modules.Where(x => x.Parent == null)
-                .OrderByDescending(x => x.Commands.Count))
-            {
-                if (!module.Commands.Any()) continue;
-                embed.AddField($"{module.Name} Commands", string.Join("\n", module.Commands
-                    .Select(x => $"• `{x.GetUsage()}`")), true);
-            }
-
-            embed.AddField("How to read parameter info", $"`<required>`, `[optional = Default]`, `...remainder`, `|multiple values|`.");
-
-            return Reply(embed);
-        }
-
-        [Command("help", "h")]
-        [Description("Returns information about a specific command.")]
-        [Remarks("help item")]
-        public DiscordCommandResult Help([Remainder] string query)
-        {
-            var result = _commands.FindCommands(query);
-
-            if (!result.Any())
-            {
-                return Reply("No commands have been found!");
-            }
-
-            var commandResult = result[0];
-            var command = commandResult.Command;
-
-            string aliases = !command.Aliases.Any() ? "" : $"({string.Join(", ", command.Aliases)})";
-
-            var embed = new LocalEmbed()
-            {
-                Title = $"{_config.Prefix}{commandResult.Alias} {aliases}",
-                Color = new Color(0x968867),
-                Description = command.Description ?? "No command description."
-            };
-
-            embed.AddField("Usage", $"`{command.GetUsage()}`", true);
-            embed.AddField("Example", $"`{command.Remarks}`" ?? "None", true);
-
-            if (command.Parameters.Any())
-            {
-                var parameters = command.Parameters.Select(x => $"• `{x.Name}` - {x.Description}");
-                embed.AddField("Parameters", string.Join("\n", parameters), false);
-            }
-
-            embed.WithFooter($"{command.Module.Name} Module • Prefix {_config.Prefix}");
-
-            return Reply(embed);
+            return Response(embed);
         }
     }
 }

@@ -73,7 +73,10 @@ namespace TarkovItemBot
 
                     services.AddHttpClient<TarkovToolsClient>();
 
+                    services.AddMemoryCache();
+
                     services.AddSingleton<PresenceService>();
+                    services.AddSingleton<SlashMigrationService>(); 
                 });
 
             await hostBuilder.RunConsoleAsync();

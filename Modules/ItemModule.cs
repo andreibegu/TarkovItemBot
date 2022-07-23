@@ -1,8 +1,11 @@
 ﻿using Disqord;
 using Disqord.Bot;
+using Disqord.Bot.Commands;
+using Disqord.Bot.Commands.Application;
 using Disqord.Extensions.Interactivity.Menus;
 using Disqord.Rest;
 using Humanizer;
+using Microsoft.Extensions.Caching.Memory;
 using Qmmands;
 using System;
 using System.Collections.Generic;
@@ -15,22 +18,24 @@ using TarkovItemBot.Services.TarkovDatabaseSearch;
 namespace TarkovItemBot.Modules
 {
     [Name("Item")]
-    public class ItemModule : DiscordModuleBase
+    public class ItemModule : DiscordApplicationModuleBase
     {
         private readonly TarkovDatabaseClient _tarkov;
         private readonly TarkovSearchClient _tarkovSearch;
+        private readonly IMemoryCache _cache;
 
-        public ItemModule(TarkovDatabaseClient tarkov, TarkovSearchClient tarkovSearch)
+        public ItemModule(TarkovDatabaseClient tarkov, TarkovSearchClient tarkovSearch,
+            IMemoryCache cache)
         {
             _tarkov = tarkov;
             _tarkovSearch = tarkovSearch;
+            _cache = cache;
         }
 
-        [Command("total", "t")]
+        [SlashCommand("total")]
         [Description("Returns the total items of a kind.")]
-        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("total Ammunition")]
-        public async Task<DiscordCommandResult> TotalAsync(
+        [RateLimit(10, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> TotalAsync(
             [Description("The kind of the item group.")] ItemKind kind = ItemKind.None)
         {
             var info = await _tarkov.GetItemIndexAsync();
@@ -38,33 +43,50 @@ namespace TarkovItemBot.Modules
             int total = kind == ItemKind.None ? info.Total : info.Kinds[kind].Count;
             var updated = kind == ItemKind.None ? info.Modified : info.Kinds[kind].Modified;
 
-            return Reply($"Total of items: `{total}` (Updated `{updated.Humanize()}`).");
+            return Response($"Total of items: `{total}` (Updated `{updated.Humanize()}`).");
         }
 
-        [Command("item", "i", "it")]
+        [SlashCommand("item")]
         [Description("Returns detailed information for the item most closely matching the query.")]
-        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("item Zagustin")]
-        public async Task<DiscordCommandResult> ItemAsync(
-            [Remainder][Range(3, 100, true, true)][Description("The item to look for.")] string query)
+        [RateLimit(10, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> ItemAsync(
+            [Range(3, 100)][Description("The item to look for.")] string query)
         {
-            var results = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 25));
+            IItem item;
 
-            if (results.Count == 0)
+            if (_cache.TryGetValue(query, out SearchItem result))
             {
-                return Reply("No items found for query!");
+                item = await _tarkov.GetItemAsync(result.Id, result.Kind);
+            }
+            else
+            {
+                result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1))
+                    .FirstOrDefault();
+
+                if (result is null)
+                    return Response("No item found for the given query!");
+
+                item = await _tarkov.GetItemAsync(result.Id, result.Kind);
             }
 
-            if (results.Count == 1)
+            return Response(item.ToEmbed());
+        }
+
+        [AutoComplete("item")]
+        [RateLimit(3, 1, RateLimitMeasure.Seconds, RateLimitBucketType.User)]
+        public async Task ItemAutoComplete(AutoComplete<string> query)
+        {
+            if (!query.IsFocused || query.RawArgument.Length < 3)
+                return;
+
+            var results = (await _tarkovSearch.SearchAsync($"name:{query.RawArgument}", DocType.Item, 10));
+
+            foreach (var result in results)
             {
-                var result = results.First();
-                var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
-                return Reply(item.ToEmbed());
+                _cache.Set(result.Name, result, TimeSpan.FromSeconds(30));
             }
 
-            var searchView = new SearchView(results, _tarkov);
-
-            return View(searchView);
+            query.Choices.AddRange(results.Select(x => x.Name));
         }
     }
 }

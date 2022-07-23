@@ -1,5 +1,7 @@
 ﻿using Disqord;
 using Disqord.Bot;
+using Disqord.Bot.Commands;
+using Disqord.Bot.Commands.Application;
 using Humanizer;
 using Qmmands;
 using System.Linq;
@@ -9,7 +11,7 @@ using TarkovItemBot.Services.TarkovDatabase;
 namespace TarkovItemBot.Modules
 {
     [Name("Location")]
-    public class LocationModule : DiscordModuleBase
+    public class LocationModule : DiscordApplicationModuleBase
     {
         private readonly TarkovDatabaseClient _tarkov;
 
@@ -18,30 +20,28 @@ namespace TarkovItemBot.Modules
             _tarkov = tarkov;
         }
 
-        [Command("locations", "maps")]
+        [SlashCommand("locations")]
         [Description("Lists all available locations to be queried for.")]
-        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("locations")]
-        public async Task<DiscordCommandResult> LocationsAsync()
+        [RateLimit(10, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> LocationsAsync()
         {
             var locations = await _tarkov.GetLocationsAsync();
             var names = locations.Select(x => Markdown.Code(x.Name));
 
-            return Reply($"All available locations: {string.Join(", ", names)}.");
+            return Response($"All available locations: {string.Join(", ", names)}.");
         }
 
-        [Command("location", "map", "m", "l")]
+        [SlashCommand("location")]
         [Description("Lists information about a specific location.")]
-        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("location The Lab")]
-        public async Task<DiscordCommandResult> LocationAsync(
-            [Remainder][Range(3, 32, true, true)][Description("The location to look for.")] string query)
+        [RateLimit(10, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> LocationAsync(
+            [Range(3, 32)][Description("The location to look for.")] string query)
         {
             var location = (await _tarkov.GetLocationsAsync(1, query)).FirstOrDefault();
 
             if (location == null)
             {
-                return Reply("No locations found for query!");
+                return Response("No locations found for query!");
             }
 
             var embed = new LocalEmbed()
@@ -68,7 +68,7 @@ namespace TarkovItemBot.Modules
 
             embed.WithFooter($"Modified {location.Modified.Humanize()}");
 
-            return Reply(embed);
+            return Response(embed);
         }
     }
 }

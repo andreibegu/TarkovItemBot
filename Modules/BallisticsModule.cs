@@ -1,18 +1,22 @@
 ﻿using ConsoleTables;
 using Disqord;
 using Disqord.Bot;
+using Disqord.Bot.Commands;
+using Disqord.Bot.Commands.Application;
 using Humanizer;
 using Qmmands;
+using Qommon;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
+using Color = Disqord.Color;
 
 namespace TarkovItemBot.Modules
 {
     [Name("Ballistics")]
-    public class BallisticsModule : DiscordModuleBase
+    public class BallisticsModule : DiscordApplicationModuleBase
     {
         private readonly TarkovDatabaseClient _tarkov;
         private readonly TarkovSearchClient _tarkovSearch;
@@ -23,19 +27,18 @@ namespace TarkovItemBot.Modules
             _tarkovSearch = tarkovSearch;
         }
 
-        [Command("rangecard", "card", "range", "ammocard")]
+        [SlashCommand("rangecard")]
         [Description("Displays a range card for a specific cartridge.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("rangecard m995")]
-        public async Task<DiscordCommandResult> BallisticsAsync(
-            [Remainder][Range(3, 100, true, true)][Description("The item to display the range card for.")] string query)
+        [RateLimit(5, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> BallisticsAsync(
+            [Range(3, 100)][Description("The item to display the range card for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"(name:{query}) AND kind:ammunition",
                 DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
-                return Reply("No items found for query!");
+                return Response("No items found for query!");
             }
 
             var item = await _tarkov.GetItemAsync<AmmunitionItem>(result.Id);
@@ -43,7 +46,7 @@ namespace TarkovItemBot.Modules
             var embed = new LocalEmbed()
             {
                 Title = $"{item.Name} ({item.ShortName})",
-                Color = item.Grid.Color,
+                Color = new Optional<Color>(item.Grid.Color),
                 ThumbnailUrl = item.IconUrl,
                 Description = item.Description,
                 Url = item.BallisticsLink
@@ -61,7 +64,7 @@ namespace TarkovItemBot.Modules
 
             if (statsResult == null)
             {
-                return Reply("No simulation results found for the given item!");
+                return Response("No simulation results found for the given item!");
             }
 
             var stats = statsResult
@@ -80,16 +83,15 @@ namespace TarkovItemBot.Modules
             var maxModified = stats.Max(x => x.Modified);
             embed.WithFooter($"Last modified {maxModified.Humanize()}");
 
-            return Reply(embed);
+            return Response(embed);
         }
 
-        [Command("armorsimulation", "armorsim", "armorimpact", "armori")]
+        [SlashCommand("armorsimulation")]
         [Description("Displays armor simulation data for a specific cartridge and armor.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("armorsimulation m995 6b43 25")]
-        public async Task<DiscordCommandResult> ArmorAsync(
-            [Range(3, 100, true, true)][Description("The ammo to simulate against.")] string ammo,
-            [Range(3, 100, true, true)][Description("The armor to simulate against.")] string armor,
+        [RateLimit(5, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> ArmorAsync(
+            [Range(3, 100)][Description("The ammo to simulate against.")] string ammo,
+            [Range(3, 100)][Description("The armor to simulate against.")] string armor,
             [Description("The range to simulate at.")] int range = 20)
         {
             var ammoResult = (await _tarkovSearch.SearchAsync($"(name:{ammo}) AND kind:ammunition",
@@ -99,10 +101,10 @@ namespace TarkovItemBot.Modules
 
             if (ammoResult == null)
             {
-                return Reply("No ammunition found for the query!");
+                return Response("No ammunition found for the query!");
             } else if (armorResult == null)
             {
-                return Reply("No armor found for the query!");
+                return Response("No armor found for the query!");
             }
 
             var ammoItem = await _tarkov.GetItemAsync<AmmunitionItem>(ammoResult.Id);
@@ -112,7 +114,7 @@ namespace TarkovItemBot.Modules
 
             if (results == null)
             {
-                return Reply($"No simulation results found for `{ammoItem.Name}` & `{armorItem.Name}`!");
+                return Response($"No simulation results found for `{ammoItem.Name}` & `{armorItem.Name}`!");
             }
 
             var simulation = results
@@ -145,7 +147,7 @@ namespace TarkovItemBot.Modules
 
             embed.WithFooter($"Last modified {simulation.Modified.Humanize()}");
 
-            return Reply(embed);
+            return Response(embed);
         }
     }
 }

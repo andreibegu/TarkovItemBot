@@ -1,7 +1,10 @@
 ﻿using Disqord;
 using Disqord.Bot;
+using Disqord.Bot.Commands;
+using Disqord.Bot.Commands.Application;
 using Humanizer;
 using Qmmands;
+using Qommon;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,11 +14,12 @@ using System.Web;
 using TarkovItemBot.Services.TarkovDatabase;
 using TarkovItemBot.Services.TarkovDatabaseSearch;
 using TarkovItemBot.Services.TarkovTools;
+using Color = Disqord.Color;
 
 namespace TarkovItemBot.Modules
 {
     [Name("Utility")]
-    public class UtilityModule : DiscordModuleBase
+    public class UtilityModule : DiscordApplicationModuleBase
     {
         private readonly TarkovDatabaseClient _tarkov;
         private readonly TarkovSearchClient _tarkovSearch;
@@ -28,18 +32,17 @@ namespace TarkovItemBot.Modules
             _tarkovTools = tarkovTools;
         }
 
-        [Command("slots", "attachments")]
+        [SlashCommand("slots")]
         [Description("Displays all slots and attachments available for an item.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("slots m4a1")]
-        public async Task<DiscordCommandResult> SlotsAsync(
-            [Remainder][Range(3, 100, true, true)][Description("The item to display attachments for.")] string query)
+        [RateLimit(5, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> SlotsAsync(
+            [Range(3, 100)][Description("The item to display attachments for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
-                return Reply("No items found for query!");
+                return Response("No items found for query!");
             }
 
             var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
@@ -47,13 +50,13 @@ namespace TarkovItemBot.Modules
             if (item is not IModifiableItem modifiableItem ||
                 !modifiableItem.Slots.Any())
             {
-                return Reply("The base item provided is not modifiable!");
+                return Response("The base item provided is not modifiable!");
             }
 
             var embed = new LocalEmbed()
             {
                 Title = $"{item.Name} ({item.ShortName})",
-                Color = item.Grid.Color,
+                Color = new Optional<Color>(item.Grid.Color),
                 ThumbnailUrl = item.IconUrl,
                 Description = item.Description,
                 Url = item.WikiUrl
@@ -73,21 +76,20 @@ namespace TarkovItemBot.Modules
                 embed.AddField(slot.Key.Humanize(LetterCasing.Title), itemResult);
             }
 
-            return Reply(embed);
+            return Response(embed);
         }
 
-        [Command("compatibility", "compatible", "attachable")]
+        [SlashCommand("compatibility")]
         [Description("Displays all items an item can be attached to.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("compatibility pk-06")]
-        public async Task<DiscordCommandResult> CompatibilityAsync(
-            [Remainder][Range(3, 100, true, true)][Description("The item to display compatibility for.")] string query)
+        [RateLimit(5, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> CompatibilityAsync(
+            [Range(3, 100)][Description("The item to display compatibility for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
-                return Reply("No items found for query!");
+                return Response("No items found for query!");
             }
 
             var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
@@ -95,13 +97,13 @@ namespace TarkovItemBot.Modules
             if (item is not IAttachableItem attachableItem
                 || !attachableItem.Compatibility.Any())
             {
-                return Reply("The base item provided is not attachable!");
+                return Response("The base item provided is not attachable!");
             }
 
             var embed = new LocalEmbed()
             {
                 Title = $"{item.Name} ({item.ShortName})",
-                Color = item.Grid.Color,
+                Color = new Optional<Color>(item.Grid.Color),
                 ThumbnailUrl = item.IconUrl,
                 Description = item.Description,
                 Url = item.WikiUrl
@@ -115,45 +117,43 @@ namespace TarkovItemBot.Modules
                 embed.AddField(slot.Key.Humanize(LetterCasing.Title), itemResult);
             }
 
-            return Reply(embed);
+            return Response(embed);
         }
 
-        [Command("wiki", "gamepedia")]
+        [SlashCommand("wiki")]
         [Description("Finds the wiki page of the queried item.")]
-        [Cooldown(10, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("wiki m4a1")]
-        public async Task<DiscordCommandResult> WikiAsync(
-            [Remainder][Range(3, 100, true, true)][Description("The item to look for")] string query)
+        [RateLimit(10, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> WikiAsync(
+            [Range(3, 100)][Description("The item to look for")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
-                return Reply("No items found for query!");
+                return Response("No items found for query!");
             }
 
-            return Reply($"<https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(result.Name.Replace(" ", "_"))}>");
+            return Response($"<https://escapefromtarkov.gamepedia.com/{HttpUtility.UrlEncode(result.Name.Replace(" ", "_"))}>");
         }
 
-        [Command("pricecheck", "price", "pc", "flea", "market", "fleamarket")]
+        [SlashCommand("pricecheck")]
         [Description("Displays current and past prices of an item on the player-driven market.")]
-        [Cooldown(5, 1, CooldownMeasure.Minutes, CooldownBucketType.User)]
-        [Remarks("price Red Keycard")]
-        public async Task<DiscordCommandResult> PriceCheckAsync(
-            [Remainder][Range(3, 100, true, true)][Description("The item to display prices for.")] string query)
+        [RateLimit(5, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
+        public async Task<IResult> PriceCheckAsync(
+            [Range(3, 100)][Description("The item to display prices for.")] string query)
         {
             var result = (await _tarkovSearch.SearchAsync($"name:{query}", DocType.Item, 1)).FirstOrDefault();
 
             if (result == null)
             {
-                return Reply("No items found for query!");
+                return Response("No items found for query!");
             }
 
             var priceData = await _tarkovTools.GetItemPriceDataAsync(result.Id);
 
             if (priceData.Avg24hPrice == 0)
             {
-                return Reply($"No price data found for item `{result.Name}`!");
+                return Response($"No price data found for item `{result.Name}`!");
             }
 
             var item = await _tarkov.GetItemAsync(result.Id, result.Kind);
@@ -161,7 +161,7 @@ namespace TarkovItemBot.Modules
             var embed = new LocalEmbed()
             {
                 Title = $"{item.Name} ({item.ShortName})",
-                Color = item.Grid.Color,
+                Color = new Optional<Color>(item.Grid.Color),
                 ThumbnailUrl = item.IconUrl,
                 Description = item.Description,
                 Url = item.WikiUrl
@@ -182,7 +182,7 @@ namespace TarkovItemBot.Modules
                 $"for {maximumProfit.Price:#,##0} {maximumProfit.Currency.Humanize()}" +
                 $" ({maximumProfit.Price/size:#,##0} {maximumProfit.Currency.Humanize()} per slot)");
 
-            return Reply(embed);
+            return Response(embed);
         }
     }
 }
