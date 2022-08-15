@@ -8,6 +8,7 @@ using Humanizer;
 using Microsoft.Extensions.Caching.Memory;
 using Qmmands;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,12 +37,13 @@ namespace TarkovItemBot.Modules
         [Description("Returns the total items of a kind.")]
         [RateLimit(10, 1, RateLimitMeasure.Minutes, RateLimitBucketType.User)]
         public async Task<IResult> TotalAsync(
-            [Description("The kind of the item group.")] ItemKind kind = ItemKind.None)
+            [Description("The kind of the item group.")] string kind = "None")
         {
+            var kindParsed = kind.DehumanizeTo<ItemKind>();
             var info = await _tarkov.GetItemIndexAsync();
 
-            int total = kind == ItemKind.None ? info.Total : info.Kinds[kind].Count;
-            var updated = kind == ItemKind.None ? info.Modified : info.Kinds[kind].Modified;
+            int total = kindParsed == ItemKind.None ? info.Total : info.Kinds[kindParsed].Count;
+            var updated = kindParsed == ItemKind.None ? info.Modified : info.Kinds[kindParsed].Modified;
 
             return Response($"Total of items: `{total}` (Updated `{updated.Humanize()}`).");
         }
@@ -79,14 +81,27 @@ namespace TarkovItemBot.Modules
             if (!query.IsFocused || query.RawArgument.Length < 3)
                 return;
 
-            var results = (await _tarkovSearch.SearchAsync($"name:{query.RawArgument}", DocType.Item, 10));
+            var results = (await _tarkovSearch.SearchAsync($"name:{query.RawArgument}", DocType.Item, 15));
 
+            // Cache as workaround, choice being the only value being passed from autocomplete handler.
             foreach (var result in results)
             {
                 _cache.Set(result.Name, result, TimeSpan.FromSeconds(30));
             }
 
             query.Choices.AddRange(results.Select(x => x.Name));
+        }
+
+        [AutoComplete("total")]
+        public void TotalAutoComplete(AutoComplete<string> kind)
+        {
+            if (!kind.IsFocused)
+                return;
+
+            kind.Choices.AddRange(Enum.GetValues<ItemKind>().Select(x => x.Humanize())
+                .Where(x => kind.RawArgument.Length == 0 
+                    || x.Contains(kind.RawArgument, StringComparison.InvariantCultureIgnoreCase))
+                .Take(25));
         }
     }
 }
