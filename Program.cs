@@ -39,6 +39,7 @@ namespace TarkovItemBot
                     bot.Token = context.Configuration["Bot:Token"];
                     bot.Prefixes = new[] { context.Configuration["Bot:Prefix"] };
                     bot.Intents &= ~GatewayIntents.Members;
+                    bot.Intents &= ~GatewayIntents.MessageContent;
 
                 })
                 .ConfigureServices((context, services) =>
