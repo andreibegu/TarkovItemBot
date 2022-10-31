@@ -53,7 +53,7 @@ namespace TarkovItemBot.Modules
 
             embed.AddField("Data Source", "[Tarkov Database](https://tarkov-database.com/) & " +
                 "[Tarkov.dev](https://tarkov.dev/)", true);
-            embed.AddField("Source Code", "[Github](https://github.com/Andrewww1/TarkovItemBot)", true);
+            embed.AddField("Source Code", "[Github](https://github.com/andreibegu/TarkovItemBot)", true);
 
             if (appInfo.IsBotPublic) embed.AddField("Invite Link", 
                 $"[Invite](https://discord.com/oauth2/authorize?client_id={appInfo.Id}&scope=bot&permissions=16384)", true);
