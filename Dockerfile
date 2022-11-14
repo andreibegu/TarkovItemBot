@@ -10,7 +10,7 @@ RUN dotnet publish --self-contained -c Release -r alpine-x64 -o ./publish \
     -p:PublishSingleFile=true \
     -p:PublishTrimmed=true
 
-FROM alpine:3.16.2
+FROM alpine:3.16.3
 
 RUN apk add --no-cache libstdc++ libintl krb5-libs icu-libs
 
