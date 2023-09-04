@@ -18,7 +18,7 @@ jobs:
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Check out
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build image
         run: docker build -t ${IMAGE_NAME}:${GITHUB_REF#refs/tags/v} .
